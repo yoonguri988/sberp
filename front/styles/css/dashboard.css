@@ -1,0 +1,299 @@
+@charset "UTF-8";
+
+/* ──────────────────────────────────────────────────────────
+   페이지 헤더 고정 (상단 sb-header 바로 아래 sticky)
+   sb-content의 좌우 패딩(24px 28px)을 음수 마진으로 상쇄해
+   고정 시 배경이 카드 영역 끝까지 끊김 없이 채워지도록 처리
+   ────────────────────────────────────────────────────────── */
+.db-page-head--sticky {
+  position: sticky;
+  top: var(--sb-header-h);
+  z-index: 20;
+  margin: -24px -28px 22px;
+  padding: 18px 28px 14px;
+  background: var(--sb-bg);
+  border-bottom: 1px solid var(--sb-border);
+}
+
+/* ──────────────────────────────────────────────────────────
+   결재 대기함 테이블 — app.css 의 전역 sb-table thead sticky 규칙은
+   "카드 영역 내부에서 자체 스크롤되는 긴 목록"을 전제로 한 것이라,
+   페이지 전체가 스크롤되는 대시보드에 그대로 쓰면 헤더 행이 카드
+   경계를 벗어나 붕 떠 보이는 문제가 생긴다. 대시보드의 결재 대기함은
+   행이 몇 개 되지 않아 sticky 헤더가 필요 없으므로 여기서만 해제.
+   ────────────────────────────────────────────────────────── */
+.db-approvals-table thead th {
+  position: static;
+}
+/* 테이블 자체는 좁아져도 컬럼이 으스러지지 않게 최소폭을 두고,
+   카드 밖으로 넘치는 대신 카드 내부에서만 가로 스크롤되게 함 */
+.db-approvals-table { min-width: 660px; }
+.table-responsive { min-width: 0; }
+
+/* ──────────────────────────────────────────────────────────
+   통계 카드 그리드 — 폭에 따라 4 → 3 → 2 → 1 열로 자연스럽게 재배치.
+   각 카드 최소폭(180px)을 보장해 라벨 글자가 억지로 줄바꿈되지 않게 함
+   ────────────────────────────────────────────────────────── */
+.db-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+.db-stat-grid > .sb-stat { min-width: 0; }
+.sb-stat__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sb-stat__delta { flex-wrap: wrap; }
+
+/* ──────────────────────────────────────────────────────────
+   본문 2×2 그리드
+   - 1행: 결재 대기함(좌) / 공지사항(우)
+   - 2행: 내 프로젝트(좌) / 오늘의 자원예약(우)
+   grid-template-areas 로 카드를 행 단위로 짝지어 배치하면, 각 행은
+   grid 기본 동작(align-items: stretch)에 의해 그 행에서 가장 높은
+   카드에 맞춰 같은 행의 다른 카드도 함께 늘어난다. 즉 "결재대기함 ↔
+   공지사항", "내 프로젝트 ↔ 오늘의 자원예약" 이 각각 쌍으로 높이가
+   맞춰지고, 남는 세로 공간은 카드 본문(.sb-card__body)이 흡수한다.
+   ────────────────────────────────────────────────────────── */
+.db-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-areas:
+    "approvals notices"
+    "projects  reservations";
+  gap: 18px;
+}
+.db-card--approvals    { grid-area: approvals; }
+.db-card--notices      { grid-area: notices; }
+.db-card--projects     { grid-area: projects; }
+.db-card--reservations { grid-area: reservations; }
+
+.db-card {
+  min-width: 0;         /* grid item 기본값(min-width:auto) 때문에 넓은 자식이
+                            카드 밖으로 넘치는 것을 방지 */
+  display: flex;
+  flex-direction: column;
+}
+.db-card > .sb-card__body,
+.db-card > .sb-card__body--flush {
+  flex: 1 1 auto;        /* 같은 행의 짝이 더 높을 때 남는 공간을 흡수 */
+}
+
+@media (max-width: 900px) {
+  .db-main-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "approvals"
+      "notices"
+      "projects"
+      "reservations";
+  }
+  /* 1열로 쌓이면 행 정렬을 맞출 필요가 없으므로 카드가 억지로 늘어나지 않게 복원 */
+  .db-card > .sb-card__body,
+  .db-card > .sb-card__body--flush { flex: 0 0 auto; }
+}
+
+/* 카드 헤더(제목/부제/버튼)가 좁아지면 줄바꿈되도록 보강.
+   app.css 의 .sb-card__head 자체는 다른 페이지에서도 쓰는 공용 스타일이라
+   건드리지 않고, 대시보드 카드에만 db-card 클래스로 범위를 좁혀 재정의 */
+.db-card > .sb-card__head {
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+.db-card > .sb-card__head h2 { min-width: 0; }
+.db-card > .sb-card__body,
+.db-card > .sb-card__body--flush {
+  min-width: 0;
+}
+
+/* ──────────────────────────────────────────────────────────
+   리스트 행 (공지사항 / 오늘의 자원예약 카드에서 공용으로 사용)
+   ────────────────────────────────────────────────────────── */
+.db-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--sb-border);
+}
+.db-row:last-child { border-bottom: none; }
+.db-row:hover { background: #fafbfc; }
+
+.db-row__icon {
+  flex: 0 0 auto;
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+}
+
+.db-row__main { flex: 1 1 auto; min-width: 0; }
+.db-row__title {
+  font-size: 13.5px;
+  font-weight: 650;
+  color: var(--sb-ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.db-row__title .txt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.db-row__meta {
+  font-size: 12px;
+  color: var(--sb-ink-faint);
+  margin-top: 2px;
+}
+.db-row__side { flex: 0 0 auto; }
+
+/* ──────────────────────────────────────────────────────────
+   내 프로젝트 카드 — 프로젝트별 진행률 블록
+   head/foot 모두 기본적으로 flex-wrap 을 허용해, 폭이 부족하면
+   "줄바꿈"으로 대응하고 카드 밖으로 넘치는 일이 없도록 함
+   ────────────────────────────────────────────────────────── */
+.db-project { padding: 14px 0; }
+.db-project:first-child { padding-top: 4px; }
+.db-project:last-child { padding-bottom: 4px; }
+
+.db-project__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 10px;
+  margin-bottom: 11px;
+}
+.db-project__name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sb-ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.db-project__name span.txt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.db-project__dday { font-size: 12.5px; font-weight: 650; color: var(--sb-ink-faint); white-space: nowrap; flex: 0 0 auto; }
+
+.db-project__progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.db-project__progress-wrap .sb-progress { flex: 1 1 auto; min-width: 0; }
+.db-project__pct {
+  font-size: 12.5px;
+  font-weight: 750;
+  color: var(--sb-ink-soft);
+  width: 34px;
+  flex: 0 0 auto;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.db-project__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  row-gap: 6px;
+  column-gap: 12px;
+  margin-top: 11px;
+  font-size: 12.5px;
+  color: var(--sb-ink-faint);
+}
+.db-project__foot > span:first-child { min-width: 0; }
+
+/* ──────────────────────────────────────────────────────────
+   인사평가 배너 — 통계 카드 위, 페이지 전체 폭을 쓰는 히어로형 배너.
+   폭이 넉넉해서 대부분 한 줄에 들어가지만, 모바일 등 좁은 화면에서는
+   flex-wrap 으로 자연스럽게 줄바꿈되며 카드 밖으로 넘치지 않게 함
+   ────────────────────────────────────────────────────────── */
+.db-eval-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  padding: 18px 22px;
+  border-radius: var(--sb-radius-lg);
+  background: linear-gradient(135deg, var(--sb-accent), #4f7cf0);
+  color: #fff;
+  box-shadow: var(--sb-shadow);
+}
+.db-eval-banner__icon {
+  flex: 0 0 auto;
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .18);
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+}
+.db-eval-banner__body { flex: 1 1 260px; min-width: 0; }
+.db-eval-banner__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 14.5px;
+  font-weight: 750;
+  letter-spacing: -.01em;
+}
+.db-eval-banner__title > .txt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.db-eval-banner__title .sb-badge { background: rgba(255, 255, 255, .22); color: #fff; flex: 0 0 auto; }
+.db-eval-banner__sub { font-size: 12px; opacity: .92; }
+.db-eval-banner .btn-light { flex: 0 0 auto; color: var(--sb-accent); white-space: nowrap; }
+
+/* ==========================================================================
+   반응형 보정
+   ========================================================================== */
+
+/* 1200px 이하 : 사이드바가 rail 모드로 좁아지는 지점과 맞춰 내부 여백만 살짝 정리
+   (음수 마진 값은 sb-content의 padding: 24px 28px 40px 과 항상 일치시켜야
+   좌우 배경이 카드 폭 끝까지 끊김 없이 채워진다 — 화면 크기와 무관하게 고정) */
+@media (max-width: 1199.98px) {
+  .db-page-head--sticky { padding: 16px 28px 14px; }
+}
+
+/* 991.98px 이하 */
+@media (max-width: 991.98px) {
+  .sb-page-head__actions { margin-left: 0; }
+  .db-page-head--sticky { padding: 14px 28px 12px; }
+}
+
+/* 767.98px 이하 : 태블릿 세로 / 큰 모바일 */
+@media (max-width: 767.98px) {
+  .sb-page-head__txt h1 { font-size: 18px; }
+  .sb-page-head__txt p { font-size: 12.5px; line-height: 1.5; }
+
+  .db-eval-banner { padding: 16px; }
+  .db-eval-banner .btn-light { width: 100%; text-align: center; }
+
+  .db-row { padding: 12px 16px; }
+}
+
+/* 575.98px 이하 : 좁은 모바일 */
+@media (max-width: 575.98px) {
+  .sb-page-head__actions .sb-badge { font-size: 11px; padding: 3px 8px; }
+  .db-row__title { white-space: normal; }
+  .db-row__title .txt { white-space: normal; }
+}

@@ -1,0 +1,104 @@
+{
+  "shared": {
+    "title": "자원 관리",
+    "backToList": "목록으로",
+    "basicInfoTitle": "기본 정보",
+    "roomCapacityRequired": "회의실은 수용인원을 입력해야 합니다.",
+    "quantityRequired": "수량을 입력하세요.",
+    "capacityPlaceholder": "회의실인 경우 입력",
+    "capacityHint": "장비·차량은 비워두셔도 됩니다.",
+    "managerPlaceholder": "지정 안 함"
+  },
+  "enum": {
+    "resType": {
+      "ROOM": "회의실",
+      "EQUIPMENT": "장비",
+      "VEHICLE": "차량"
+    },
+    "resStatus": {
+      "AVAILABLE": "사용가능",
+      "MAINTENANCE": "점검중",
+      "DISABLED": "사용중지"
+    }
+  },
+  "field": {
+    "resCode": "자원코드",
+    "resName": "자원명",
+    "resType": "자원 유형",
+    "location": "위치",
+    "quantity": "수량",
+    "capacity": "수용인원",
+    "resStatus": "상태",
+    "remark": "비고",
+    "manager": "담당자"
+  },
+  "list": {
+    "breadcrumbHome": "홈",
+    "breadcrumbAsset": "자산",
+    "title": "자원 관리",
+    "subtitle": "회의실, 장비, 차량 등 예약 가능한 자원을 등록하고 관리합니다.",
+    "addButton": "자원 등록",
+    "alert": {
+      "badPassword": "비밀번호가 일치하지 않아 삭제되지 않았습니다.",
+      "hasReservations": "예약 이력이 있는 자원은 먼저 예약 내역을 정리해야 삭제할 수 있습니다."
+    },
+    "cardTitle": "자원 목록",
+    "cardSubtitle": "검색 조건에 맞는 자원을 확인합니다.",
+    "searchPlaceholder": "자원명 또는 자원코드 검색",
+    "allType": "전체 유형",
+    "allStatus": "전체 상태",
+    "columns": {
+      "resType": "유형",
+      "actions": "관리"
+    },
+    "emptyText": "등록된 자원이 없습니다.",
+    "detailTooltip": "상세보기",
+    "totalCountPrefix": "총",
+    "totalCountSuffix": "개 자원"
+  },
+  "detail": {
+    "breadcrumbCurrent": "자원 상세",
+    "subtitle": "자원 상세 정보를 확인합니다.",
+    "sectionTitle": "자원 정보",
+    "managerEmpty": "지정 담당자 없음"
+  },
+  "insert": {
+    "breadcrumbCurrent": "자원 등록",
+    "title": "자원 등록",
+    "subtitle": "예약에 사용할 회의실, 장비, 차량 정보를 입력합니다.",
+    "requiredNote": "표시는 필수 입력 항목입니다.",
+    "successMessage": "자원이 등록되었습니다.",
+    "duplicateCodeError": "이미 사용 중인 자원코드입니다.",
+    "validation": {
+      "resCodeRequired": "자원코드를 입력하세요.",
+      "resNameRequired": "자원명을 입력하세요."
+    },
+    "placeholder": {
+      "resCode": "예: RM004",
+      "resName": "예: 대회의실, 노트북, 카니발",
+      "location": "예: 본관 3층, 지하주차장 2호기",
+      "remark": "필요한 설명을 입력하세요"
+    },
+    "submitButton": "등록하기"
+  },
+  "update": {
+    "breadcrumbCurrent": "자원 수정",
+    "title": "자원 수정",
+    "subtitle": "등록된 자원 정보를 수정합니다.",
+    "successMessage": "자원 정보가 수정되었습니다.",
+    "submitButton": "수정 완료"
+  },
+  "deleteModal": {
+    "title": "자원 삭제",
+    "blockedTitle": "삭제할 수 없습니다",
+    "blockedWarningPrefix": "이 자원에는 진행 중인 예약이",
+    "blockedWarningSuffix": "건 있습니다.",
+    "blockedHint": "예약이 있는 동안에는 삭제(해체)를 진행할 수 없습니다.",
+    "passwordPromptPrefix": "계속하려면",
+    "passwordPromptSuffix": "를 입력하세요.",
+    "passwordInline": "비밀번호",
+    "passwordLabel": "비밀번호",
+    "passwordPlaceholder": "비밀번호 입력",
+    "confirmButton": "삭제 확인"
+  }
+}

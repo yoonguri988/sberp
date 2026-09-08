@@ -1,0 +1,177 @@
+{
+  "breadcrumb": "Attendance",
+
+  "leaveMy": {
+    "title": "My Leave Balance",
+    "subtitle": "View your annual leave balance by year.",
+    "breadcrumb": "My Leave Balance",
+    "table": {
+      "year": "Year",
+      "totalDays": "Total",
+      "usedDays": "Used",
+      "remainingDays": "Remaining",
+      "unit": "days"
+    },
+    "emptyMsg": "No leave data available.",
+    "historyCardTitle": "Leave Usage History",
+    "historyTable": {
+      "grantDays": "Days",
+      "grantType": "Type",
+      "grantedAt": "Date",
+      "reason": "Reason"
+    }
+  },
+
+  "myHistory": {
+    "title": "My Attendance",
+    "subtitle": "View your check-in and check-out history.",
+    "breadcrumb": "My Attendance",
+    "table": {
+      "date": "Date",
+      "checkIn": "Check-in",
+      "checkOut": "Check-out",
+      "workMinutes": "Work (min)",
+      "overtimeMinutes": "Overtime (min)",
+      "nightMinutes": "Night (min)",
+      "status": "Status"
+    },
+    "emptyMsg": "No attendance records."
+  },
+
+  "dashboard": {
+    "title": "Clock In/Out",
+    "subtitle": "Check today's attendance and clock in or out.",
+    "breadcrumb": "Clock In/Out",
+    "notCheckedIn": "You have not clocked in yet.",
+    "checkedIn": "Clocked In",
+    "checkedOut": "Clocked Out",
+    "btnCheckIn": "Clock In",
+    "btnCheckOut": "Clock Out",
+    "workDone": "Today's work is complete.",
+    "todayDate": "Today",
+    "checkInTime": "Check-in Time",
+    "checkOutTime": "Check-out Time",
+    "workMinutes": "Work Minutes",
+    "status": "Status",
+    "confirmCheckIn": "Are you sure you want to clock in?",
+    "confirmCheckOut": "Are you sure you want to clock out?"
+  },
+
+  "admin": {
+    "title": "Attendance Admin",
+    "subtitle": "View and edit all employees' attendance records.",
+    "breadcrumb": "Attendance Admin",
+    "search": {
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "btnSearch": "Search",
+      "keywordPlaceholder": "Employee name or number"
+    },
+    "table": {
+      "empNo": "Emp No",
+      "empName": "Name",
+      "date": "Date",
+      "checkIn": "Check-in",
+      "checkOut": "Check-out",
+      "workMinutes": "Work (min)",
+      "status": "Status",
+      "action": "Action"
+    },
+    "btnEdit": "Edit",
+    "btnCreate": "Add Attendance",
+    "emptyMsg": "No attendance records match the search criteria.",
+    "editModal": {
+      "title": "Edit Attendance",
+      "checkIn": "Check-in Time",
+      "checkOut": "Check-out Time",
+      "status": "Status",
+      "btnSave": "Save",
+      "btnCancel": "Cancel",
+      "checkInRequired": "Please enter the check-in time."
+    },
+    "createModal": {
+      "title": "Add Attendance",
+      "btnRegister": "Register",
+      "empNo": "Emp No",
+      "empNoPlaceholder": "e.g. EMP-001",
+      "empNoRequired": "Please enter an employee number.",
+      "workDate": "Work Date",
+      "workDateRequired": "Please select a work date."
+    }
+  },
+
+  "leaveAdmin": {
+    "title": "Leave Admin",
+    "subtitle": "View and manage employees' annual leave.",
+    "breadcrumb": "Leave Admin",
+    "yearSelect": "Select Year",
+    "table": {
+      "empNo": "Emp No",
+      "empName": "Name",
+      "totalDays": "Total",
+      "usedDays": "Used",
+      "remainingDays": "Remaining",
+      "action": "Action"
+    },
+    "emptyMsg": "No leave data for the selected year.",
+    "btnCalculate": "Generate",
+    "btnDeduct": "Deduct",
+    "btnAdjust": "Adjust",
+    "btnHistory": "History",
+    "confirmCalculate": "Generate annual leave for this employee?",
+    "deductModal": {
+      "title": "Deduct Leave",
+      "halfType": "Half Day",
+      "fullDay": "Full Day (1 day)",
+      "halfAM": "AM Half",
+      "halfPM": "PM Half",
+      "leaveDate": "Leave Date",
+      "leaveDateRequired": "Please select the leave date.",
+      "reason": "Reason",
+      "btnDeduct": "Deduct"
+    },
+    "adjustModal": {
+      "title": "Adjust Leave",
+      "amount": "Days",
+      "amountHint": "Positive: add / Negative: deduct",
+      "reason": "Reason",
+      "btnAdjust": "Adjust"
+    },
+    "historyModal": {
+      "title": "Grant/Deduct History",
+      "table": {
+        "grantDays": "Days",
+        "grantType": "Type",
+        "grantedAt": "Date",
+        "reason": "Reason"
+      },
+      "grantType": {
+        "REG": "Regular",
+        "CAR": "Carry Over",
+        "ADJ": "Adjustment",
+        "USE": "Used"
+      },
+      "emptyMsg": "No history available."
+    }
+  },
+
+  "status": {
+    "NORMAL": "Normal",
+    "LATE": "Late",
+    "EARLY_LEAVE": "Early Leave",
+    "ABSENT": "Absent",
+    "AM_HALF": "AM Half Day",
+    "PM_HALF": "PM Half Day",
+    "ANNUAL": "Annual Leave"
+  },
+
+  "msg": {
+    "createSuccess": "Attendance registered.",
+    "checkInSuccess": "Clocked in successfully.",
+    "checkOutSuccess": "Clocked out successfully.",
+    "editSuccess": "Attendance updated.",
+    "calculateSuccess": "Annual leave generated.",
+    "deductSuccess": "Leave deducted.",
+    "adjustSuccess": "Leave adjusted."
+  }
+}

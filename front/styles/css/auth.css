@@ -1,0 +1,704 @@
+@charset "UTF-8";
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+body {
+  font-family:
+    "Pretendard Variable",
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.login-page {
+  display: flex;
+  background: #fff;
+}
+.aw {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.ab {
+  flex: 0 0 440px;
+  background: linear-gradient(150deg, #1e3a8a 0%, #1d4ed8 52%, #3b82f6 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 52px 48px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.ab::before {
+  content: "";
+  position: absolute;
+  width: 560px;
+  height: 560px;
+  bottom: -160px;
+  right: -160px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.055);
+  pointer-events: none;
+}
+.ab::after {
+  content: "";
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  top: 50px;
+  right: 16px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.045);
+  pointer-events: none;
+}
+.ab-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+.ab-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 21px;
+}
+.ab-name {
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+.ab-mid {
+  margin: auto 0;
+  padding: 48px 0;
+  position: relative;
+  z-index: 1;
+}
+.ab-tagline {
+  font-size: 30px;
+  font-weight: 750;
+  line-height: 1.3;
+  letter-spacing: -0.04em;
+  margin-bottom: 14px;
+}
+.ab-tagline-sub {
+  font-size: 15px;
+  opacity: 0.72;
+  line-height: 1.65;
+}
+.ab-feats {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 36px;
+}
+.ab-feat {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 11px 16px;
+}
+.ab-feat i {
+  font-size: 17px;
+  flex: 0 0 auto;
+  opacity: 0.9;
+}
+.ab-feat span {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.ab-foot {
+  font-size: 12px;
+  opacity: 0.4;
+  position: relative;
+  z-index: 1;
+}
+
+.ap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  background: #fff;
+}
+.ap-wrap {
+  width: 100%;
+  max-width: 412px;
+}
+.asec {
+  display: none;
+}
+.asec.on {
+  display: block;
+}
+.a-h {
+  font-size: 26px;
+  font-weight: 750;
+  color: var(--sb-ink);
+  letter-spacing: -0.04em;
+  margin: 0 0 6px;
+}
+.a-sub {
+  font-size: 14px;
+  color: var(--sb-ink-faint);
+  line-height: 1.65;
+  margin: 0 0 32px;
+}
+
+body.reset-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
+  background: linear-gradient(150deg, #eff4ff 0%, #f5f6f8 60%, #f0fdf4 100%);
+}
+.rp-wrap {
+  width: 100%;
+  max-width: 448px;
+}
+.rp-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.rp-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, var(--sb-accent), #4f7cf0);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 21px;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.32);
+}
+.rp-name {
+  font-size: 20px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  color: var(--sb-ink);
+}
+.rp-card {
+  background: #fff;
+  border: 1px solid var(--sb-border);
+  border-radius: var(--sb-radius-lg);
+  padding: 40px 40px 36px;
+  box-shadow:
+    0 8px 32px rgba(16, 24, 40, 0.1),
+    0 2px 4px rgba(16, 24, 40, 0.04);
+}
+.rp-icon-ring {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--sb-accent-soft);
+  border: 1px solid var(--sb-accent-soft-2);
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  color: var(--sb-accent);
+  margin: 0 auto 20px;
+}
+.rp-h {
+  font-size: 22px;
+  font-weight: 750;
+  color: var(--sb-ink);
+  letter-spacing: -0.04em;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.rp-sub {
+  font-size: 13.5px;
+  color: var(--sb-ink-faint);
+  line-height: 1.65;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.rp-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--sb-accent-soft);
+  border: 1px solid var(--sb-accent-soft-2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 26px;
+}
+.rp-user-av {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--sb-accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 750;
+  font-size: 16px;
+  flex: 0 0 auto;
+}
+.rp-user-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--sb-ink);
+}
+.rp-user-sub {
+  font-size: 12px;
+  color: var(--sb-ink-faint);
+  margin-top: 1px;
+}
+
+.pw-bar-wrap {
+  height: 4px;
+  background: var(--sb-border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.pw-bar {
+  height: 100%;
+  border-radius: 99px;
+  transition:
+    width 0.3s,
+    background 0.3s;
+  width: 0;
+}
+.pw-lbl {
+  font-size: 12px;
+  font-weight: 650;
+  margin-bottom: 14px;
+  min-height: 16px;
+}
+.pw-reqs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.pw-req {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #f1f3f6;
+  color: var(--sb-ink-faint);
+  border-radius: 99px;
+  padding: 4px 10px;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.pw-req.ok {
+  background: var(--sb-green-soft);
+  color: var(--sb-green);
+}
+.pw-req i,
+.pw-req .anticon {
+  font-size: 11px;
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.rp-check-ring {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--sb-green-soft);
+  border: 2px solid #86efac;
+  display: grid;
+  place-items: center;
+  font-size: 38px;
+  color: var(--sb-green);
+  margin: 0 auto 24px;
+  animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.rp-success-h {
+  font-size: 22px;
+  font-weight: 750;
+  text-align: center;
+  color: var(--sb-ink);
+  margin-bottom: 8px;
+}
+.rp-success-sub {
+  font-size: 14px;
+  color: var(--sb-ink-faint);
+  text-align: center;
+  line-height: 1.65;
+  margin-bottom: 28px;
+}
+.rp-countdown {
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--sb-ink-faint);
+  margin-top: 14px;
+}
+
+.fl {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--sb-ink-soft);
+  margin-bottom: 7px;
+  letter-spacing: 0.02em;
+}
+.fw {
+  position: relative;
+  margin-bottom: 18px;
+}
+.fw.no-mb {
+  margin-bottom: 8px;
+}
+.fi {
+  display: block;
+  width: 100%;
+  height: 50px;
+  border: 1.5px solid var(--sb-border);
+  border-radius: var(--sb-radius);
+  padding: 0 46px 0 15px;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--sb-ink);
+  background: #fff;
+  outline: none;
+  box-sizing: border-box;
+  transition:
+    border-color 0.14s,
+    box-shadow 0.14s;
+}
+.fi::placeholder {
+  color: var(--sb-ink-faint);
+  font-size: 14px;
+}
+.fi:focus {
+  border-color: var(--sb-accent);
+  box-shadow: 0 0 0 3px var(--sb-accent-soft);
+}
+.fi.er {
+  border-color: var(--sb-red) !important;
+  box-shadow: 0 0 0 3px var(--sb-red-soft) !important;
+}
+
+/* antd Input에 prefix/suffix(아이콘)를 넣으면 우리가 준 className="fi"는
+   실제 <input>이 아니라 그걸 감싸는 span.ant-input-affix-wrapper 쪽에
+   붙는다 (안쪽 input은 계속 ant-input 클래스만 가짐). 위 .fi 규칙은
+   raw <input class="fi"> 전용이라 그 경우엔 적용되지 않으므로,
+   wrapper/내부 input 각각에 맞춰 같은 모양을 재정의한다. */
+.ant-input-affix-wrapper.fi {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  border: 1.5px solid var(--sb-border);
+  border-radius: var(--sb-radius);
+  padding: 0 15px;
+  background: #fff;
+  box-shadow: none;
+  transition:
+    border-color 0.14s,
+    box-shadow 0.14s;
+}
+.ant-input-affix-wrapper.fi:hover {
+  border-color: var(--sb-border-strong);
+}
+.ant-input-affix-wrapper.fi.ant-input-affix-wrapper-focused,
+.ant-input-affix-wrapper.fi:focus-within {
+  border-color: var(--sb-accent);
+  box-shadow: 0 0 0 3px var(--sb-accent-soft);
+}
+.ant-input-affix-wrapper.fi.ant-input-affix-wrapper-status-error {
+  border-color: var(--sb-red) !important;
+  box-shadow: 0 0 0 3px var(--sb-red-soft) !important;
+}
+.ant-input-affix-wrapper.fi .ant-input {
+  height: auto;
+  border: none;
+  padding: 0;
+  margin: 0 0 0 10px;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--sb-ink);
+  background: transparent;
+  box-shadow: none;
+}
+.ant-input-affix-wrapper.fi .ant-input::placeholder {
+  color: var(--sb-ink-faint);
+  font-size: 14px;
+}
+.ant-input-affix-wrapper.fi .ant-input-prefix {
+  margin-right: 0;
+  color: var(--sb-ink-faint);
+  font-size: 16px;
+}
+.ant-input-affix-wrapper.fi .ant-input-suffix {
+  margin-left: 8px;
+  color: var(--sb-ink-faint);
+  font-size: 16px;
+}
+.ant-input-affix-wrapper.fi .ant-input-suffix .anticon:hover {
+  color: var(--sb-ink-soft);
+}
+/* prefix 없이 순수 antd Input(.fi)로 쓰는 경우 대비 */
+input.ant-input.fi {
+  display: block;
+  width: 100%;
+  height: 50px;
+  border: 1.5px solid var(--sb-border);
+  border-radius: var(--sb-radius);
+  padding: 0 15px;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--sb-ink);
+  background: #fff;
+  box-shadow: none;
+  transition:
+    border-color 0.14s,
+    box-shadow 0.14s;
+}
+input.ant-input.fi:focus {
+  border-color: var(--sb-accent);
+  box-shadow: 0 0 0 3px var(--sb-accent-soft);
+}
+
+.f-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: var(--sb-ink-faint);
+  line-height: 1;
+}
+.f-icon.clickable {
+  cursor: pointer;
+}
+.f-icon.clickable:hover {
+  color: var(--sb-ink-soft);
+}
+.fe {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  color: var(--sb-red);
+  margin-top: -12px;
+  margin-bottom: 14px;
+}
+.fe.on {
+  display: flex;
+}
+.f-err {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  color: var(--sb-red);
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+.f-err.on {
+  display: flex;
+}
+
+.a-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 52px;
+  background: var(--sb-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--sb-radius);
+  font-family: inherit;
+  font-size: 15.5px;
+  font-weight: 650;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  transition:
+    background 0.14s,
+    transform 0.08s,
+    box-shadow 0.14s;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.28);
+  margin-top: 4px;
+}
+.a-btn:hover:not(:disabled) {
+  background: var(--sb-accent-hover);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.36);
+}
+.a-btn:active:not(:disabled) {
+  transform: scale(0.985);
+}
+.a-btn:disabled {
+  background: #9db5e8;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+/* antd Button은 icon 뒤 텍스트 span에 기본 margin-left:8px 를 자동으로
+   붙이는데, 위에서 이미 gap:8px 를 쓰고 있어 합치면 16px 로 벌어진다.
+   중복분 제거. */
+.a-btn.ant-btn > .anticon + span {
+  margin-left: 0;
+}
+
+.a-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--sb-accent);
+  font-weight: 650;
+  cursor: pointer;
+}
+.a-link:hover {
+  text-decoration: underline;
+}
+
+.a-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--sb-ink-soft);
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 28px;
+}
+.a-back:hover {
+  color: var(--sb-ink);
+}
+
+.a-alert {
+  display: none;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--sb-red-soft);
+  border: 1px solid #fca5a5;
+  border-radius: var(--sb-radius-sm);
+  padding: 12px 14px;
+  font-size: 13.5px;
+  color: #b91c1c;
+  margin-bottom: 14px;
+}
+.a-alert.on {
+  display: flex;
+}
+.a-alert i {
+  font-size: 15px;
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+/* antd Alert(className="a-alert on")는 루트가 div 하나뿐이라 wrapper
+   문제는 없지만, antd 기본 스킨(패딩/배경/보더)이 덧씌워지므로 내부
+   구조(ant-alert-icon / ant-alert-content / ant-alert-message)에 맞춰
+   위 .a-alert 디자인을 그대로 재현한다. */
+.ant-alert.a-alert .ant-alert-icon {
+  position: static;
+  margin-right: 0;
+  margin-top: 1px;
+  font-size: 15px;
+  color: #b91c1c;
+}
+.ant-alert.a-alert .ant-alert-content {
+  padding: 0;
+}
+.ant-alert.a-alert .ant-alert-message {
+  font-size: 13.5px;
+  color: #b91c1c;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.a-success {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  background: var(--sb-green-soft);
+  border: 1px solid #86efac;
+  border-radius: var(--sb-radius);
+  padding: 14px 16px;
+  margin-bottom: 26px;
+}
+.a-success.on {
+  display: flex;
+}
+.a-success i {
+  font-size: 22px;
+  color: var(--sb-green);
+  flex: 0 0 auto;
+}
+
+.a-demo {
+  background: var(--sb-accent-soft);
+  border: 1px solid var(--sb-accent-soft-2);
+  border-radius: var(--sb-radius-sm);
+  padding: 12px 14px;
+  margin-top: 22px;
+}
+.a-demo p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--sb-accent);
+  font-weight: 600;
+  line-height: 1.8;
+}
+.a-demo code {
+  background: rgba(37, 99, 235, 0.13);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 12px;
+}
+
+@media (max-width: 860px) {
+  .ab {
+    display: none;
+  }
+  .ap {
+    background: var(--sb-bg);
+  }
+  .ap-wrap {
+    background: #fff;
+    padding: 36px 28px;
+    border-radius: var(--sb-radius-lg);
+    box-shadow: var(--sb-shadow-lg);
+  }
+}

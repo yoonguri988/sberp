@@ -1,0 +1,212 @@
+{
+  "common": {
+    "breadcrumbRoot": "Performance Review",
+    "sentiment": {
+      "positive": "Positive",
+      "neutral": "Neutral",
+      "negative": "Negative"
+    },
+    "scoreLabel": {
+      "performance": "Performance",
+      "expertise": "Expertise",
+      "teamwork": "Teamwork",
+      "attitude": "Work Attitude",
+      "growth": "Growth Potential"
+    },
+    "scoreDesc": {
+      "performance": "Goal achievement, quality of work",
+      "expertise": "Job knowledge, technical skills",
+      "teamwork": "Collaboration, communication",
+      "attitude": "Diligence, responsibility",
+      "growth": "Self-development, willingness to take on challenges"
+    },
+    "evalStatus": {
+      "draft": "Draft",
+      "submitted": "Submitted"
+    },
+    "periodStatus": {
+      "ready": "Ready",
+      "open": "Open",
+      "closed": "Closed",
+      "reporting": "Analyzing",
+      "reported": "Completed",
+      "reportingFailed": "Analysis Failed"
+    }
+  },
+  "dashboard": {
+    "breadcrumbCurrent": "Write Evaluation",
+    "title": "Write Evaluation",
+    "subtitle": "Review the list of team members you need to evaluate and write their evaluations.",
+    "periodChangeBtn": "Change Period",
+    "periodManageBtn": "Manage Periods",
+    "selectPeriodTitle": "Please select a period to evaluate",
+    "selectPeriodHint": "Only periods currently open are shown.",
+    "noOpenPeriodMsg": "No open periods.",
+    "periodMetaFormat": "{{year}} {{term}} · {{start}} ~ {{end}}",
+    "submitProgressLabel": "Submission Progress",
+    "table": {
+      "emp": "Employee",
+      "dept": "Department",
+      "pos": "Position",
+      "status": "Status"
+    },
+    "viewBtn": "View",
+    "writeBtn": "Write",
+    "noTargetMsg": "No evaluation targets."
+  },
+  "detail": {
+    "breadcrumbCurrent": "Evaluation Details",
+    "title": "Evaluation Details",
+    "targetLabel": "Target: {{name}}",
+    "backToListBtn": "Back to List",
+    "descTargetLabel": "Evaluation Target",
+    "statusLabel": "Status",
+    "typeLabel": "Evaluation Type",
+    "weightedScoreLabel": "Weighted Score",
+    "scoreCardTitle": "Scores",
+    "commentCardTitle": "Comments",
+    "strengthLabel": "Strengths",
+    "improvementLabel": "Areas for Improvement"
+  },
+  "write": {
+    "breadcrumbCurrent": "{{mode}}",
+    "editMode": "Edit",
+    "createMode": "Write",
+    "title": "{{mode}} Evaluation",
+    "targetLabel": "Target: {{name}} ({{dept}})",
+    "backBtn": "Back",
+    "scorePlaceholder": "1 - 5",
+    "strengthCommentLabel": "Strength Comments",
+    "strengthCommentPlaceholder": "Describe this employee's strengths.",
+    "improvementCommentLabel": "Improvement Comments",
+    "improvementCommentPlaceholder": "Describe areas that need improvement.",
+    "draftBtn": "Save Draft",
+    "submitBtn": "Submit Final",
+    "savedMsg": "Saved.",
+    "scoreRequiredMsg": "Please select a score for every item.",
+    "commentRequiredMsg": "Please fill in both the strength and improvement comments."
+  },
+  "report": {
+    "detail": {
+      "breadcrumbCurrent": "AI Report Details",
+      "title": "AI Report Details",
+      "backBtn": "Back",
+      "overallGradeLabel": "Overall Grade",
+      "overallScoreLabel": "Overall Score",
+      "sentimentLabel": "Sentiment",
+      "modelLabel": "Model",
+      "empLabel": "Employee",
+      "deptPosLabel": "Department · Position",
+      "periodLabel": "Evaluation Period",
+      "generatedAtLabel": "Generated",
+      "aiSummaryTitle": "AI Summary",
+      "summaryEmptyMsg": "No summary has been generated yet.",
+      "strengthAnalysisTitle": "Strength Analysis",
+      "improvementTitle": "Improvement Suggestions"
+    },
+    "list": {
+      "breadcrumbCurrent": "AI Reports",
+      "title": "AI Reports",
+      "subtitle": "View employee performance summary reports by period.",
+      "periodChangeBtn": "Change Period",
+      "periodManageBtn": "Manage Periods",
+      "processedMsg": "Processed.",
+      "selectPeriodMsg": "Please select a period to view reports.",
+      "periodListBtn": "View Period List",
+      "countSuffix": "{{count}}",
+      "regenerateAllBtn": "Regenerate All",
+      "table": {
+        "emp": "Employee",
+        "grade": "Grade",
+        "score": "Overall Score",
+        "sentiment": "Sentiment",
+        "date": "Generated"
+      },
+      "regenerateTooltip": "Regenerate",
+      "emptyMsg": "No reports."
+    },
+    "my": {
+      "breadcrumbCurrent": "My Reports",
+      "title": "My AI Reports",
+      "subtitle": "View your performance analysis reports by period.",
+      "table": {
+        "period": "Period",
+        "grade": "Grade",
+        "score": "Overall Score",
+        "sentiment": "Sentiment",
+        "date": "Generated"
+      },
+      "emptyMsg": "No reports have been generated."
+    }
+  },
+  "period": {
+    "detail": {
+      "breadcrumbCurrent": "Details",
+      "namePlaceholder": "...",
+      "periodMetaFormat": "{{year}} {{term}}",
+      "backToListBtn": "Back to List",
+      "statusLabel": "Status",
+      "periodRangeLabel": "Period",
+      "evalCountLabel": "Evaluations",
+      "reportCountLabel": "Reports",
+      "countSuffix": "{{count}}",
+      "aiProgressTitle": "AI Analysis Progress",
+      "editBtn": "Edit",
+      "openBtn": "Open Period",
+      "closeBtn": "Close Period",
+      "startAiBtn": "Start AI Analysis",
+      "viewReportBtn": "View Reports",
+      "openConfirmTitle": "Open this period?",
+      "openConfirmContent": "Once opened, employees can begin their evaluations.",
+      "closeConfirmTitle": "Close this period?",
+      "closeConfirmContent": "Evaluations cannot be edited after closing.",
+      "startAiConfirmTitle": "Start AI analysis?",
+      "startAiConfirmContent": "AI will generate reports based on all submitted evaluations.",
+      "statusChangedMsg": "Status changed."
+    },
+    "form": {
+      "breadcrumbCurrent": "{{mode}}",
+      "editMode": "Edit",
+      "createMode": "Add",
+      "title": "{{mode}} Period",
+      "backToListBtn": "Back to List",
+      "yearLabel": "Evaluation Year",
+      "yearRequired": "Please enter a year.",
+      "yearPlaceholder": "2026",
+      "termLabel": "Evaluation Term",
+      "termRequired": "Please select a term.",
+      "termSelectPlaceholder": "Select",
+      "titleLabel": "Title",
+      "titleRequired": "Please enter a title.",
+      "titlePlaceholder": "e.g. 2026 1st Half Regular Review",
+      "startDateLabel": "Start Date",
+      "startDateRequired": "Please select a start date.",
+      "endDateLabel": "End Date",
+      "endDateRequired": "Please select an end date.",
+      "dupExistsMsg": "This period is already registered.",
+      "availableMsg": "Available.",
+      "editSuccessMsg": "Period updated.",
+      "addSuccessMsg": "Period registered.",
+      "duplicateWarning": "Duplicate period.",
+      "termOptions": {
+        "annual" : "Annual",
+        "h1": "1st Half",
+        "h2": "2nd Half"
+      }
+    },
+    "list": {
+      "breadcrumbCurrent": "Manage Periods",
+      "title": "Performance Review Periods",
+      "subtitle": "Add, edit, and manage the status of regular performance review periods.",
+      "addBtn": "Add Period",
+      "table": {
+        "status": "Status",
+        "title": "Title",
+        "year": "Year",
+        "term": "Term",
+        "period": "Period"
+      },
+      "emptyMsg": "No periods registered."
+    }
+  }
+}

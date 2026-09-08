@@ -1,0 +1,119 @@
+{
+  "common": {
+    "breadcrumbHome": "홈",
+    "breadcrumbRoot": "채용관리",
+    "statusLabels": {
+      "open": "모집중",
+      "closed": "마감",
+      "cancelled": "취소됨"
+    }
+  },
+  "list": {
+    "breadcrumbCurrent": "채용공고",
+    "title": "채용공고 관리",
+    "subtitle": "채용공고를 등록하고 지원자 현황과 이력서를 연결해 관리합니다.",
+    "addBtn": "채용공고 등록",
+    "cardTitle": "채용공고 목록",
+    "searchPlaceholder": "채용공고명 검색",
+    "statusPlaceholder": "공고 상태",
+    "searchBtn": "검색",
+    "table": {
+      "title": "공고명",
+      "department": "부서",
+      "position": "직무",
+      "headcount": "인원",
+      "employmentType": "고용형태",
+      "manager": "담당자",
+      "applicantCnt": "지원자",
+      "status": "상태",
+      "actions": "관리"
+    },
+    "applicantCountUnit": "{{count}}명",
+    "actionTooltips": {
+      "resumeSearch": "이력서 검색",
+      "detail": "상세",
+      "clone": "복제",
+      "edit": "수정",
+      "delete": "삭제"
+    },
+    "emptyDescription": "등록된 채용공고가 없습니다.",
+    "totalCountPrefix": "총 ",
+    "totalCountSuffix": "건",
+    "formModal": {
+      "titleAdd": "채용공고 등록",
+      "titleEdit": "채용공고 수정",
+      "okAdd": "등록",
+      "okEdit": "수정",
+      "cancelBtn": "취소",
+      "titleLabel": "공고 제목",
+      "titlePlaceholder": "예: 2026 상반기 백엔드 개발자 채용",
+      "titleRequired": "공고 제목을 입력해 주세요.",
+      "departmentLabel": "모집 부서",
+      "departmentPlaceholder": "예: 개발팀",
+      "departmentRequired": "모집 부서를 입력해 주세요.",
+      "positionLabel": "모집 직무",
+      "positionPlaceholder": "예: 백엔드 개발자",
+      "positionRequired": "모집 직무를 입력해 주세요.",
+      "headcountLabel": "모집 인원",
+      "headcountPlaceholder": "예: 2",
+      "headcountRequired": "모집 인원을 입력해 주세요.",
+      "employmentTypeLabel": "고용 형태",
+      "employmentTypeRequired": "고용 형태를 입력해 주세요.",
+      "employmentTypePlaceholder": "선택",
+      "employmentTypeOptions": {
+        "fulltime": "정규직",
+        "contract": "계약직",
+        "intern": "인턴",
+        "dispatch": "파견직"
+      },
+      "dateRangeLabel": "접수 기간 (종료일 미지정 시 상시채용)",
+      "dateRangeRequired": "접수 시작일은 필수입니다.",
+      "statusLabel": "공고 상태",
+      "statusRequired": "공고 상태를 선택해 주세요.",
+      "descriptionLabel": "상세 내용",
+      "descriptionPlaceholder": "담당 업무, 자격요건, 우대사항 등"
+    },
+    "deleteModal": {
+      "title": "채용공고 삭제",
+      "okText": "삭제",
+      "cancelText": "취소",
+      "confirmSuffix": "공고를 삭제하시겠습니까?",
+      "hint": "지원자가 이미 있는 공고는 백엔드 정책에 따라 삭제가 제한될 수 있습니다."
+    },
+    "messages": {
+      "createSuccess": "채용공고가 등록되었습니다.",
+      "updateSuccess": "채용공고가 수정되었습니다.",
+      "deleteSuccess": "채용공고가 삭제되었습니다."
+    }
+  },
+  "detail": {
+    "breadcrumbList": "채용공고",
+    "breadcrumbCurrent": "상세",
+    "title": "채용공고 상세",
+    "subtitle": "등록된 채용공고 정보와 지원자 현황을 확인합니다.",
+    "backToListBtn": "목록으로",
+    "editFromListBtn": "목록에서 수정",
+    "labels": {
+      "department": "모집 부서",
+      "position": "모집 직무",
+      "headcount": "모집 인원",
+      "employmentType": "고용 형태",
+      "manager": "담당자",
+      "applicantCount": "지원자 수",
+      "startDate": "접수 시작일",
+      "endDate": "접수 종료일",
+      "createdAt": "등록일시",
+      "updatedAt": "최종 수정일시",
+      "description": "상세 내용"
+    },
+    "headcountUnit": "{{count}}명",
+    "alwaysOpen": "상시채용",
+    "shortcuts": {
+      "title": "바로가기",
+      "applicantList": "지원자 목록",
+      "kanban": "칸반보드",
+      "rank": "적합도(fit_score) 순위",
+      "resumeSearch": "이력서 AI 검색"
+    }
+  }
+}

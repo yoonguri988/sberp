@@ -1,0 +1,378 @@
+@charset "UTF-8";
+
+.admin-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--sb-accent);
+  background: var(--sb-accent-soft);
+  padding: 3px 9px;
+  border-radius: 99px;
+}
+
+.form-narrow {
+  max-width: 800px;
+}
+
+.com-search-wrap {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--sb-border);
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+  transition:
+    border-color 0.14s,
+    box-shadow 0.14s;
+}
+.com-search-wrap.focused {
+  border-color: var(--sb-accent);
+  box-shadow: 0 0 0 3px rgba(var(--sb-accent-rgb), 0.12);
+}
+.com-search-wrap .csw-select {
+  height: 36px;
+  border: none;
+  border-right: 1px solid var(--sb-border);
+  background: #f5f6f8;
+  font-size: 13px;
+  padding: 0 8px 0 11px;
+  color: var(--sb-ink);
+  outline: none;
+  cursor: pointer;
+  min-width: 110px;
+  font-family: inherit;
+  font-weight: 550;
+}
+.com-search-wrap .csw-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.com-search-wrap .csw-input-wrap i {
+  position: absolute;
+  left: 11px;
+  color: var(--sb-ink-faint);
+  font-size: 14px;
+  pointer-events: none;
+}
+.com-search-wrap .csw-input {
+  height: 36px;
+  border: none;
+  outline: none;
+  padding: 0 14px 0 33px;
+  font-size: 13px;
+  color: var(--sb-ink);
+  width: 240px;
+  background: transparent;
+  font-family: inherit;
+}
+
+/* ==========================================================================
+   삭제 확인 모달
+   ========================================================================== */
+.del-modal-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--sb-red-soft);
+  color: var(--sb-red);
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  margin: 0 auto 14px;
+}
+.del-company-name {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--sb-ink);
+}
+.del-warning {
+  text-align: center;
+  font-size: 13px;
+  color: var(--sb-ink-soft);
+  margin-bottom: 16px;
+  line-height: 1.55;
+}
+
+.sql-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: "SFMono-Regular", "Consolas", monospace;
+  background: #f0f2f5;
+  color: var(--sb-ink-soft);
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--sb-border);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.sql-chip i {
+  font-size: 11px;
+}
+
+.sb-tabs {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid var(--sb-border);
+  margin-bottom: 22px;
+}
+.sb-tab {
+  padding: 10px 20px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--sb-ink-soft);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: color 0.12s;
+  white-space: nowrap;
+  user-select: none;
+}
+.sb-tab:hover {
+  color: var(--sb-ink);
+}
+.sb-tab.active {
+  color: var(--sb-accent);
+  border-bottom-color: var(--sb-accent);
+}
+.sb-tab-panel {
+  display: none;
+}
+.sb-tab-panel.active {
+  display: block;
+}
+
+.dept-cell-name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.dept-depth-icon {
+  color: var(--sb-ink-faint);
+  font-size: 12px;
+  flex: 0 0 auto;
+}
+.dept-row-lv1 .dept-name-text {
+  font-weight: 700;
+  color: var(--sb-ink);
+}
+.dept-row-lv2 td.dept-name-col {
+  padding-left: 36px !important;
+}
+.dept-row-lv3 td.dept-name-col {
+  padding-left: 60px !important;
+}
+.dept-name-text {
+  font-size: 13.5px;
+}
+
+.logo-zone {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px;
+  background: #fafbfc;
+  border: 1px dashed var(--sb-border);
+  border-radius: 10px;
+}
+.logo-preview {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  background: var(--sb-accent-soft);
+  color: var(--sb-accent);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 32px;
+  overflow: hidden;
+  flex: 0 0 auto;
+  border: 1px solid var(--sb-border);
+}
+
+/* ==========================================================================
+   회사 상세 / 마이페이지 요약 카드 (detail.js, my.js)
+   ----------------------------------------------------------------------
+   원본 company.css에는 없던 mc-* 클래스들. detail.js/my.js가 이 클래스들을
+   참조하고 있었는데 정의가 없어 페이지에 하드코딩된 인라인 style(#888,
+   #999 등 토큰과 무관한 색상)로만 대충 그려지고 있었다. 디자인 시스템
+   변수를 쓰도록 정식으로 정의한다.
+   ========================================================================== */
+.mc-summary {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+.mc-logo {
+  flex: 0 0 auto;
+}
+.mc-summary__main {
+  flex: 1;
+  min-width: 0;
+}
+.mc-summary__name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--sb-ink);
+}
+.mc-summary__sub {
+  font-size: 13px;
+  color: var(--sb-ink-faint);
+  margin-top: 2px;
+}
+.mc-stat-divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--sb-border);
+}
+.mc-stat-col {
+  text-align: center;
+  min-width: 64px;
+}
+.mc-stat-col__label {
+  font-size: 12px;
+  color: var(--sb-ink-faint);
+  margin-bottom: 4px;
+}
+.mc-stat-col__val {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--sb-ink);
+}
+
+.mc-org-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--sb-border);
+}
+.mc-org-row:last-child {
+  border-bottom: none;
+}
+.mc-org-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  flex: 0 0 auto;
+}
+.mc-org-name {
+  flex: 1;
+  font-size: 13.5px;
+  color: var(--sb-ink);
+}
+.mc-org-lead {
+  margin-left: 8px;
+  font-size: 12px;
+  color: var(--sb-ink-faint);
+}
+.mc-org-row.depth-1 .mc-org-name {
+  padding-left: 20px;
+}
+.mc-org-row.depth-2 .mc-org-name {
+  padding-left: 40px;
+}
+
+.mc-info-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.mc-info-row:last-child {
+  margin-bottom: 0;
+}
+.mc-info-icon {
+  font-size: 18px;
+  color: var(--sb-ink-faint);
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+.mc-info-label {
+  font-size: 12px;
+  color: var(--sb-ink-faint);
+  margin-bottom: 2px;
+}
+.mc-info-val {
+  font-weight: 600;
+  color: var(--sb-ink);
+  font-size: 13.5px;
+}
+
+.indust-code-chip {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--sb-accent-soft);
+  color: var(--sb-accent);
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-family: "SFMono-Regular", "Consolas", monospace;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.ac-wrap {
+  position: relative;
+}
+.ac-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background: #fff;
+  border: 1px solid var(--sb-border);
+  border-radius: 10px;
+  box-shadow: var(--sb-shadow-lg);
+  overflow: hidden;
+  display: none;
+}
+.ac-list.show {
+  display: block;
+}
+.ac-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+.ac-item:hover,
+.ac-item.active {
+  background: var(--sb-accent-soft);
+}
+.ac-item b {
+  color: var(--sb-accent);
+}
+.ac-item__meta {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--sb-ink-faint);
+}
+.ac-empty {
+  padding: 14px;
+  color: var(--sb-ink-faint);
+  font-size: 13px;
+  text-align: center;
+}
+
+.field-hint {
+  font-size: 10.5px;
+  color: var(--sb-ink-faint);
+  font-family: "SFMono-Regular", "Consolas", monospace;
+  margin-left: 6px;
+  vertical-align: middle;
+}

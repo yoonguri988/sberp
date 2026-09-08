@@ -1,0 +1,145 @@
+{
+  "common": {
+    "footer": "© SBerp. 채용 지원자를 위한 공간입니다."
+  },
+  "oauth2": {
+    "processing": "로그인 처리 중입니다...",
+    "loginFailedTitle": "로그인에 실패했습니다",
+    "retryDefaultDescription": "다시 시도해 주세요.",
+    "backToLoginBtn": "로그인 화면으로 돌아가기"
+  },
+  "layout": {
+    "myApplicationsLink": "내 지원현황",
+    "logoutMenuItem": "로그아웃",
+    "jobListLink": "채용공고",
+    "loginBtn": "로그인"
+  },
+  "authLayout": {
+    "tagline": "함께 성장할<br/>동료를 찾습니다",
+    "subtitle": "지원 현황 확인부터 이력서 제출까지,<br/>한 곳에서 편하게 진행하세요.",
+    "features": {
+      "social": "소셜 계정으로 간편 로그인 (카카오·네이버·구글)",
+      "status": "지원 후 언제든 진행 상태를 확인",
+      "resume": "이력서(PDF) 업로드 및 재제출"
+    }
+  },
+  "login": {
+    "providers": {
+      "kakao": "카카오로 시작하기",
+      "naver": "네이버로 시작하기",
+      "google": "Google로 시작하기"
+    },
+    "heading": "지원자 로그인",
+    "subtitle": "채용공고 열람과 지원서 제출은 소셜 계정 로그인 후 이용할 수 있습니다.<br/>아래 계정 중 하나로 간편하게 시작하세요.",
+    "noteLine": "로그인 시 이름·이메일 정보가 지원서 작성에 활용될 수 있습니다.<br/>채용 담당자이신가요? ",
+    "adminLoginLink": "관리자 로그인으로 이동"
+  },
+  "list": {
+    "title": "채용공고",
+    "subtitle": "현재 모집 중인 포지션을 확인하고 지원해 보세요.",
+    "searchPlaceholder": "공고명을 검색해 보세요",
+    "loadError": "공고를 불러오지 못했습니다",
+    "emptySearch": "'{{keyword}}'에 대한 검색 결과가 없습니다.",
+    "emptyDefault": "현재 진행 중인 채용공고가 없습니다.",
+    "headcountUnit": "{{count}}명",
+    "closingDate": "~ {{date}} 마감",
+    "alwaysOpen": "상시채용"
+  },
+  "detail": {
+    "backToListBtn": "목록으로",
+    "loadError": "공고를 불러오지 못했습니다",
+    "statusOpen": "모집중",
+    "statusClosed": "마감",
+    "statusCancelled": "취소됨",
+    "headcountUnit": "{{count}}명",
+    "dateRange": "{{start}} ~ {{end}}",
+    "dateRangeOpen": "{{start}} ~ 상시채용",
+    "alwaysOpen": "상시채용",
+    "labels": {
+      "department": "모집 부서",
+      "position": "모집 직무",
+      "headcount": "모집 인원",
+      "employmentType": "고용 형태",
+      "manager": "담당자",
+      "applicantCount": "지원자 수",
+      "startDate": "접수 시작일",
+      "endDate": "접수 종료일",
+      "createdAt": "등록일시",
+      "updatedAt": "최종 수정일시",
+      "description": "상세 내용"
+    },
+    "applyBtn": "이 공고에 지원하기",
+    "cannotApplyBtn": "현재 지원할 수 없는 공고입니다"
+  },
+  "apply": {
+    "backToDetailBtn": "공고로 돌아가기",
+    "successTitle": "지원이 완료되었습니다",
+    "successSubtitleWithTitle": "\"{{title}}\" 공고에 지원서가 정상적으로 접수되었습니다.",
+    "successSubtitleDefault": "지원서가 정상적으로 접수되었습니다.",
+    "uploadResumeBtn": "이력서(PDF) 업로드하러 가기",
+    "viewMyApplicationsBtn": "내 지원현황 보기",
+    "formTitle": "지원서 작성",
+    "formSubtitleWithTitle": "\"{{title}}\" 공고에 지원합니다.",
+    "formSubtitleDefault": "선택한 공고에 지원합니다.",
+    "nameLabel": "이름",
+    "namePlaceholder": "홍길동",
+    "nameRequired": "이름을 입력해 주세요.",
+    "emailLabel": "이메일",
+    "emailInvalid": "올바른 이메일 형식이 아닙니다.",
+    "emailPlaceholder": "입력하지 않으면 소셜 계정 이메일이 사용됩니다.",
+    "phoneLabel": "연락처",
+    "phoneRequired": "연락처를 입력해 주세요.",
+    "phonePlaceholder": "010-1234-5678",
+    "submitErrorDefault": "지원서 제출에 실패했습니다.",
+    "submitBtn": "지원서 제출"
+  },
+  "my": {
+    "title": "내 지원현황",
+    "subtitle": "지원한 공고의 진행 상태를 확인하고 이력서를 제출/재제출할 수 있습니다.",
+    "cancelSuccess": "지원이 취소되었습니다.",
+    "updateSuccess": "지원 정보가 수정되었습니다.",
+    "uploadSuccess": "이력서가 제출되었습니다. AI 분석 후 담당자에게 전달됩니다.",
+    "selectFileWarning": "업로드할 이력서(PDF) 파일을 선택해 주세요.",
+    "emptyDescription": "아직 지원한 공고가 없습니다.",
+    "editBtn": "지원 정보 수정",
+    "resumeBtn": "이력서 제출",
+    "resumeResubmitBtn": "이력서 재제출",
+    "previewResumeBtn": "제출한 이력서 확인",
+    "resumeSubmittedTag": "이력서 제출완료",
+    "previewError": "이력서를 불러오지 못했습니다.",
+    "cancelConfirmTitle": "지원을 취소하시겠습니까?",
+    "cancelOkText": "취소하기",
+    "cancelCancelText": "닫기",
+    "cancelBtn": "지원 취소",
+    "appliedDate": "지원일 {{date}}",
+    "statusLabels": {
+      "received": "접수",
+      "screening": "서류심사",
+      "interview": "면접",
+      "hired": "합격",
+      "rejected": "불합격"
+    },
+    "uploadModal": {
+      "title": "이력서(PDF) 업로드",
+      "okText": "제출",
+      "cancelText": "닫기",
+      "dragText": "클릭하거나 파일을 이 영역에 끌어다 놓으세요",
+      "dragHint": "PDF 파일 1개만 업로드할 수 있습니다. 기존 이력서는 자동으로 교체됩니다."
+    },
+    "editModal": {
+      "title": "지원 정보 수정",
+      "okText": "저장",
+      "cancelText": "닫기",
+      "nameLabel": "이름",
+      "namePlaceholder": "홍길동",
+      "nameRequired": "이름을 입력해 주세요.",
+      "emailLabel": "이메일",
+      "emailRequired": "이메일을 입력해 주세요.",
+      "emailInvalid": "올바른 이메일 형식이 아닙니다.",
+      "emailPlaceholder": "example@email.com",
+      "phoneLabel": "연락처",
+      "phoneRequired": "연락처를 입력해 주세요.",
+      "phonePlaceholder": "010-0000-0000"
+    }
+  }
+}

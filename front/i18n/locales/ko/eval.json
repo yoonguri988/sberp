@@ -1,0 +1,221 @@
+{
+  "common": {
+    "breadcrumbRoot": "인사평가",
+    "sentiment": {
+      "positive": "긍정적",
+      "neutral": "중립적",
+      "negative": "부정적"
+    },
+    "scoreLabel": {
+      "performance": "업무 성과",
+      "expertise": "전문성",
+      "teamwork": "팀워크",
+      "attitude": "근무 태도",
+      "growth": "성장 잠재력"
+    },
+    "scoreDesc": {
+      "performance": "목표 달성도, 업무 품질",
+      "expertise": "직무 지식, 기술 역량",
+      "teamwork": "협업, 커뮤니케이션",
+      "attitude": "성실성, 책임감",
+      "growth": "자기개발, 도전 의지"
+    },
+    "evalStatus": {
+      "draft": "임시저장",
+      "submitted": "제출완료"
+    },
+    "periodStatus": {
+      "ready": "준비",
+      "open": "진행 중",
+      "closed": "마감",
+      "reporting": "분석 중",
+      "reported": "완료",
+      "reportingFailed": "분석 실패"
+    }
+  },
+  "dashboard": {
+    "breadcrumbCurrent": "평가 작성",
+    "title": "평가 작성",
+    "subtitle": "내가 평가해야 할 부서원 목록을 확인하고 평가를 작성합니다.",
+    "periodChangeBtn": "회차 변경",
+    "periodManageBtn": "회차 관리",
+    "selectPeriodTitle": "평가할 회차를 선택하세요",
+    "selectPeriodHint": "진행 중(OPEN)인 회차만 표시됩니다.",
+    "noOpenPeriodMsg": "진행 중인 회차가 없습니다.",
+    "periodMetaFormat": "{{year}}년 {{term}} · {{start}} ~ {{end}}",
+    "submitProgressLabel": "제출 진행률",
+    "table": {
+      "emp": "사원",
+      "dept": "부서",
+      "pos": "직급",
+      "status": "상태"
+    },
+    "viewBtn": "보기",
+    "writeBtn": "작성",
+    "noTargetMsg": "평가 대상이 없습니다."
+  },
+  "detail": {
+    "breadcrumbCurrent": "평가 상세",
+    "title": "평가 상세",
+    "targetLabel": "대상: {{name}}",
+    "backToListBtn": "목록으로",
+    "descTargetLabel": "평가 대상",
+    "statusLabel": "상태",
+    "typeLabel": "평가 유형",
+    "weightedScoreLabel": "가중 점수",
+    "scoreCardTitle": "점수",
+    "commentCardTitle": "코멘트",
+    "strengthLabel": "강점",
+    "improvementLabel": "개선점"
+  },
+  "write": {
+    "breadcrumbCurrent": "{{mode}}",
+    "editMode": "수정",
+    "createMode": "작성",
+    "title": "평가 {{mode}}",
+    "targetLabel": "대상: {{name}} ({{dept}})",
+    "backBtn": "돌아가기",
+    "scorePlaceholder": "1 ~ 5",
+    "strengthCommentLabel": "강점 코멘트",
+    "strengthCommentPlaceholder": "이 사원의 강점을 작성하세요.",
+    "improvementCommentLabel": "개선 코멘트",
+    "improvementCommentPlaceholder": "개선이 필요한 부분을 작성하세요.",
+    "draftBtn": "임시 저장",
+    "submitBtn": "최종 제출",
+    "savedMsg": "저장되었습니다.",
+    "scoreRequiredMsg": "모든 점수 항목을 선택해주세요.",
+    "commentRequiredMsg": "강점과 개선점을 모두 입력해주세요."
+  },
+  "report": {
+    "detail": {
+      "breadcrumbCurrent": "AI 리포트 상세",
+      "title": "AI 리포트 상세",
+      "backBtn": "돌아가기",
+      "overallGradeLabel": "종합 등급",
+      "overallScoreLabel": "종합 점수",
+      "sentimentLabel": "감성 라벨",
+      "modelLabel": "모델",
+      "empLabel": "사원",
+      "deptPosLabel": "부서 · 직급",
+      "periodLabel": "평가 회차",
+      "generatedAtLabel": "생성일",
+      "aiSummaryTitle": "AI 요약",
+      "summaryEmptyMsg": "요약문이 아직 생성되지 않았습니다.",
+      "strengthAnalysisTitle": "강점 분석",
+      "improvementTitle": "개선 제언",
+      "attTitle": "근태 현황",
+      "attWorkDays": "출근일",
+      "attLate": "지각",
+      "attEarlyLeave": "조퇴",
+      "attAbsent": "결근",
+      "attAnnual": "연차 사용",
+      "attRate": "출근율",
+      "attDayUnit": "일",
+      "attCountUnit": "회"
+    },
+    "list": {
+      "breadcrumbCurrent": "AI 리포트",
+      "title": "AI 리포트",
+      "subtitle": "회차별 사원 성과 요약 리포트를 확인합니다.",
+      "periodChangeBtn": "회차 변경",
+      "periodManageBtn": "회차 관리",
+      "processedMsg": "처리되었습니다.",
+      "selectPeriodMsg": "리포트를 확인할 회차를 선택하세요.",
+      "periodListBtn": "회차 목록 보기",
+      "countSuffix": "{{count}}건",
+      "regenerateAllBtn": "전체 재생성",
+      "table": {
+        "emp": "사원",
+        "grade": "등급",
+        "score": "종합 점수",
+        "sentiment": "감성",
+        "date": "생성일"
+      },
+      "regenerateTooltip": "재생성",
+      "emptyMsg": "리포트가 없습니다."
+    },
+    "my": {
+      "breadcrumbCurrent": "내 리포트",
+      "title": "내 AI 리포트",
+      "subtitle": "회차별 내 성과 분석 리포트를 확인합니다.",
+      "table": {
+        "period": "평가 회차",
+        "grade": "등급",
+        "score": "종합 점수",
+        "sentiment": "감성",
+        "date": "생성일"
+      },
+      "emptyMsg": "생성된 리포트가 없습니다."
+    }
+  },
+  "period": {
+    "detail": {
+      "breadcrumbCurrent": "상세",
+      "namePlaceholder": "...",
+      "periodMetaFormat": "{{year}}년 {{term}}",
+      "backToListBtn": "목록으로",
+      "statusLabel": "상태",
+      "periodRangeLabel": "기간",
+      "evalCountLabel": "평가 건수",
+      "reportCountLabel": "리포트 건수",
+      "countSuffix": "{{count}}건",
+      "aiProgressTitle": "AI 분석 진행률",
+      "editBtn": "수정",
+      "openBtn": "회차 열기",
+      "closeBtn": "회차 마감",
+      "startAiBtn": "AI 분석 시작",
+      "viewReportBtn": "리포트 보기",
+      "openConfirmTitle": "회차를 열겠습니까?",
+      "openConfirmContent": "열면 사원들이 평가를 시작할 수 있습니다.",
+      "closeConfirmTitle": "회차를 마감하겠습니까?",
+      "closeConfirmContent": "마감 후에는 평가를 수정할 수 없습니다.",
+      "startAiConfirmTitle": "AI 분석을 시작하겠습니까?",
+      "startAiConfirmContent": "모든 제출된 평가를 기반으로 AI가 리포트를 생성합니다.",
+      "statusChangedMsg": "상태가 변경되었습니다."
+    },
+    "form": {
+      "breadcrumbCurrent": "{{mode}}",
+      "editMode": "수정",
+      "createMode": "등록",
+      "title": "회차 {{mode}}",
+      "backToListBtn": "목록으로",
+      "yearLabel": "평가 연도",
+      "yearRequired": "연도를 입력하세요.",
+      "yearPlaceholder": "2026",
+      "termLabel": "평가 구분",
+      "termRequired": "구분을 선택하세요.",
+      "termSelectPlaceholder": "선택",
+      "titleLabel": "제목",
+      "titleRequired": "제목을 입력하세요.",
+      "titlePlaceholder": "예: 2026년 상반기 정기평가",
+      "startDateLabel": "시작일",
+      "startDateRequired": "시작일을 선택하세요.",
+      "endDateLabel": "종료일",
+      "endDateRequired": "종료일을 선택하세요.",
+      "dupExistsMsg": "이미 등록된 회차입니다.",
+      "availableMsg": "등록 가능합니다.",
+      "editSuccessMsg": "회차가 수정되었습니다.",
+      "addSuccessMsg": "회차가 등록되었습니다.",
+      "duplicateWarning": "중복된 회차입니다.",
+      "termOptions": {
+        "annual": "연간",
+        "h1": "상반기",
+        "h2": "하반기"
+      }
+    },
+    "list": {
+      "breadcrumbCurrent": "회차 관리",
+      "title": "인사평가 회차 관리",
+      "subtitle": "정기 인사평가 회차를 등록·수정하고, 상태를 관리합니다.",
+      "addBtn": "회차 등록",
+      "table": {
+        "status": "상태",
+        "title": "제목",
+        "year": "연도",
+        "term": "구분",
+        "period": "기간"
+      },
+      "emptyMsg": "등록된 회차가 없습니다."
+    }
+  }
+}

@@ -1,0 +1,308 @@
+@charset "UTF-8";
+
+.approval-document-wrap table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+
+.approval-document-wrap th {
+	background-color: #f8f9fa;
+	color: #333;
+	font-weight: 600;
+	padding: 12px;
+	border: 1px solid #dee2e6;
+}
+
+.approval-document-wrap td {
+	padding: 12px;
+	border: 1px solid #dee2e6;
+}
+
+/* 빈 슬롯 */
+
+.appr-slots{
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.appr-slot{
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 11px 14px;
+	border: 1.5px dashed var(--sb-border);
+	border-radius: var(--sb-radius-sm);
+	background: #fafbfc;
+	cursor: pointer;
+	transition: border-color .12s, background .12s;
+}
+
+.appr-slot:hover {
+	border-color: var(--sb-accent-soft-2);
+}
+
+.appr-slot__badge {
+	flex: 0 0 auto;
+	width: 26px;
+	height: 26px;
+	border-radius: 50%;
+	background: var(--sb-border);
+	color: var(--sb-ink-faint);
+	font-size: 12.5px;
+	font-weight: 700;
+	display: grid;
+	place-items: center;
+}
+
+.appr-slot__body {
+	flex: 1 1 auto;
+	font-size: 13.5px;
+	color: var(--sb-ink-faint);
+}
+
+.appr-slot__empty {
+	font-style: italic;
+}
+
+/* 채워진 슬롯 */
+
+.appr-slot.filled {
+	border-style: solid;
+	border-color: var(--sb-accent-soft-2);
+	background: var(--sb-accent-soft);
+	cursor: pointer;
+}
+
+.appr-slot.filled .appr-slot__badge {
+	background: var(--sb-accent);
+	color: #fff;
+}
+
+.appr-slot.filled .appr-slot__body {
+	color: var(--sb-ink);
+	font-weight: 650;
+}
+
+.appr-slot.filled .appr-slot__pos {
+	font-weight: 500;
+	color: var(--sb-ink-faint);
+	margin-left: 6px;
+}
+
+.appr-slot.filled:hover {
+	border-color: var(--sb-red);
+	background: var(--sb-red-soft);
+}
+
+.appr-slot.filled .appr-slot__body::after {
+	content: " (클릭 시 제외) ";
+	font-size: 11.5px;
+	font-weight: 500;
+	color: var(--sb-red);
+	transition: color .12s;
+}
+
+.appr-slot.filled:hover .appr-slot__body::after {
+    color: var(--sb-red);
+}
+
+/* 부서 소속 사원 목록 */
+.appr-emp-box {
+	max-height: 160px;
+	overflow-y: auto;
+	border: 1px solid var(--sb-border);
+	border-radius: var(--sb-radius-sm);
+	padding: 6px;	
+}
+
+.appr-emp-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 7px 10px;
+	border-radius: 7px;
+	font-size: 13px;
+	cursor: pointer;
+	color: var(--sb-ink);
+}
+
+.appr-emp-row:hover{
+	background: var(--sb-accent-soft);
+}
+
+.appr-emp-row.disabled{
+	color: var(--sb-ink-faint);
+	cursor: not-allowed;
+	opacity: .55;
+}
+
+.appr-emp-row.disabled:hover {
+	background: transparent;
+}
+
+.appr-emp-row .pos-chip {
+	font-size: 11px;
+	font-weight: 700;
+	background: #eef0f3;
+	color: var(--sb-ink-soft);
+	padding: 2px 8px;
+	border-radius: 5px;
+}
+
+/* 결재선 타임라인 */
+.appr-timeline {
+	padding-left: 4px;
+}
+
+.appr-timeline__item {
+	position: relative;
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+	padding: 14px 4px;
+}
+
+.appr-timeline__item:not(:last-child)::before {
+	content: '';
+	position: absolute;
+	left: 23px;
+	top: 46px;
+	bottom: -14px;
+	width: 3px;
+	background: var(--sb-border);
+}
+
+.appr-timeline__avatar {
+	flex: 0 0 auto;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	display: grid;
+	place-items: center;
+	font-weight: 700;
+	font-size: 14px;
+	color: #fff;
+	z-index: 1;
+}
+
+.appr-timeline__avatar.role-draft {
+	background: var(--sb-ink-faint);
+}
+
+.appr-timeline__avatar.role-wai {
+	background: var(--sb-amber);
+}
+
+.appr-timeline__avatar.role-app {
+	background: var(--sb-green);
+}
+
+.appr-timeline__avatar.role-rej {
+	background: var(--sb-red);
+}
+
+.appr-timeline__avatar.role-not {
+	background: var(--sb-border);
+	color: var(--sb-ink-faint);
+}
+
+.appr-timeline__body {
+	flex: 1 1 auto;
+	padding-top: 1px;
+}
+
+.appr-timeline__name {
+	font-weight: 700;
+	font-size: 14px;
+	color: var(--sb-ink);
+}
+
+.appr-timeline__pos {
+	font-size: 12px;
+	color: var(--sb-ink-faint);
+	margin-top: 1px;
+}
+
+.appr-timeline__time {
+	font-size: 11px;
+	color: var(--sb-ink-faint);
+	margin-top: 2px;
+}
+
+.appr-timeline__status {
+	flex: 0 0 auto;
+	align-self: center;
+}
+
+.sb-badge--gray {
+	background: #eef0f3;
+	color: var(--sb-ink-soft);
+}
+
+/* 상세 페이지 레이아웃 보완 */
+
+.equal-height-card {
+	height: 100%;
+	margin-bottom: 0 !important;
+}
+
+.scrollable-timeline {
+	max-height: 220px;
+	overflow-y: auto;
+	padding-right: 5px;
+}
+
+/* 스크롤바 디자인 */
+.scrollable-timeline::-webkit-scrollbar {
+	width: 6px;
+}
+
+.scrollable-timeline::-webkit-scrollbar-thumb {
+	background: #e0e0e0;
+	border-radius: 4px;
+}
+
+.document-content-area {
+	min-height: 300px;
+	background-color: #fff;
+	padding: 20px;
+	border: 1px solid #e9ecef;
+	border-radius: 4px;
+}
+
+/* summernot 에러 스타일 */
+.note-editor.is-invalid {
+	border-color: #dc3545 !important;
+	box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* 동적 필드 카드 스키마 입력용 */
+.appr-dyn-field {
+	padding: 11px 14px;
+	border: 1.5px solid var(--sb-border);
+	border-radius: var(--sb-radius-sm);
+	background: #fafbfc;
+	margin-bottom: 8px;
+}
+
+.appr-dyn-field label {
+	font-size: 12.5px;
+	font-weight: 650;
+	color: var(--sb-ink-soft);
+	margin-bottom: 6px;
+	display: block;
+}
+
+.appr-dyn-input {
+	border-radius: 6px;
+	border-color: var(--sb-border-strong);
+	font-size: 13.5px;
+	background: #fff;
+}
+
+.appr-dyn-input:focus {
+	border-color: var(--sb-accent);
+	box-shadow: 0 0 0 3px var(--sb-accent-soft);
+}

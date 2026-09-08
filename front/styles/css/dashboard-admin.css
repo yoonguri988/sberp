@@ -1,0 +1,90 @@
+@charset "UTF-8";
+
+/* ──────────────────────────────────────────────────────────
+   관리자 대시보드 - 페이지 헤더 sticky (dashboard.css와 동일 패턴)
+   ────────────────────────────────────────────────────────── */
+.db-page-head--sticky {
+  position: sticky;
+  top: var(--sb-header-h);
+  z-index: 20;
+  margin: -24px -28px 22px;
+  padding: 18px 28px 14px;
+  background: var(--sb-bg);
+  border-bottom: 1px solid var(--sb-border);
+}
+
+/* 통계 카드 그리드 - 관리자는 카드 수가 많아 6열까지 확장 */
+.db-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+.db-stat-grid > .sb-stat { min-width: 0; }
+
+/* ──────────────────────────────────────────────────────────
+   본문 그리드
+   - 1행: 부서별 인원·근태(넓게) / 처리 필요 항목
+   - 2행: 최근 입사자 / 전사 프로젝트 진행률
+   ────────────────────────────────────────────────────────── */
+.db-admin-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-areas:
+    "dept     sysalert"
+    "newjoin  projall";
+  gap: 18px;
+}
+.db-card--dept     { grid-area: dept; }
+.db-card--sysalert { grid-area: sysalert; }
+.db-card--newjoin  { grid-area: newjoin; }
+.db-card--projall  { grid-area: projall; }
+
+.db-card { min-width: 0; display: flex; flex-direction: column; }
+.db-card > .sb-card__body,
+.db-card > .sb-card__body--flush { flex: 1 1 auto; min-width: 0; }
+
+@media (max-width: 900px) {
+  .db-admin-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "dept"
+      "sysalert"
+      "newjoin"
+      "projall";
+  }
+}
+
+/* 리스트 행 (공용 db-row 패턴, 대시보드 css와 동일 스펙 유지) */
+.db-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--sb-border);
+}
+.db-row:last-child { border-bottom: none; }
+.db-row:hover { background: #fafbfc; }
+.db-row__icon {
+  flex: 0 0 auto; width: 34px; height: 34px; border-radius: 9px;
+  display: grid; place-items: center; font-size: 15px;
+}
+.db-row__main { flex: 1 1 auto; min-width: 0; }
+.db-row__title { font-size: 13.5px; font-weight: 650; color: var(--sb-ink); display: flex; align-items: center; gap: 6px; min-width: 0; }
+.db-row__title .txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.db-row__meta { font-size: 12px; color: var(--sb-ink-faint); margin-top: 2px; }
+.db-row__side { flex: 0 0 auto; }
+
+.db-project { padding: 14px 0; }
+.db-project:first-child { padding-top: 4px; }
+.db-project:last-child { padding-bottom: 4px; }
+.db-project__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; margin-bottom: 11px; }
+.db-project__name { font-size: 14px; font-weight: 700; color: var(--sb-ink); min-width: 0; flex: 1 1 auto; }
+.db-project__name .txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+.db-project__dday { font-size: 12.5px; font-weight: 650; color: var(--sb-ink-faint); white-space: nowrap; flex: 0 0 auto; }
+.db-project__progress-wrap { display: flex; align-items: center; gap: 10px; }
+.db-project__progress-wrap .sb-progress { flex: 1 1 auto; min-width: 0; }
+.db-project__pct { font-size: 12.5px; font-weight: 750; color: var(--sb-ink-soft); width: 34px; flex: 0 0 auto; text-align: right; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 767.98px) {
+  .db-page-head--sticky { padding: 16px 28px 14px; }
+}

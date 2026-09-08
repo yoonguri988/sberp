@@ -1,0 +1,59 @@
+{
+  "common": {
+    "breadcrumbOrg": "Organization"
+  },
+  "list": {
+    "breadcrumbCurrent": "Permissions",
+    "title": "Permissions",
+    "subtitle": "Add, edit, and delete authorities per company. Access control based on authority is enforced on the application server.",
+    "addBtn": "Add Permission",
+    "listCardTitle": "Permission List",
+    "countSuffix": "{{count}} permissions",
+    "emptyMsg": "No permissions registered.",
+    "empCountSuffix": "{{count}}",
+    "selectHint": "Select a permission on the left.",
+    "selectHint2": "Or create a new one with 'Add Permission'.",
+    "assignedEmpLabel": "Employees with this permission",
+    "empTable": {
+      "emp": "Employee",
+      "dept": "Department",
+      "pos": "Position"
+    },
+    "paginationTotal": "Total {{total}}",
+    "empEmptyMsg": "No employees have this permission.",
+    "addModalTitle": "Add Permission",
+    "editModalTitle": "Edit Permission",
+    "nameLabel": "Permission Name",
+    "nameExtra": "By Spring Security convention, it is recommended to start with the ROLE_ prefix.",
+    "namePlaceholder": "e.g. ROLE_MEMBER",
+    "nameRequired": "Please enter a permission name.",
+    "deleteModalTitle": "Delete Permission",
+    "deleteConfirmMsg": "Are you sure you want to delete the permission {{autName}}?",
+    "deleteHint": "This permission cannot be deleted while employees are assigned to it.",
+    "addSuccessMsg": "Permission registered.",
+    "editSuccessMsg": "Permission updated.",
+    "deleteSuccessMsg": "Permission deleted."
+  },
+  "empAuth": {
+    "breadcrumbCurrent": "Assign Employee Permissions",
+    "title": "Employee Permission Management",
+    "subtitle": "Grant or revoke permissions for the selected employee.",
+    "backToEmpDetailBtn": "Back to Employee Details",
+    "empInfoCardTitle": "Employee Info",
+    "loadingMsg": "Loading employee information...",
+    "empNoLabel": "Employee No.",
+    "emailLabel": "Email",
+    "statusLabel": "Status",
+    "grantedCardTitle": "Currently Granted Permissions",
+    "countSuffix": "{{count}}",
+    "grantedEmptyMsg": "No permissions granted.",
+    "revokeBtn": "Revoke",
+    "availableCardTitle": "Available Permissions",
+    "availableCardExtra": "Company-wide permissions not yet granted",
+    "noPermMsg": "No permissions registered.",
+    "allGrantedMsg": "All permissions have already been granted.",
+    "grantedCountSuffix": "{{count}} granted",
+    "grantBtn": "Grant",
+    "successMsg": "Permission changed."
+  }
+}

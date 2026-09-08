@@ -1,0 +1,104 @@
+{
+  "shared": {
+    "title": "Resource Management",
+    "backToList": "Back to List",
+    "basicInfoTitle": "Basic Information",
+    "roomCapacityRequired": "Please enter the capacity for a meeting room.",
+    "quantityRequired": "Please enter the quantity.",
+    "capacityPlaceholder": "Enter if this is a meeting room",
+    "capacityHint": "You may leave this blank for equipment or vehicles.",
+    "managerPlaceholder": "Not assigned"
+  },
+  "enum": {
+    "resType": {
+      "ROOM": "Meeting Room",
+      "EQUIPMENT": "Equipment",
+      "VEHICLE": "Vehicle"
+    },
+    "resStatus": {
+      "AVAILABLE": "Available",
+      "MAINTENANCE": "Under Maintenance",
+      "DISABLED": "Disabled"
+    }
+  },
+  "field": {
+    "resCode": "Resource Code",
+    "resName": "Resource Name",
+    "resType": "Resource Type",
+    "location": "Location",
+    "quantity": "Quantity",
+    "capacity": "Capacity",
+    "resStatus": "Status",
+    "remark": "Remarks",
+    "manager": "Manager"
+  },
+  "list": {
+    "breadcrumbHome": "Home",
+    "breadcrumbAsset": "Assets",
+    "title": "Resource Management",
+    "subtitle": "Register and manage bookable resources such as meeting rooms, equipment, and vehicles.",
+    "addButton": "Add Resource",
+    "alert": {
+      "badPassword": "The password did not match, so the resource was not deleted.",
+      "hasReservations": "Resources with existing reservations must have those reservations cleared before they can be deleted."
+    },
+    "cardTitle": "Resource List",
+    "cardSubtitle": "View resources matching your search criteria.",
+    "searchPlaceholder": "Search by resource name or code",
+    "allType": "All Types",
+    "allStatus": "All Statuses",
+    "columns": {
+      "resType": "Type",
+      "actions": "Actions"
+    },
+    "emptyText": "No resources have been registered.",
+    "detailTooltip": "View Details",
+    "totalCountPrefix": "Total",
+    "totalCountSuffix": " resources"
+  },
+  "detail": {
+    "breadcrumbCurrent": "Resource Details",
+    "subtitle": "View detailed information about this resource.",
+    "sectionTitle": "Resource Information",
+    "managerEmpty": "No manager assigned"
+  },
+  "insert": {
+    "breadcrumbCurrent": "Add Resource",
+    "title": "Add Resource",
+    "subtitle": "Enter details for a meeting room, equipment, or vehicle to make it available for booking.",
+    "requiredNote": "Fields marked are required.",
+    "successMessage": "The resource has been registered.",
+    "duplicateCodeError": "This resource code is already in use.",
+    "validation": {
+      "resCodeRequired": "Please enter a resource code.",
+      "resNameRequired": "Please enter a resource name."
+    },
+    "placeholder": {
+      "resCode": "e.g. RM004",
+      "resName": "e.g. Main Conference Room, Laptop, Carnival",
+      "location": "e.g. Main Building 3F, Basement Parking Lot 2",
+      "remark": "Enter any additional notes"
+    },
+    "submitButton": "Register"
+  },
+  "update": {
+    "breadcrumbCurrent": "Edit Resource",
+    "title": "Edit Resource",
+    "subtitle": "Update the information for a registered resource.",
+    "successMessage": "The resource information has been updated.",
+    "submitButton": "Save Changes"
+  },
+  "deleteModal": {
+    "title": "Delete Resource",
+    "blockedTitle": "Cannot Delete",
+    "blockedWarningPrefix": "This resource currently has",
+    "blockedWarningSuffix": "active reservation(s).",
+    "blockedHint": "This resource cannot be deleted while reservations exist.",
+    "passwordPromptPrefix": "Enter your",
+    "passwordPromptSuffix": "to continue.",
+    "passwordInline": "password",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter password",
+    "confirmButton": "Confirm Delete"
+  }
+}

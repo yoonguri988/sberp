@@ -1,0 +1,112 @@
+{
+  "admin": {
+    "greeting": "안녕하세요, {{empName}} {{posName}}님.",
+    "defaultUserName": "사용자",
+    "statusTag": {
+      "NORMAL": "정상출근",
+      "LATE": "지각",
+      "EARLY_LEAVE": "조퇴",
+      "ABSENT": "미출근",
+      "ANNUAL": "연차",
+      "AM_HALF": "오전반차",
+      "PM_HALF": "오후반차"
+    },
+    "quickLinks": {
+      "emp": "사원관리",
+      "att": "근태관리",
+      "appr": "전자결재",
+      "leave": "연차관리",
+      "notice": "공지사항",
+      "aichat": "규정관리"
+    },
+    "projectStatus": {
+      "TODO": "대기",
+      "DOING": "진행"
+    },
+    "projectEmptyMsg": "진행 중인 프로젝트가 없습니다",
+    "checkInBtn": "출근하기",
+    "checkOutBtn": "퇴근하기",
+    "attHistoryLink": "근태 현황",
+    "leaveLabel": "잔여 연차",
+    "leaveApplyLink": "휴가 신청",
+    "checkInConfirm": {
+      "title": "출근 확인",
+      "content": "{{time}}에 출근 처리합니다.",
+      "okText": "출근",
+      "cancelText": "취소"
+    },
+    "checkOutConfirm": {
+      "title": "퇴근 확인",
+      "content": "{{time}}에 퇴근 처리합니다.",
+      "okText": "퇴근",
+      "cancelText": "취소"
+    },
+    "checkInSuccessMsg": "출근 처리되었습니다.",
+    "checkOutSuccessMsg": "퇴근 처리되었습니다.",
+    "chartLabels": {
+      "present": "출근",
+      "late": "지각",
+      "absent": "미출근",
+      "leave": "휴가"
+    },
+    "chartTooltipUnit": "명",
+    "chartTotalLabel": "전체",
+    "todayAttChartHead": "오늘 출결 현황",
+    "noticeHead": "공지사항",
+    "viewAll": "전체보기",
+    "noticeEmptyMsg": "공지사항이 없습니다",
+    "urgentBadge": "긴급",
+    "pendingHead": "처리 필요",
+    "approvalBoxLink": "결재함",
+    "pendingApproval": "결재 대기",
+    "myDrafting": "내 기안 진행 중",
+    "countUnit": "건",
+    "companyProjectHead": "회사 프로젝트",
+    "myProjectHead": "내 프로젝트",
+    "weeklyTrendHead": "주간 근태 추이"
+  },
+  "member": {
+    "greeting": "안녕하세요, {{empName}}님",
+    "attStatus": {
+      "absent": "미출근",
+      "done": "퇴근 완료",
+      "working": "출근중"
+    },
+    "todoDoc": {
+      "docId": "문서번호",
+      "docTitle": "제목",
+      "empName": "기안자",
+      "docStatus": "상태",
+      "approveBtn": "결재하기"
+    },
+    "evalOpen": {
+      "titleSuffix": "정기평가",
+      "inProgressBadge": "진행중",
+      "progressText": "평가 진행률 {{submittedCount}} / {{totalCount}}건 제출",
+      "goToEvalBtn": "평가하러 가기"
+    },
+    "stats": {
+      "pendingApproval": "결재 대기",
+      "leaveRemaining": "잔여 연차",
+      "todayAtt": "오늘 근태",
+      "myProjects": "진행중 프로젝트",
+      "unitCase": "{{count}}건",
+      "unitDay": "{{count}}일",
+      "noData": "-"
+    },
+    "pendingBoxHead": "결재 대기함",
+    "viewAll": "전체보기",
+    "moreBtn": "더보기",
+    "pendingEmptyMsg": "결재 대기중인 문서가 없습니다.",
+    "noticeHead": "공지사항",
+    "noticeEmptyMsg": "등록된 공지가 없습니다.",
+    "myProjectHead": "내 프로젝트",
+    "myProjectEmptyMsg": "참여중인 프로젝트가 없습니다.",
+    "myReservationHead": "내 자원예약",
+    "reservationEmptyMsg": "최근 신청한 예약이 없습니다.",
+    "resvStatus": {
+      "APP": "승인",
+      "WAI": "대기"
+    }
+  }
+}

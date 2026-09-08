@@ -1,0 +1,328 @@
+{
+  "depthLabels": {
+    "hq": "본부",
+    "team": "팀",
+    "cell": "셀",
+    "part": "파트",
+    "fallback": "하위"
+  },
+  "list": {
+    "breadcrumbHome": "홈",
+    "breadcrumbOrg": "회사/부서 관리",
+    "breadcrumbDept": "부서 관리",
+    "title": "부서 관리",
+    "subtitle": "부서 구조를 조회하고 관리합니다.",
+    "stats": {
+      "totalDept": "전체 부서",
+      "hq": "본부",
+      "deptTeam": "부서/팀",
+      "totalEmp": "전체 인원"
+    },
+    "comSelectPlaceholder": "회사 선택 (필수)",
+    "searchPlaceholder": "부서명 또는 코드 검색",
+    "resultCount": "{{count}}건",
+    "addBtn": "부서 등록",
+    "selectCompanyEmpty": "조회할 회사를 선택하세요.",
+    "selectCompanyHint": "회사명은 필수 검색 조건입니다.",
+    "noMatchEmpty": "일치하는 부서가 없습니다.",
+    "table": {
+      "no": "NO",
+      "deptName": "부서명",
+      "code": "코드",
+      "parentDept": "상위부서",
+      "leader": "부서장",
+      "empCount": "인원",
+      "empCountValue": "{{count}}명",
+      "actions": "관리"
+    },
+    "topLevelBadge": "최상위",
+    "detailTooltip": "상세보기",
+    "editTooltip": "수정",
+    "deleteTooltip": "삭제",
+    "noPermissionTooltip": "관리자만 이용할 수 있습니다.",
+    "footerSummary": "총 {{count}}개 부서 ·",
+    "footerHierLabel": "상위 부서",
+    "footerNote": "기준 트리 구조로 표시됩니다.",
+    "transferRequiredMsg": "소속 사원 이관이 필요합니다."
+  },
+  "add": {
+    "breadcrumbHome": "홈",
+    "breadcrumbList": "부서 관리",
+    "breadcrumbAdd": "등록",
+    "title": "부서 등록",
+    "subtitle": "새로운 부서를 시스템에 등록합니다.",
+    "backBtn": "목록으로",
+    "basicInfo": {
+      "title": "기본 정보",
+      "deptNameLabel": "부서명",
+      "deptNameRequired": "부서명을 입력하세요.",
+      "deptNamePlaceholder": "예: 플랫폼개발팀",
+      "deptCodeLabel": "부서코드",
+      "deptCodeRequired": "부서코드를 입력하세요.",
+      "deptCodeDuplicate": "이미 사용 중인 부서코드입니다.",
+      "deptCodeHint": "영문 대문자 · 숫자 권장",
+      "deptCodePlaceholder": "예: PLT"
+    },
+    "hierarchy": {
+      "title": "소속 및 계층",
+      "comLabel": "소속 회사",
+      "defaultComName": "회사",
+      "parentLabel": "상위 부서",
+      "parentNoneOption": "없음 (최상위 본부)",
+      "parentHint": "비워두면 최상위 본부(depth 1)로 등록됩니다.",
+      "depthLabel": "계층 깊이",
+      "sortOrderLabel": "정렬 순서",
+      "previewLabel": "계층 미리보기",
+      "previewTyping": "부서명 입력 중…"
+    },
+    "leaderHint": "부서장은 부서 등록 후 부서 수정 화면에서 지정할 수 있습니다.",
+    "submitBtn": "등록하기",
+    "successMsg": "부서가 등록되었습니다.",
+    "noComError": "소속 회사 정보가 없습니다. 목록 화면에서 다시 진입해주세요.",
+    "accessDenied": {
+      "title": "접근 권한이 없습니다",
+      "message": "부서 등록은 관리자만 이용할 수 있습니다.",
+      "backBtn": "목록으로 돌아가기"
+    }
+  },
+  "edit": {
+    "breadcrumbHome": "홈",
+    "breadcrumbList": "부서 관리",
+    "breadcrumbEdit": "수정",
+    "adminBadge": "관리자",
+    "title": "부서 수정",
+    "titleWithName": "{{deptName}} · 수정",
+    "subtitleWithId": "DEPT-{{id}} · 부서 정보를 수정합니다.",
+    "backBtn": "목록으로",
+    "notFoundMsg": "해당 부서를 찾을 수 없습니다.",
+    "backToListBtn": "목록으로 돌아가기",
+    "basicInfo": {
+      "title": "기본 정보",
+      "deptNameLabel": "부서명",
+      "deptNameRequired": "부서명을 입력하세요.",
+      "deptCodeLabel": "부서코드",
+      "deptCodeRequired": "부서코드를 입력하세요.",
+      "deptCodeDuplicate": "이미 사용 중인 부서코드입니다."
+    },
+    "hierarchy": {
+      "title": "소속 및 계층",
+      "comLabel": "소속 회사",
+      "comHint": "소속 회사는 변경할 수 없습니다.",
+      "defaultComName": "회사",
+      "parentLabel": "상위 부서",
+      "parentNoneOption": "없음 (최상위 본부)",
+      "parentHint": "자기 자신/하위 부서는 선택할 수 없습니다. 변경 시 하위 부서의 depth가 함께 갱신됩니다.",
+      "depthLabel": "계층 깊이",
+      "sortOrderLabel": "정렬 순서",
+      "previewLabel": "계층 미리보기",
+      "previewTyping": "부서명 입력 중…"
+    },
+    "leader": {
+      "title": "부서장",
+      "optionalTag": "선택 사항",
+      "selectLabel": "부서장 사원 선택",
+      "selectPlaceholder": "지정 안 함"
+    },
+    "empStatus": {
+      "title": "소속 사원 현황",
+      "totalCount": "총 {{count}}명",
+      "table": {
+        "empNo": "사번",
+        "empName": "이름",
+        "position": "직급",
+        "email": "이메일",
+        "status": "상태"
+      },
+      "emptyMsg": "소속 사원이 없습니다."
+    },
+    "deleteBtn": "부서 삭제",
+    "saveBtn": "변경사항 저장",
+    "saveSuccessMsg": "변경사항이 저장되었습니다.",
+    "deleteSuccessMsg": "삭제 처리되었습니다.",
+    "transferRequiredMsg": "소속 사원 이관이 필요합니다.",
+    "accessDenied": {
+      "title": "접근 권한이 없습니다",
+      "message": "부서 수정/삭제는 관리자만 이용할 수 있습니다.",
+      "backBtn": "목록으로 돌아가기"
+    }
+  },
+  "detail": {
+    "breadcrumbHome": "홈",
+    "breadcrumbTitle": "부서 상세 현황",
+    "backBtn": "목록으로"
+  },
+  "my": {
+    "breadcrumbHome": "홈",
+    "breadcrumbTitle": "내 부서",
+    "subtitle": "내가 소속된 부서 정보입니다."
+  },
+  "transfer": {
+    "list": {
+      "bannerPart1": "부서는 현재",
+      "bannerStatus": "이관 대기(PENDING_DELETE)",
+      "bannerPart2": "상태입니다. 아래 소속 사원을 모두 다른 부서로 이관해야 부서 삭제가 최종 완료됩니다.",
+      "aiRecomTitle": "AI 추천 부서: {{targetDeptName}}",
+      "aiApplyBtn": "이 추천을 전체 사원에 적용",
+      "summary": {
+        "empCountLabel": "소속 사원",
+        "empCountUnit": "명",
+        "reservationCountLabel": "미처리 예약",
+        "reservationCountUnit": "건",
+        "apprLineCountLabel": "결재 대기(라인)",
+        "apprLineCountUnit": "건",
+        "apprDocCountLabel": "상신 진행중",
+        "apprDocCountUnit": "건",
+        "infoNote": "예약·결재 항목은 사원(emp_id) 기준으로 따라가는 구조라 별도 이관 작업 없이 사원의 소속 부서만 변경하면 자동으로 함께 이동합니다. 아래 목록은 참고용입니다."
+      },
+      "form": {
+        "header": "소속 사원 이관",
+        "bulkPlaceholder": "일괄 적용할 부서 선택",
+        "applyAllBtn": "전체 적용",
+        "table": {
+          "no": "NO",
+          "empNo": "사번",
+          "empName": "이름",
+          "position": "직급",
+          "targetDept": "이관할 부서"
+        },
+        "rowPlaceholder": "이관할 부서 선택",
+        "emptyMsg": "소속 사원이 없습니다. 바로 삭제를 완료할 수 있습니다."
+      },
+      "cancelModal": {
+        "title": "이관 취소",
+        "content": "이관을 취소하고 부서를 원래 상태(ACTIVE)로 되돌리시겠습니까?",
+        "okText": "취소하기",
+        "cancelText": "닫기"
+      },
+      "cancelBtn": "이관 취소 (부서 원복)",
+      "completeBtn": "이관 완료",
+      "completeSuccessMsg": "이관이 완료되었습니다.",
+      "cancelSuccessMsg": "이관이 취소되고 부서가 원복되었습니다.",
+      "reservations": {
+        "title": "미처리 예약 (참고용)",
+        "table": {
+          "emp": "사원",
+          "resource": "자원",
+          "status": "상태",
+          "startDt": "장비예약시작일",
+          "endDt": "장비예약종료일"
+        }
+      },
+      "apprLines": {
+        "title": "결재 대기 라인 (참고용)",
+        "table": {
+          "emp": "사원",
+          "docTitle": "문서명",
+          "linOrder": "결재순서",
+          "status": "상태"
+        }
+      },
+      "apprDocs": {
+        "title": "상신 진행중 결재문서 (참고용)",
+        "table": {
+          "emp": "사원",
+          "docTitle": "문서명",
+          "status": "상태"
+        }
+      }
+    },
+    "log": {
+      "title": "부서 이관 이력",
+      "filter": {
+        "originDept": "원부서",
+        "targetDept": "대상부서",
+        "aiRecommended": "AI 제안 여부",
+        "aiAccepted": "AI 추천 수용",
+        "manual": "수동 선택",
+        "dateFrom": "처리일자(시작)",
+        "dateTo": "처리일자(종료)"
+      },
+      "infoNotePrefix": "기본으로",
+      "infoNoteBold": "최근 30일",
+      "infoNoteSuffix": "만 조회합니다. 전체 기간을 보려면 시작일을 더 과거로 넓혀서 조회하세요.",
+      "table": {
+        "processedAt": "처리일자",
+        "originDept": "원부서",
+        "targetDept": "대상부서",
+        "emp": "사원",
+        "aiSuggested": "AI 제안",
+        "aiReason": "AI 사유",
+        "processedBy": "처리자"
+      },
+      "aiAcceptedBadge": "수용",
+      "manualBadge": "수동",
+      "emptyMsg": "조건에 해당하는 이관 이력이 없습니다.",
+      "totalCountPrefix": "총",
+      "totalCountSuffix": "건"
+    },
+    "pending": {
+      "title": "이관 대기 부서",
+      "searchPlaceholder": "부서명 또는 부서코드 검색",
+      "infoNote": "부서 삭제(해체)를 진행하다가 사원 이관을 마치지 못하고 나가신 경우, 여기서 다시 찾아 이어서 진행할 수 있습니다.",
+      "table": {
+        "deptName": "부서명",
+        "deptCode": "부서코드",
+        "empCount": "소속 사원 수",
+        "empCountValue": "{{count}}명",
+        "pendingSince": "이관 대기 시작"
+      },
+      "continueBtn": "이관 이어하기",
+      "noMatchEmpty": "\"{{keyword}}\"에 해당하는 이관 대기 부서가 없습니다.",
+      "emptyMsg": "이관 대기중인 부서가 없습니다."
+    }
+  },
+  "deleteModal": {
+    "header": {
+      "blocked": "삭제할 수 없습니다",
+      "transfer": "사원 이관이 필요합니다",
+      "delete": "부서 삭제"
+    },
+    "transferBtn": "이관 진행",
+    "deleteBtn": "삭제 확인",
+    "blocked": {
+      "warningPrefix": "이 부서에는 하위 부서가",
+      "warningSuffix": "개 존재합니다.",
+      "hint": "하위 부서를 먼저 삭제하거나 다른 부서로 이동한 뒤 다시 시도해주세요.",
+      "warnBox": "하위 부서가 있는 동안에는 삭제(해체)를 진행할 수 없습니다."
+    },
+    "transfer": {
+      "warningPrefix": "삭제를 진행하면 부서 상태가",
+      "warningStatus": "이관 대기(PENDING_DELETE)",
+      "warningSuffix": "로 변경되고,",
+      "warningLine2": "바로 사원 이관 화면으로 이동합니다.",
+      "warnBoxPrefix": "소속 사원",
+      "warnBoxSuffix": "명을 다른 부서로 이관해야 최종 삭제가 완료됩니다."
+    },
+    "delete": {
+      "warningLine1": "삭제 시 연결된 데이터에 영향을 줄 수 있습니다.",
+      "warningLine2": "이 작업은 되돌릴 수 없습니다."
+    }
+  },
+  "detailView": {
+    "myDeptBanner": "현재 내가 소속된 부서입니다.",
+    "basicInfo": {
+      "title": "부서 기본 정보",
+      "deptNameLabel": "부서 이름",
+      "deptCodeLabel": "부서 코드",
+      "parentDeptLabel": "상위 부서",
+      "topLevelChip": "최상위 부서",
+      "leaderLabel": "부서장",
+      "noLeader": "지정된 부서장 없음",
+      "hierPathLabel": "계층 경로"
+    },
+    "empSection": {
+      "title": "소속 사원",
+      "countValue": "{{count}}명",
+      "table": {
+        "empNo": "사원번호",
+        "empName": "이름",
+        "position": "직급",
+        "email": "이메일",
+        "mobile": "연락처",
+        "status": "상태",
+        "hireDate": "입사일"
+      },
+      "emptyMsg": "소속 사원이 없습니다."
+    }
+  }
+}

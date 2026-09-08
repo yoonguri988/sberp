@@ -1,0 +1,104 @@
+// reducers/index.js
+import { combineReducers } from "@reduxjs/toolkit";
+import authReducer from "./auth/authReducer";
+import companyReducer from "./com/companyReducer";
+import deptReducer from "./dept/deptReducer";
+import deptTransferReducer from "./dept/deptTransferReducer";
+import apiUtilReducer from "./api/apiUtilReducer";
+import resourceReducer from "./res/resourceReducer";
+import resvReducer from "./resv/resvReducer";
+import adminResvReducer from "./resv/adminResvReducer";
+import apprFormReducer from "./appr/apprFormReducer";
+import apprDocReducer from "./appr/apprDocReducer";
+import apprLineDelegationReducer from "./appr/apprLineDelegationReducer";
+import apprLogReducer from "./appr/apprLogReducer";
+import empReducer from "./emp/empReducer";
+import posReducer from "./pos/posReducer";
+import permReducer from "./perm/permReducer";
+import evalReducer from "./eval/evalReducer";
+import evalPeriodReducer from "./eval/evalPeriodReducer";
+import evalReportReducer from "./eval/evalReportReducer";
+import projReducer from "./proj/projReducer";
+import projMemReducer from "./proj/projMemReducer";
+import taskReducer from "./task/taskReducer";
+import noticeReducer from "./notice/noticeReducer";
+import weekReducer from "./week/weekReducer";
+import loginHistoryReducer from "./auth/loginHistoryReducer";
+// 급여 관련 리듀서
+import salStdReducer from "./sal/salStdReducer";
+import salPayReducer from "./sal/salPayReducer";
+import salAcctReducer from "./sal/salAcctReducer";
+import salHistReducer from "./sal/salHistReducer";
+import salPolicyReducer from "./sal/salPolicyReducer";
+import salAiChatReducer from "./sal/salAiChatReducer";
+import salAiDocReducer from "./sal/salAiDocReducer";
+import attReducer from "./att/attReducer";
+// 근태/연차 관련 리듀서
+import leaveBalanceReducer from "./att/leaveBalanceReducer";
+import hrAiChatReducer from "./emp/hrAiChatReducer";
+import hrAiDocReducer from "./emp/hrAiDocReducer";
+// 채용관리 관련 리듀서
+import recruitReducer from "./rec/recruitReducer";
+import recruitPublicReducer from "./rec/recruitPublicReducer";
+import applicantReducer from "./apct/applicantReducer";
+import applicantPublicReducer from "./apct/applicantPublicReducer";
+import apctAuthReducer from "./apct/apctAuthReducer";
+import resumeReducer from "./rsm/resumeReducer";
+import resumePublicReducer from "./rsm/resumePublicReducer";
+// 메인화면 - 대시보드
+import adminDashboardReducer from "./dashboard/adminDashboardReducer";
+import memberDashboardReducer from "./dashboard/memberDashboardReducer";
+
+const rootReducer = combineReducers({
+  auth: authReducer, // state.auth
+  company: companyReducer, // state.company
+  dept: deptReducer, // state.dept
+  deptTransfer: deptTransferReducer, // state.deptTransfer
+  apiUtil: apiUtilReducer, // state.apiUtil
+  resource: resourceReducer, // state.resource
+  resv: resvReducer, // state.resv
+  adminResv: adminResvReducer, // state.adminResv
+  apprForm: apprFormReducer, // state.apprForm
+  apprDoc: apprDocReducer, // state.apprDoc
+  apprLineDelegation: apprLineDelegationReducer, // state.apprLineDelegation
+  apprLog: apprLogReducer, // state.apprLog
+  emp: empReducer, // state.emp
+  pos: posReducer, // state.pos
+  perm: permReducer, // state.perm
+  eval: evalReducer, // state.eval
+  period: evalPeriodReducer, // state.period
+  report: evalReportReducer, // state.report
+  proj: projReducer, // state.proj
+  projMem: projMemReducer, // state.projMem
+  task: taskReducer, // state.task
+  notice: noticeReducer, // state.notice
+  week: weekReducer,
+  loginHistory: loginHistoryReducer, // state.loginHistory
+  // 급여 관련 리듀서
+  salStd: salStdReducer, // state.salStd
+  salPay: salPayReducer, // state.salPay
+  salAcct: salAcctReducer, // state.salAcct
+  salHist: salHistReducer, // state.salHist
+  salPolicy: salPolicyReducer, // state.salPolicy
+  salAiChat: salAiChatReducer, // state.salAiChat
+  salAiDoc: salAiDocReducer, // state.salAiDoc
+  // 근태/연차
+  att: attReducer, // state.att
+  leave : leaveBalanceReducer, //state.leave
+  hrAiChat: hrAiChatReducer, // state.hrAiChat
+  hrAiDoc: hrAiDocReducer, // state.hrAiDoc
+  // 채용관리 관련 리듀서
+  recruit: recruitReducer, // state.recruit
+  recruitPublic: recruitPublicReducer, // state.recruitPublic
+  applicant: applicantReducer, // state.applicant
+  applicantPublic: applicantPublicReducer, // state.applicantPublic
+  apctAuth: apctAuthReducer, // state.apctAuth
+  resume: resumeReducer, // state.resume
+  resumePublic: resumePublicReducer, // state.resumePublic
+  // 메인화면 - 대시보드
+  adminDashboard: adminDashboardReducer, // state.adminDashboard
+  memberDashboard: memberDashboardReducer, // state.memberDashboard
+
+});
+
+export default rootReducer;

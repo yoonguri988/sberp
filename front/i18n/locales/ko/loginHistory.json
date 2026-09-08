@@ -1,0 +1,37 @@
+{
+  "list": {
+    "breadcrumbHome": "홈",
+    "breadcrumbCurrent": "로그인 이력 관리",
+    "title": "로그인 이력 관리",
+    "subtitle": "사용자의 로그인 성공/실패 이력을 조회합니다.",
+    "statsTotal": "전체 시도",
+    "statsSuccess": "성공",
+    "statsFail": "실패",
+    "cardTitle": "로그인 이력",
+    "filterStartDt": "시작일",
+    "filterEndDt": "종료일",
+    "filterEmail": "이메일 검색",
+    "filterEmailPlaceholder": "이메일 일부 입력",
+    "searchButton": "조회",
+    "searchNotePrefix": "기간을 지정하지 않으면 기본으로 ",
+    "searchNoteEmphasis": "최근 30일",
+    "searchNoteSuffix": "만 조회합니다.",
+    "empty": "조건에 해당하는 로그인 이력이 없습니다.",
+    "tableDatetime": "일시",
+    "tableEmail": "이메일",
+    "tableName": "이름",
+    "tableResult": "결과",
+    "tableFailReason": "실패 사유",
+    "tableIp": "IP",
+    "tableUserAgent": "User-Agent",
+    "totalCountPrefix": "총 ",
+    "totalCountSuffix": "건",
+    "fetchError": "로그인 이력 조회에 실패하였습니다.",
+    "statsError": "로그인 통계 조회에 실패하였습니다."
+  },
+  "status": {
+    "all": "전체",
+    "success": "성공",
+    "fail": "실패"
+  }
+}

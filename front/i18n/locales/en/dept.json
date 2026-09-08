@@ -1,0 +1,328 @@
+{
+  "depthLabels": {
+    "hq": "Headquarters",
+    "team": "Team",
+    "cell": "Cell",
+    "part": "Part",
+    "fallback": "Sub-unit"
+  },
+  "list": {
+    "breadcrumbHome": "Home",
+    "breadcrumbOrg": "Company/Department Management",
+    "breadcrumbDept": "Department Management",
+    "title": "Department Management",
+    "subtitle": "View and manage the department structure.",
+    "stats": {
+      "totalDept": "Total Departments",
+      "hq": "Headquarters",
+      "deptTeam": "Departments/Teams",
+      "totalEmp": "Total Employees"
+    },
+    "comSelectPlaceholder": "Select Company (required)",
+    "searchPlaceholder": "Search by department name or code",
+    "resultCount": "{{count}} results",
+    "addBtn": "Add Department",
+    "selectCompanyEmpty": "Please select a company to view.",
+    "selectCompanyHint": "Company name is a required search condition.",
+    "noMatchEmpty": "No matching departments found.",
+    "table": {
+      "no": "No.",
+      "deptName": "Department Name",
+      "code": "Code",
+      "parentDept": "Parent Department",
+      "leader": "Department Head",
+      "empCount": "Headcount",
+      "empCountValue": "{{count}}",
+      "actions": "Actions"
+    },
+    "topLevelBadge": "Top Level",
+    "detailTooltip": "View Details",
+    "editTooltip": "Edit",
+    "deleteTooltip": "Delete",
+    "noPermissionTooltip": "Administrators only.",
+    "footerSummary": "A total of {{count}} departments are shown, structured as a tree based on",
+    "footerHierLabel": "Parent Department",
+    "footerNote": ".",
+    "transferRequiredMsg": "Employees must be transferred to another department."
+  },
+  "add": {
+    "breadcrumbHome": "Home",
+    "breadcrumbList": "Department Management",
+    "breadcrumbAdd": "Add",
+    "title": "Add Department",
+    "subtitle": "Register a new department in the system.",
+    "backBtn": "Back to List",
+    "basicInfo": {
+      "title": "Basic Information",
+      "deptNameLabel": "Department Name",
+      "deptNameRequired": "Please enter a department name.",
+      "deptNamePlaceholder": "e.g., Platform Development Team",
+      "deptCodeLabel": "Department Code",
+      "deptCodeRequired": "Please enter a department code.",
+      "deptCodeDuplicate": "This department code is already in use.",
+      "deptCodeHint": "Uppercase letters and numbers recommended",
+      "deptCodePlaceholder": "e.g., PLT"
+    },
+    "hierarchy": {
+      "title": "Affiliation & Hierarchy",
+      "comLabel": "Company",
+      "defaultComName": "Company",
+      "parentLabel": "Parent Department",
+      "parentNoneOption": "None (Top-level Headquarters)",
+      "parentHint": "Leave blank to register as a top-level headquarters (depth 1).",
+      "depthLabel": "Hierarchy Depth",
+      "sortOrderLabel": "Sort Order",
+      "previewLabel": "Hierarchy Preview",
+      "previewTyping": "Typing department name…"
+    },
+    "leaderHint": "The department head can be assigned on the Edit Department screen after registration.",
+    "submitBtn": "Register",
+    "successMsg": "The department has been registered.",
+    "noComError": "No company information found. Please re-enter from the list screen.",
+    "accessDenied": {
+      "title": "Access Denied",
+      "message": "Only administrators can register departments.",
+      "backBtn": "Back to List"
+    }
+  },
+  "edit": {
+    "breadcrumbHome": "Home",
+    "breadcrumbList": "Department Management",
+    "breadcrumbEdit": "Edit",
+    "adminBadge": "Admin",
+    "title": "Edit Department",
+    "titleWithName": "{{deptName}} · Edit",
+    "subtitleWithId": "DEPT-{{id}} · Edit department information.",
+    "backBtn": "Back to List",
+    "notFoundMsg": "The requested department could not be found.",
+    "backToListBtn": "Back to List",
+    "basicInfo": {
+      "title": "Basic Information",
+      "deptNameLabel": "Department Name",
+      "deptNameRequired": "Please enter a department name.",
+      "deptCodeLabel": "Department Code",
+      "deptCodeRequired": "Please enter a department code.",
+      "deptCodeDuplicate": "This department code is already in use."
+    },
+    "hierarchy": {
+      "title": "Affiliation & Hierarchy",
+      "comLabel": "Company",
+      "comHint": "The company cannot be changed.",
+      "defaultComName": "Company",
+      "parentLabel": "Parent Department",
+      "parentNoneOption": "None (Top-level Headquarters)",
+      "parentHint": "You cannot select this department itself or any of its sub-departments. Changing this will also update the depth of any sub-departments.",
+      "depthLabel": "Hierarchy Depth",
+      "sortOrderLabel": "Sort Order",
+      "previewLabel": "Hierarchy Preview",
+      "previewTyping": "Typing department name…"
+    },
+    "leader": {
+      "title": "Department Head",
+      "optionalTag": "Optional",
+      "selectLabel": "Select Department Head",
+      "selectPlaceholder": "Not assigned"
+    },
+    "empStatus": {
+      "title": "Current Employees",
+      "totalCount": "{{count}} total",
+      "table": {
+        "empNo": "Employee No.",
+        "empName": "Name",
+        "position": "Position",
+        "email": "Email",
+        "status": "Status"
+      },
+      "emptyMsg": "There are no employees in this department."
+    },
+    "deleteBtn": "Delete Department",
+    "saveBtn": "Save Changes",
+    "saveSuccessMsg": "Your changes have been saved.",
+    "deleteSuccessMsg": "The department has been deleted.",
+    "transferRequiredMsg": "Employees must be transferred to another department.",
+    "accessDenied": {
+      "title": "Access Denied",
+      "message": "Only administrators can edit or delete departments.",
+      "backBtn": "Back to List"
+    }
+  },
+  "detail": {
+    "breadcrumbHome": "Home",
+    "breadcrumbTitle": "Department Details",
+    "backBtn": "Back to List"
+  },
+  "my": {
+    "breadcrumbHome": "Home",
+    "breadcrumbTitle": "My Department",
+    "subtitle": "Information about the department you belong to."
+  },
+  "transfer": {
+    "list": {
+      "bannerPart1": "is currently in",
+      "bannerStatus": "Transfer Pending (PENDING_DELETE)",
+      "bannerPart2": "status. All employees in this department must be transferred to another department before the deletion can be finalized.",
+      "aiRecomTitle": "AI-recommended department: {{targetDeptName}}",
+      "aiApplyBtn": "Apply this recommendation to all employees",
+      "summary": {
+        "empCountLabel": "Employees:",
+        "empCountUnit": "",
+        "reservationCountLabel": "Unresolved Reservations:",
+        "reservationCountUnit": "",
+        "apprLineCountLabel": "Pending Approval Lines:",
+        "apprLineCountUnit": "",
+        "apprDocCountLabel": "Documents In Progress:",
+        "apprDocCountUnit": "",
+        "infoNote": "Reservations and approvals follow the employee (emp_id), so simply changing an employee's department automatically moves them without any separate transfer action. The list below is for reference only."
+      },
+      "form": {
+        "header": "Transfer Employees",
+        "bulkPlaceholder": "Select a department to apply to all",
+        "applyAllBtn": "Apply to All",
+        "table": {
+          "no": "No.",
+          "empNo": "Employee No.",
+          "empName": "Name",
+          "position": "Position",
+          "targetDept": "Target Department"
+        },
+        "rowPlaceholder": "Select target department",
+        "emptyMsg": "There are no employees in this department. You can complete the deletion right away."
+      },
+      "cancelModal": {
+        "title": "Cancel Transfer",
+        "content": "Do you want to cancel the transfer and restore the department to its original (ACTIVE) status?",
+        "okText": "Cancel Transfer",
+        "cancelText": "Close"
+      },
+      "cancelBtn": "Cancel Transfer (Restore Department)",
+      "completeBtn": "Complete Transfer",
+      "completeSuccessMsg": "The transfer has been completed.",
+      "cancelSuccessMsg": "The transfer has been canceled and the department restored.",
+      "reservations": {
+        "title": "Unresolved Reservations (Reference)",
+        "table": {
+          "emp": "Employee",
+          "resource": "Resource",
+          "status": "Status",
+          "startDt": "Reservation Start",
+          "endDt": "Reservation End"
+        }
+      },
+      "apprLines": {
+        "title": "Pending Approval Lines (Reference)",
+        "table": {
+          "emp": "Employee",
+          "docTitle": "Document Title",
+          "linOrder": "Approval Order",
+          "status": "Status"
+        }
+      },
+      "apprDocs": {
+        "title": "Documents In Progress (Reference)",
+        "table": {
+          "emp": "Employee",
+          "docTitle": "Document Title",
+          "status": "Status"
+        }
+      }
+    },
+    "log": {
+      "title": "Department Transfer History",
+      "filter": {
+        "originDept": "Origin Department",
+        "targetDept": "Target Department",
+        "aiRecommended": "AI Suggestion",
+        "aiAccepted": "AI Recommendation Accepted",
+        "manual": "Manually Selected",
+        "dateFrom": "Processed From",
+        "dateTo": "Processed To"
+      },
+      "infoNotePrefix": "By default, only the",
+      "infoNoteBold": "last 30 days",
+      "infoNoteSuffix": "are shown. To view a wider range, move the start date further into the past.",
+      "table": {
+        "processedAt": "Processed Date",
+        "originDept": "Origin Department",
+        "targetDept": "Target Department",
+        "emp": "Employee",
+        "aiSuggested": "AI Suggested",
+        "aiReason": "AI Reason",
+        "processedBy": "Processed By"
+      },
+      "aiAcceptedBadge": "Accepted",
+      "manualBadge": "Manual",
+      "emptyMsg": "No transfer history matches the selected conditions.",
+      "totalCountPrefix": "Total",
+      "totalCountSuffix": " results"
+    },
+    "pending": {
+      "title": "Departments Pending Transfer",
+      "searchPlaceholder": "Search by department name or code",
+      "infoNote": "If you left in the middle of deleting (dissolving) a department before finishing the employee transfer, you can find it here and continue.",
+      "table": {
+        "deptName": "Department Name",
+        "deptCode": "Department Code",
+        "empCount": "Employee Count",
+        "empCountValue": "{{count}}",
+        "pendingSince": "Pending Since"
+      },
+      "continueBtn": "Continue Transfer",
+      "noMatchEmpty": "No departments pending transfer match \"{{keyword}}\".",
+      "emptyMsg": "There are no departments pending transfer."
+    }
+  },
+  "deleteModal": {
+    "header": {
+      "blocked": "Cannot Delete",
+      "transfer": "Employee Transfer Required",
+      "delete": "Delete Department"
+    },
+    "transferBtn": "Proceed with Transfer",
+    "deleteBtn": "Confirm Delete",
+    "blocked": {
+      "warningPrefix": "This department has",
+      "warningSuffix": "sub-department(s).",
+      "hint": "Please delete or move the sub-departments elsewhere first, then try again.",
+      "warnBox": "You cannot delete (dissolve) a department while it still has sub-departments."
+    },
+    "transfer": {
+      "warningPrefix": "Proceeding will change the department status to",
+      "warningStatus": "Transfer Pending (PENDING_DELETE)",
+      "warningSuffix": ", and",
+      "warningLine2": "you will be taken directly to the employee transfer screen.",
+      "warnBoxPrefix": "You must transfer",
+      "warnBoxSuffix": "employees in this department to another department before the deletion is finalized."
+    },
+    "delete": {
+      "warningLine1": "Deleting may affect related data.",
+      "warningLine2": "This action cannot be undone."
+    }
+  },
+  "detailView": {
+    "myDeptBanner": "This is the department you currently belong to.",
+    "basicInfo": {
+      "title": "Department Basic Information",
+      "deptNameLabel": "Department Name",
+      "deptCodeLabel": "Department Code",
+      "parentDeptLabel": "Parent Department",
+      "topLevelChip": "Top-level Department",
+      "leaderLabel": "Department Head",
+      "noLeader": "No department head assigned",
+      "hierPathLabel": "Hierarchy Path"
+    },
+    "empSection": {
+      "title": "Employees",
+      "countValue": "{{count}}",
+      "table": {
+        "empNo": "Employee No.",
+        "empName": "Name",
+        "position": "Position",
+        "email": "Email",
+        "mobile": "Mobile",
+        "status": "Status",
+        "hireDate": "Hire Date"
+      },
+      "emptyMsg": "There are no employees in this department."
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "common": {
+    "statusLabels": {
+      "received": "Received",
+      "screening": "Screening",
+      "interview": "Interview",
+      "hired": "Hired",
+      "rejected": "Not Selected"
+    }
+  },
+  "list": {
+    "breadcrumbHome": "Home",
+    "breadcrumbRoot": "Recruitment",
+    "breadcrumbCurrent": "Applicants",
+    "title": "Applicant Management",
+    "subtitle": "Check applicant status by posting and change their screening status.",
+    "dashboardBtn": "Dashboard",
+    "kanbanBtn": "Kanban Board",
+    "rankBtn": "Fit Score Ranking",
+    "cardTitle": "Applicant List",
+    "totalBadge": "Total {{count}}",
+    "recruitPlaceholder": "Select posting (All)",
+    "statusPlaceholder": "Screening status (All)",
+    "searchBtn": "Search",
+    "table": {
+      "name": "Applicant Name",
+      "recTitle": "Posting",
+      "email": "Email",
+      "phone": "Phone",
+      "resume": "Resume",
+      "appliedDate": "Applied Date",
+      "status": "Status"
+    },
+    "resumeSubmitted": "Submitted",
+    "resumeNotSubmitted": "Not Submitted",
+    "detailTooltip": "Details",
+    "emptyDescription": "No applicants match the selected conditions.",
+    "totalCountPrefix": "Total ",
+    "totalCountSuffix": "",
+    "messages": {
+      "statusChangeSuccess": "The applicant's status has been changed."
+    }
+  },
+  "detail": {
+    "breadcrumbHome": "Home",
+    "breadcrumbRoot": "Applicant Management",
+    "breadcrumbList": "Applicants",
+    "breadcrumbCurrent": "Details",
+    "title": "Applicant Details",
+    "subtitle": "Check the applicant's information.",
+    "backToListBtn": "Back to list",
+    "editFromListBtn": "Edit from list",
+    "labels": {
+      "recTitle": "Posting",
+      "email": "Email",
+      "phone": "Phone",
+      "appliedAt": "Applied At",
+      "createdAt": "Registered At",
+      "updatedAt": "Last Updated"
+    },
+    "resumeCardTitle": "Resume Information",
+    "resumeEmpty": "No resume has been submitted.",
+    "resumeLabels": {
+      "fileName": "File Name",
+      "analysisStatus": "Analysis Status",
+      "fitScore": "AI Fit Score",
+      "uploadedAt": "Uploaded At",
+      "analyzedAt": "Analyzed At",
+      "aiSummary": "AI Summary"
+    },
+    "messages": {
+      "statusChangeSuccess": "The applicant's status has been changed."
+    }
+  },
+  "dashboard": {
+    "backBtn": "Back to applicant list",
+    "breadcrumb": "Recruitment > Applicants > Dashboard",
+    "title": "Applicant Status Dashboard",
+    "subtitle": "Aggregates the number of applicants by screening stage across all of our company's postings.",
+    "stats": {
+      "total": "Total Applicants",
+      "inProgress": "In Progress",
+      "hireRate": "Hire Rate"
+    },
+    "unitPerson": "",
+    "inProgressDetail": "Received {{received}} · Screening {{screening}} · Interview {{interview}}",
+    "hireRateDetail": "Hired {{hired}} / Total {{total}}",
+    "emptyData": "There is no applicant data to aggregate yet.",
+    "charts": {
+      "distribution": "Distribution by Screening Stage",
+      "byStatus": "Applicants by Stage"
+    },
+    "barDatasetLabel": "Number of Applicants",
+    "doughnutTooltip": " {{label}}: {{count}} ({{pct}}%)",
+    "barTooltip": " {{count}}"
+  },
+  "kanban": {
+    "backBtn": "Back to applicant list",
+    "breadcrumb": "Recruitment > Applicants > Kanban Board",
+    "title": "Applicant Kanban Board",
+    "subtitle": "Select a posting to drag applicants between screening stages and change their status.",
+    "recruitPlaceholder": "Select posting",
+    "searchPlaceholder": "Search applicant name",
+    "listViewBtn": "View as list",
+    "selectRecruitEmpty": "Select a posting to display its kanban board.",
+    "columnCount": "{{count}}",
+    "resumeTag": "Resume",
+    "emptyColumn": "None"
+  },
+  "rank": {
+    "backBtn": "Back to applicant list",
+    "breadcrumb": "Recruitment > Applicants > Fit Score Ranking",
+    "title": "AI Fit Score Ranking",
+    "subtitle": "Check applicant rankings by posting based on AI resume analysis results.",
+    "recruitPlaceholder": "Select posting",
+    "selectRecruitEmpty": "Please select a posting to view its ranking.",
+    "table": {
+      "rank": "Rank",
+      "name": "Applicant Name",
+      "email": "Email",
+      "fitScore": "AI Fit Score",
+      "status": "Screening Status"
+    },
+    "fitScoreUnit": "{{score}} pts",
+    "notAnalyzed": "Not Analyzed",
+    "emptyTable": "No analyzed applicants.",
+    "totalCountPrefix": "Total ",
+    "totalCountSuffix": ""
+  },
+  "resumeSearch": {
+    "breadcrumbHome": "Home",
+    "breadcrumbRoot": "Recruitment",
+    "breadcrumbCurrent": "Resume AI Search",
+    "title": "Resume AI Search",
+    "subtitle": "Search resumes submitted to a posting using semantic (RAG) search. e.g. \"Spring Batch large-scale processing experience\"",
+    "recruitPlaceholder": "Select posting",
+    "queryPlaceholder": "Describe the skills/experience you're looking for in natural language",
+    "topKOption": "Top {{count}}",
+    "searchBtn": "Search",
+    "selectRecruitEmpty": "Please select a posting to search first.",
+    "noResults": "No results found. Try searching with different terms.",
+    "detailLink": "View applicant details",
+    "similarityTag": "Similarity {{pct}}%"
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "common": {
+    "statusLabels": {
+      "received": "접수",
+      "screening": "서류심사",
+      "interview": "면접",
+      "hired": "합격",
+      "rejected": "불합격"
+    }
+  },
+  "list": {
+    "breadcrumbHome": "홈",
+    "breadcrumbRoot": "채용관리",
+    "breadcrumbCurrent": "지원자",
+    "title": "지원자 관리",
+    "subtitle": "공고별 지원자 현황을 조회하고 전형 상태를 변경합니다.",
+    "dashboardBtn": "대시보드",
+    "kanbanBtn": "칸반보드",
+    "rankBtn": "적합도 순위",
+    "cardTitle": "지원자 목록",
+    "totalBadge": "총 {{count}}명",
+    "recruitPlaceholder": "채용공고 선택 (전체)",
+    "statusPlaceholder": "전형 상태 (전체)",
+    "searchBtn": "검색",
+    "table": {
+      "name": "지원자명",
+      "recTitle": "지원 공고",
+      "email": "이메일",
+      "phone": "연락처",
+      "resume": "이력서",
+      "appliedDate": "지원일",
+      "status": "상태"
+    },
+    "resumeSubmitted": "제출됨",
+    "resumeNotSubmitted": "미제출",
+    "detailTooltip": "상세",
+    "emptyDescription": "조건에 맞는 지원자가 없습니다.",
+    "totalCountPrefix": "총 ",
+    "totalCountSuffix": "명",
+    "messages": {
+      "statusChangeSuccess": "지원자 상태가 변경되었습니다."
+    }
+  },
+  "detail": {
+    "breadcrumbHome": "홈",
+    "breadcrumbRoot": "지원자 관리",
+    "breadcrumbList": "지원자",
+    "breadcrumbCurrent": "상세",
+    "title": "지원자 상세",
+    "subtitle": "지원자 정보를 확인합니다.",
+    "backToListBtn": "목록으로",
+    "editFromListBtn": "목록에서 수정",
+    "labels": {
+      "recTitle": "지원 공고",
+      "email": "이메일",
+      "phone": "연락처",
+      "appliedAt": "지원일시",
+      "createdAt": "등록일시",
+      "updatedAt": "최종 수정일시"
+    },
+    "resumeCardTitle": "이력서 정보",
+    "resumeEmpty": "제출된 이력서가 없습니다.",
+    "resumeLabels": {
+      "fileName": "파일명",
+      "analysisStatus": "분석 상태",
+      "fitScore": "AI 적합도 점수",
+      "uploadedAt": "업로드 일시",
+      "analyzedAt": "분석 완료 일시",
+      "aiSummary": "AI 요약"
+    },
+    "messages": {
+      "statusChangeSuccess": "지원자 상태가 변경되었습니다."
+    }
+  },
+  "dashboard": {
+    "backBtn": "지원자 목록으로",
+    "breadcrumb": "채용관리 > 지원자 > 대시보드",
+    "title": "지원자 현황 대시보드",
+    "subtitle": "우리 회사 채용공고 전체의 전형 단계별 지원자 수를 집계합니다.",
+    "stats": {
+      "total": "전체 지원자",
+      "inProgress": "전형 진행중",
+      "hireRate": "합격률"
+    },
+    "unitPerson": "명",
+    "inProgressDetail": "접수 {{received}} · 서류 {{screening}} · 면접 {{interview}}",
+    "hireRateDetail": "합격 {{hired}}명 / 전체 {{total}}명",
+    "emptyData": "집계할 지원자 데이터가 아직 없습니다.",
+    "charts": {
+      "distribution": "전형 단계별 분포",
+      "byStatus": "단계별 지원자 수"
+    },
+    "barDatasetLabel": "지원자 수",
+    "doughnutTooltip": " {{label}}: {{count}}명 ({{pct}}%)",
+    "barTooltip": " {{count}}명"
+  },
+  "kanban": {
+    "backBtn": "지원자 목록으로",
+    "breadcrumb": "채용관리 > 지원자 > 칸반보드",
+    "title": "지원자 칸반보드",
+    "subtitle": "공고를 선택하면 전형 단계별로 지원자를 드래그해서 상태를 변경할 수 있습니다.",
+    "recruitPlaceholder": "채용공고 선택",
+    "searchPlaceholder": "지원자 이름 검색",
+    "listViewBtn": "목록으로 보기",
+    "selectRecruitEmpty": "공고를 선택하면 칸반보드가 표시됩니다.",
+    "columnCount": "{{count}}명",
+    "resumeTag": "이력서",
+    "emptyColumn": "없음"
+  },
+  "rank": {
+    "backBtn": "지원자 목록으로",
+    "breadcrumb": "채용관리 > 지원자 > 적합도 순위",
+    "title": "AI 적합도(fit_score) 순위",
+    "subtitle": "이력서 AI 분석 결과를 기준으로 공고별 지원자 순위를 확인합니다.",
+    "recruitPlaceholder": "채용공고 선택",
+    "selectRecruitEmpty": "순위를 확인할 채용공고를 선택해 주세요.",
+    "table": {
+      "rank": "순위",
+      "name": "지원자명",
+      "email": "이메일",
+      "fitScore": "AI 적합도 점수",
+      "status": "전형 상태"
+    },
+    "fitScoreUnit": "{{score}}점",
+    "notAnalyzed": "미분석",
+    "emptyTable": "분석된 지원자가 없습니다.",
+    "totalCountPrefix": "총 ",
+    "totalCountSuffix": "명"
+  },
+  "resumeSearch": {
+    "breadcrumbHome": "홈",
+    "breadcrumbRoot": "채용관리",
+    "breadcrumbCurrent": "이력서 AI 검색",
+    "title": "이력서 AI 검색",
+    "subtitle": "공고에 제출된 이력서를 의미 기반(RAG)으로 검색합니다. 예: \"Spring Batch 대용량 처리 경험\"",
+    "recruitPlaceholder": "채용공고 선택",
+    "queryPlaceholder": "찾고 싶은 역량/경험을 자연어로 입력하세요",
+    "topKOption": "상위 {{count}}건",
+    "searchBtn": "검색",
+    "selectRecruitEmpty": "검색할 채용공고를 먼저 선택해 주세요.",
+    "noResults": "검색 결과가 없습니다. 다른 표현으로 다시 검색해 보세요.",
+    "detailLink": "지원자 상세 보기",
+    "similarityTag": "유사도 {{pct}}%"
+  }
+}

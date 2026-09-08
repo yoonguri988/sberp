@@ -1,0 +1,37 @@
+{
+  "list": {
+    "breadcrumbHome": "Home",
+    "breadcrumbCurrent": "Login History",
+    "title": "Login History",
+    "subtitle": "View successful and failed login attempts by users.",
+    "statsTotal": "Total Attempts",
+    "statsSuccess": "Success",
+    "statsFail": "Failed",
+    "cardTitle": "Login History",
+    "filterStartDt": "Start Date",
+    "filterEndDt": "End Date",
+    "filterEmail": "Search by Email",
+    "filterEmailPlaceholder": "Enter part of the email",
+    "searchButton": "Search",
+    "searchNotePrefix": "If no date range is specified, only the ",
+    "searchNoteEmphasis": "last 30 days",
+    "searchNoteSuffix": " will be shown by default.",
+    "empty": "No login history matches the selected conditions.",
+    "tableDatetime": "Date/Time",
+    "tableEmail": "Email",
+    "tableName": "Name",
+    "tableResult": "Result",
+    "tableFailReason": "Failure Reason",
+    "tableIp": "IP",
+    "tableUserAgent": "User-Agent",
+    "totalCountPrefix": "Total ",
+    "totalCountSuffix": "",
+    "fetchError": "Failed to load login history.",
+    "statsError": "Failed to load login statistics."
+  },
+  "status": {
+    "all": "All",
+    "success": "Success",
+    "fail": "Failed"
+  }
+}

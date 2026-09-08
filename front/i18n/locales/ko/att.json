@@ -1,0 +1,177 @@
+{
+  "breadcrumb": "근태 관리",
+
+  "leaveMy": {
+    "title": "내 연차 현황",
+    "subtitle": "연도별 연차 발생·사용·잔여 현황을 확인합니다.",
+    "breadcrumb": "내 연차 현황",
+    "table": {
+      "year": "연도",
+      "totalDays": "총 발생",
+      "usedDays": "사용",
+      "remainingDays": "잔여",
+      "unit": "일"
+    },
+    "emptyMsg": "연차 데이터가 없습니다.",
+    "historyCardTitle": "연차 사용 이력",
+    "historyTable": {
+      "grantDays": "일수",
+      "grantType": "유형",
+      "grantedAt": "일시",
+      "reason": "사유"
+    }
+  },
+
+  "myHistory": {
+    "title": "내 근태 이력",
+    "subtitle": "본인의 출퇴근 기록을 확인합니다.",
+    "breadcrumb": "내 근태 이력",
+    "table": {
+      "date": "날짜",
+      "checkIn": "출근",
+      "checkOut": "퇴근",
+      "workMinutes": "근무(분)",
+      "overtimeMinutes": "연장(분)",
+      "nightMinutes": "야간(분)",
+      "status": "상태"
+    },
+    "emptyMsg": "근태 기록이 없습니다."
+  },
+
+  "dashboard": {
+    "title": "출퇴근 현황",
+    "subtitle": "오늘의 출퇴근 현황을 확인하고 출근/퇴근을 처리합니다.",
+    "breadcrumb": "출퇴근 현황",
+    "notCheckedIn": "아직 출근하지 않았습니다.",
+    "checkedIn": "출근 완료",
+    "checkedOut": "퇴근 완료",
+    "btnCheckIn": "출근하기",
+    "btnCheckOut": "퇴근하기",
+    "workDone": "오늘 근무를 완료했습니다.",
+    "todayDate": "오늘 날짜",
+    "checkInTime": "출근 시간",
+    "checkOutTime": "퇴근 시간",
+    "workMinutes": "근무 시간(분)",
+    "status": "상태",
+    "confirmCheckIn": "출근 처리하시겠습니까?",
+    "confirmCheckOut": "퇴근 처리하시겠습니까?"
+  },
+
+  "admin": {
+    "title": "근태 현황 관리",
+    "subtitle": "전체 사원의 근태 기록을 조회하고 수정합니다.",
+    "breadcrumb": "근태 현황 관리",
+    "search": {
+      "startDate": "시작일",
+      "endDate": "종료일",
+      "btnSearch": "검색",
+      "keywordPlaceholder": "사원명 또는 사번"
+    },
+    "table": {
+      "empNo": "사번",
+      "empName": "이름",
+      "date": "날짜",
+      "checkIn": "출근",
+      "checkOut": "퇴근",
+      "workMinutes": "근무(분)",
+      "status": "상태",
+      "action": "관리"
+    },
+    "btnEdit": "수정",
+    "btnCreate": "근태 등록",
+    "emptyMsg": "검색 조건에 해당하는 근태 기록이 없습니다.",
+    "editModal": {
+      "title": "근태 수정",
+      "checkIn": "출근 시간",
+      "checkOut": "퇴근 시간",
+      "status": "상태",
+      "btnSave": "저장",
+      "btnCancel": "취소",
+      "checkInRequired": "출근 시간을 입력해주세요."
+    },
+    "createModal": {
+      "title": "근태 등록",
+      "btnRegister": "등록",
+      "empNo": "사번",
+      "empNoPlaceholder": "예: EMP-001",
+      "empNoRequired": "사번을 입력해주세요.",
+      "workDate": "근무일",
+      "workDateRequired": "근무일을 선택해주세요."
+    }
+  },
+
+  "leaveAdmin": {
+    "title": "연차 관리",
+    "subtitle": "사원별 연차 현황을 조회하고 발생·차감·조정합니다.",
+    "breadcrumb": "연차 관리",
+    "yearSelect": "연도 선택",
+    "table": {
+      "empNo": "사번",
+      "empName": "이름",
+      "totalDays": "총 발생",
+      "usedDays": "사용",
+      "remainingDays": "잔여",
+      "action": "관리"
+    },
+    "emptyMsg": "해당 연도의 연차 데이터가 없습니다.",
+    "btnCalculate": "연차 발생",
+    "btnDeduct": "차감",
+    "btnAdjust": "조정",
+    "btnHistory": "이력",
+    "confirmCalculate": "해당 사원의 연차를 발생시키겠습니까?",
+    "deductModal": {
+      "title": "연차 차감",
+      "halfType": "반차 구분",
+      "fullDay": "연차 (1일)",
+      "halfAM": "오전 반차",
+      "halfPM": "오후 반차",
+      "leaveDate": "휴가 사용일",
+      "leaveDateRequired": "휴가 사용일을 선택해주세요.",
+      "reason": "사유",
+      "btnDeduct": "차감"
+    },
+    "adjustModal": {
+      "title": "연차 조정",
+      "amount": "조정 일수",
+      "amountHint": "양수: 추가 부여 / 음수: 차감",
+      "reason": "사유",
+      "btnAdjust": "조정"
+    },
+    "historyModal": {
+      "title": "부여/차감 이력",
+      "table": {
+        "grantDays": "일수",
+        "grantType": "유형",
+        "grantedAt": "일시",
+        "reason": "사유"
+      },
+      "grantType": {
+        "REG": "정기 발생",
+        "CAR": "이월",
+        "ADJ": "수동 조정",
+        "USE": "사용"
+      },
+      "emptyMsg": "이력이 없습니다."
+    }
+  },
+
+  "status": {
+    "NORMAL": "정상",
+    "LATE": "지각",
+    "EARLY_LEAVE": "조퇴",
+    "ABSENT": "결근",
+    "AM_HALF": "오전 반차",
+    "PM_HALF": "오후 반차",
+    "ANNUAL": "연차"
+  },
+
+  "msg": {
+    "createSuccess": "근태가 등록되었습니다.",
+    "checkInSuccess": "출근 처리되었습니다.",
+    "checkOutSuccess": "퇴근 처리되었습니다.",
+    "editSuccess": "근태가 수정되었습니다.",
+    "calculateSuccess": "연차가 발생되었습니다.",
+    "deductSuccess": "연차가 차감되었습니다.",
+    "adjustSuccess": "연차가 조정되었습니다."
+  }
+}

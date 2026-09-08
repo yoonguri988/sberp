@@ -1,0 +1,112 @@
+{
+  "admin": {
+    "greeting": "Hello, {{empName}} {{posName}}.",
+    "defaultUserName": "User",
+    "statusTag": {
+      "NORMAL": "On Time",
+      "LATE": "Late",
+      "EARLY_LEAVE": "Early Leave",
+      "ABSENT": "Absent",
+      "ANNUAL": "Annual Leave",
+      "AM_HALF": "AM Half-Day",
+      "PM_HALF": "PM Half-Day"
+    },
+    "quickLinks": {
+      "emp": "Employees",
+      "att": "Attendance",
+      "appr": "Approval",
+      "leave": "Leave Management",
+      "notice": "Notices",
+      "aichat": "Policy Docs"
+    },
+    "projectStatus": {
+      "TODO": "To Do",
+      "DOING": "In Progress"
+    },
+    "projectEmptyMsg": "No projects in progress",
+    "checkInBtn": "Check In",
+    "checkOutBtn": "Check Out",
+    "attHistoryLink": "Attendance",
+    "leaveLabel": "Remaining Leave",
+    "leaveApplyLink": "Apply for Leave",
+    "checkInConfirm": {
+      "title": "Confirm Check-In",
+      "content": "Check in at {{time}}?",
+      "okText": "Check In",
+      "cancelText": "Cancel"
+    },
+    "checkOutConfirm": {
+      "title": "Confirm Check-Out",
+      "content": "Check out at {{time}}?",
+      "okText": "Check Out",
+      "cancelText": "Cancel"
+    },
+    "checkInSuccessMsg": "Checked in successfully.",
+    "checkOutSuccessMsg": "Checked out successfully.",
+    "chartLabels": {
+      "present": "Present",
+      "late": "Late",
+      "absent": "Absent",
+      "leave": "Leave"
+    },
+    "chartTooltipUnit": "",
+    "chartTotalLabel": "Total",
+    "todayAttChartHead": "Today's Attendance",
+    "noticeHead": "Notices",
+    "viewAll": "View All",
+    "noticeEmptyMsg": "No notices",
+    "urgentBadge": "Urgent",
+    "pendingHead": "Action Needed",
+    "approvalBoxLink": "Approvals",
+    "pendingApproval": "Pending Approval",
+    "myDrafting": "My Drafts In Progress",
+    "countUnit": "",
+    "companyProjectHead": "Company Projects",
+    "myProjectHead": "My Projects",
+    "weeklyTrendHead": "Weekly Attendance Trend"
+  },
+  "member": {
+    "greeting": "Hello, {{empName}}",
+    "attStatus": {
+      "absent": "Not Checked In",
+      "done": "Checked Out",
+      "working": "Working"
+    },
+    "todoDoc": {
+      "docId": "Doc No.",
+      "docTitle": "Title",
+      "empName": "Drafted By",
+      "docStatus": "Status",
+      "approveBtn": "Review"
+    },
+    "evalOpen": {
+      "titleSuffix": "Performance Review",
+      "inProgressBadge": "In Progress",
+      "progressText": "Progress: {{submittedCount}} / {{totalCount}} submitted",
+      "goToEvalBtn": "Go to Review"
+    },
+    "stats": {
+      "pendingApproval": "Pending Approval",
+      "leaveRemaining": "Remaining Leave",
+      "todayAtt": "Today's Attendance",
+      "myProjects": "Active Projects",
+      "unitCase": "{{count}}",
+      "unitDay": "{{count}} days",
+      "noData": "-"
+    },
+    "pendingBoxHead": "Pending Approvals",
+    "viewAll": "View All",
+    "moreBtn": "More",
+    "pendingEmptyMsg": "No documents pending approval.",
+    "noticeHead": "Notices",
+    "noticeEmptyMsg": "No notices registered.",
+    "myProjectHead": "My Projects",
+    "myProjectEmptyMsg": "No projects joined.",
+    "myReservationHead": "My Reservations",
+    "reservationEmptyMsg": "No recent reservations.",
+    "resvStatus": {
+      "APP": "Approved",
+      "WAI": "Waiting"
+    }
+  }
+}

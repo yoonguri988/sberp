@@ -1,0 +1,1551 @@
+@charset "UTF-8";
+/* ==========================================================================
+   SBerp — Enterprise ERP Prototype
+   Design tokens + custom layer on top of Bootstrap 5 / antd
+   ========================================================================== */
+
+:root {
+  /* Brand / accent */
+  --sb-accent: #2563eb;
+  --sb-accent-rgb: 37, 99, 235;
+  --sb-accent-hover: #1d4ed8;
+  --sb-accent-soft: #eff4ff;
+  --sb-accent-soft-2: #dbe6ff;
+
+  /* Neutrals */
+  --sb-bg: #f5f6f8;
+  --sb-surface: #ffffff;
+  --sb-border: #e6e8ec;
+  --sb-border-strong: #d4d8de;
+  --sb-ink: #1a1f29;
+  --sb-ink-soft: #5b6473;
+  --sb-ink-faint: #8a93a3;
+
+  /* Status */
+  --sb-green: #16a34a;
+  --sb-green-soft: #e7f6ed;
+  --sb-amber: #d97706;
+  --sb-amber-soft: #fdf2e3;
+  --sb-red: #dc2626;
+  --sb-red-soft: #fdecec;
+  --sb-violet: #7c3aed;
+  --sb-violet-soft: #f1ebfe;
+  --sb-cyan: #0891b2;
+  --sb-cyan-soft: #e4f5f9;
+
+  /* Geometry */
+  --sb-radius: 10px;
+  --sb-radius-sm: 7px;
+  --sb-radius-lg: 16px;
+  --sb-sidebar-w: 248px;
+  --sb-sidebar-rail: 72px;
+  --sb-header-h: 60px;
+
+  --sb-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --sb-shadow:
+    0 1px 3px rgba(16, 24, 40, 0.08), 0 1px 2px rgba(16, 24, 40, 0.04);
+  --sb-shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.12);
+
+  --bs-primary: var(--sb-accent);
+  --bs-primary-rgb: var(--sb-accent-rgb);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 기본 reset */
+html,
+body,
+#__next {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family:
+    "Pretendard Variable",
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    "Segoe UI",
+    sans-serif;
+  background: var(--sb-bg);
+  color: var(--sb-ink);
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: var(--sb-accent-soft-2);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #cdd2da;
+  border-radius: 99px;
+  border: 2px solid var(--sb-bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b3bac5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Ant Design Layout 기본 높이 */
+.ant-layout {
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   App shell
+   ========================================================================== */
+.sb-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+
+/* ----- Sidebar ----- */
+.sb-sidebar {
+  flex: 0 0 auto;
+  width: var(--sb-sidebar-w);
+  height: 100vh;
+  overflow: hidden;
+  background: var(--sb-surface) !important;
+  border-right: 1px solid var(--sb-border);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* antd Sider가 children을 .ant-layout-sider-children으로 한 번 더 감싸기 때문에
+   실제 flex-column / 배경 적용은 이 래퍼에도 걸어줘야 sb-brand/sb-nav/sb-sidebar__foot에 먹힘 */
+.sb-sidebar.ant-layout-sider-light,
+.sb-sidebar {
+  background: var(--sb-surface) !important;
+}
+.sb-sidebar > .ant-layout-sider-children {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--sb-surface);
+}
+
+.sb-brand {
+  height: var(--sb-header-h);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--sb-border);
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.sb-brand__mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--sb-accent), #4f7cf0);
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  box-shadow: 0 2px 6px rgba(var(--sb-accent-rgb), 0.35);
+}
+.sb-brand__name {
+  font-weight: 750;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+}
+.sb-brand__name b {
+  color: var(--sb-accent);
+}
+
+.sb-nav {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 12px 20px;
+}
+.sb-nav__section {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sb-ink-faint);
+  padding: 16px 12px 6px;
+}
+.sb-nav__item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 12px;
+  border-radius: var(--sb-radius-sm);
+  color: var(--sb-ink-soft);
+  font-weight: 550;
+  margin-bottom: 2px;
+  position: relative;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    color 0.12s;
+}
+.sb-nav__item i {
+  font-size: 17px;
+  width: 20px;
+  text-align: center;
+  flex: 0 0 auto;
+}
+.sb-nav__item:hover {
+  background: #f1f3f6;
+  color: var(--sb-ink);
+}
+.sb-nav__item.active {
+  background: var(--sb-accent-soft);
+  color: var(--sb-accent);
+  font-weight: 650;
+}
+.sb-nav__item.active::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--sb-accent);
+}
+.sb-nav__badge {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--sb-red);
+  color: #fff;
+  border-radius: 99px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: grid;
+  place-items: center;
+}
+.sb-nav__label {
+  overflow: hidden;
+}
+
+.sb-sidebar__foot {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--sb-border);
+  padding: 10px 12px;
+}
+.sb-userchip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px;
+  border-radius: var(--sb-radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.sb-userchip:hover {
+  background: #f1f3f6;
+}
+.sb-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  background: var(--sb-accent-soft-2);
+  color: var(--sb-accent);
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* 대형 아바타 (프로필) */
+.sb-avatar--xl {
+  width: 72px;
+  height: 72px;
+  font-size: 28px;
+  border-radius: 50%;
+}
+
+.sb-userchip__meta {
+  overflow: hidden;
+  line-height: 1.25;
+}
+.sb-userchip__meta b {
+  font-size: 13px;
+  display: block;
+}
+.sb-userchip__meta span {
+  font-size: 11.5px;
+  color: var(--sb-ink-faint);
+}
+
+/* ----- Main column ----- */
+.sb-main {
+  min-width: 0;
+  flex: 1 1 auto;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ----- Header ----- */
+.sb-header {
+  height: var(--sb-header-h);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(8px);
+  border-bottom: 1px solid var(--sb-border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 22px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  flex: 0 0 auto;
+}
+.sb-iconbtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--sb-ink-soft);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition:
+    background 0.12s,
+    color 0.12s;
+  position: relative;
+}
+.sb-iconbtn:hover {
+  background: #f1f3f6;
+  color: var(--sb-ink);
+}
+.sb-iconbtn .dot {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  background: var(--sb-red);
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+}
+
+.sb-search {
+  flex: 1 1 auto;
+  max-width: 440px;
+  position: relative;
+}
+.sb-search input {
+  width: 100%;
+  height: 38px;
+  border: 1px solid var(--sb-border);
+  background: #f5f6f8;
+  border-radius: 9px;
+  padding: 0 12px 0 38px;
+  font-size: 13.5px;
+  color: var(--sb-ink);
+  outline: none;
+  transition:
+    border 0.14s,
+    background 0.14s,
+    box-shadow 0.14s;
+}
+.sb-search input:focus {
+  background: #fff;
+  border-color: var(--sb-accent);
+  box-shadow: 0 0 0 3px rgba(var(--sb-accent-rgb), 0.12);
+}
+.sb-search i {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--sb-ink-faint);
+  font-size: 15px;
+}
+.sb-search kbd {
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  background: #fff;
+  border: 1px solid var(--sb-border);
+  border-radius: 5px;
+  padding: 2px 6px;
+  color: var(--sb-ink-faint);
+}
+
+.sb-header__spacer {
+  flex: 1 1 auto;
+}
+.sb-header__right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ----- Page content ----- */
+.sb-content {
+  padding: 24px 28px 40px;
+  flex: 1 1 auto;
+}
+.sb-content--wide {
+  max-width: none;
+}
+
+/* ----- Error pages (404 / 500 / _error) ----- */
+.sb-error-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sb-bg);
+  padding: 24px;
+}
+
+.sb-page-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.sb-page-head__txt h1 {
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+.sb-page-head__txt p {
+  color: var(--sb-ink-soft);
+  margin: 4px 0 0;
+  font-size: 13.5px;
+}
+.sb-page-head__actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sb-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: var(--sb-ink-faint);
+  margin-bottom: 6px;
+}
+.sb-breadcrumb i {
+  font-size: 11px;
+}
+.sb-breadcrumb a {
+  color: var(--sb-ink-faint);
+}
+.sb-breadcrumb a:hover {
+  color: var(--sb-accent);
+}
+
+/* 채용관리(rec/apct) 상세·순위·검색 화면의 "목록으로" 뒤로가기 버튼.
+   기존 모듈은 breadcrumb 안에 목록 링크를 넣는 방식(notice/detail.js 등)을 쓰지만,
+   rec/apct는 상세 화면 진입 경로가 여러 곳(목록/대시보드/공고상세 등)이라 breadcrumb만으로는
+   "어디로 돌아갈지"가 애매해 별도의 명시적 뒤로가기 버튼을 추가로 둔다.
+   반드시 .sb-page-head__txt 안에서만 써야 한다 — .sb-page-head 자체는 flex 컨테이너라
+   버튼/breadcrumb/h1/p가 그 직속 자식으로 나열되면 세로로 쌓이지 않고 가로로 밀려 깨진다. */
+.sb-page-back {
+  padding: 0 0 6px;
+  height: auto;
+  color: var(--sb-ink-faint);
+  font-size: 12.5px;
+}
+.sb-page-back:hover {
+  color: var(--sb-accent);
+  background: transparent;
+}
+
+/* ----- Footer ----- */
+.sb-footer {
+  border-top: 1px solid var(--sb-border);
+  padding: 24px 28px;
+  color: var(--sb-ink-faint);
+  font-size: 12.5px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.sb-footer a {
+  color: var(--sb-ink-faint);
+}
+.sb-footer a:hover {
+  color: var(--sb-accent);
+}
+
+/* ==========================================================================
+   Cards / surfaces
+   ========================================================================== */
+.sb-card {
+  background: var(--sb-surface);
+  border: 1px solid var(--sb-border);
+  border-radius: var(--sb-radius);
+  box-shadow: var(--sb-shadow-sm);
+}
+
+a.sb-card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.sb-card--link {
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.sb-card--link:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sb-shadow);
+}
+
+.sb-card__head {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--sb-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sb-card__head h2 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.sb-card__head .sub {
+  font-size: 12.5px;
+  color: var(--sb-ink-faint);
+}
+.sb-card__head .right {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.sb-card__body {
+  padding: 18px;
+}
+.sb-card__body--flush {
+  padding: 0;
+}
+
+/* Stat tiles */
+.sb-stat {
+  background: var(--sb-surface);
+  border: 1px solid var(--sb-border);
+  border-radius: var(--sb-radius);
+  padding: 18px;
+  box-shadow: var(--sb-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+}
+.sb-stat__top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sb-stat__ico {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+  flex: 0 0 auto;
+}
+.sb-stat__label {
+  font-size: 13px;
+  color: var(--sb-ink-soft);
+  font-weight: 550;
+}
+.sb-stat__val {
+  font-size: 27px;
+  font-weight: 760;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.sb-stat__delta {
+  font-size: 12.5px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.sb-stat__delta.up {
+  color: var(--sb-green);
+}
+.sb-stat__delta.down {
+  color: var(--sb-red);
+}
+.sb-stat__delta.flat {
+  color: var(--sb-ink-faint);
+}
+
+/* ─── 상태 흐름 (sb-flow) ───────────────────────────────── */
+.sb-flow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 8px 4px;
+}
+.sb-flow > .bi {
+  color: var(--sb-ink-faint);
+  font-size: 14px;
+}
+
+.sb-flow-step {
+  flex: 1;
+  min-width: 60px;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: var(--sb-radius-sm);
+  border: 1px solid var(--sb-border);
+  background: var(--sb-surface);
+  color: var(--sb-ink-faint);
+  font-size: 13px;
+  font-weight: 550;
+  transition: all 0.15s ease;
+  position: relative;
+}
+.sb-flow-step-done {
+  background: var(--sb-green-soft);
+  border-color: var(--sb-green);
+  color: var(--sb-green);
+  font-weight: 600;
+}
+.sb-flow-step-done::before {
+  content: "\F26B";
+  font-family: "bootstrap-icons";
+  margin-right: 3px;
+  font-weight: 700;
+}
+
+.sb-flow-step-active {
+  background: var(--sb-accent);
+  border-color: var(--sb-accent);
+  color: #fff;
+  font-weight: 700;
+  box-shadow:
+    0 0 0 3px var(--sb-accent-soft),
+    var(--sb-shadow-sm);
+  transform: translateY(-1px);
+}
+.sb-flow-step-active::before {
+  content: "\F287";
+  font-family: "bootstrap-icons";
+  margin-right: 4px;
+  font-size: 8px;
+  vertical-align: middle;
+}
+
+.sb-flow-step-failed {
+  background: var(--sb-red-soft);
+  border-color: var(--sb-red);
+  color: var(--sb-red);
+  font-weight: 600;
+}
+.sb-flow-step-failed::before {
+  content: "\F62A";
+  font-family: "bootstrap-icons";
+  margin-right: 3px;
+  font-weight: 700;
+}
+
+/* tone helpers for icon bubbles */
+.tone-blue {
+  background: var(--sb-accent-soft);
+  color: var(--sb-accent);
+}
+.tone-green {
+  background: var(--sb-green-soft);
+  color: var(--sb-green);
+}
+.tone-amber {
+  background: var(--sb-amber-soft);
+  color: var(--sb-amber);
+}
+.tone-red {
+  background: var(--sb-red-soft);
+  color: var(--sb-red);
+}
+.tone-violet {
+  background: var(--sb-violet-soft);
+  color: var(--sb-violet);
+}
+.tone-cyan {
+  background: var(--sb-cyan-soft);
+  color: var(--sb-cyan);
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+  font-weight: 600;
+  border-radius: var(--sb-radius-sm);
+  font-size: 13.5px;
+  letter-spacing: -0.01em;
+}
+.btn:focus {
+  box-shadow: none;
+}
+.btn-sb {
+  background: var(--sb-accent);
+  color: #fff;
+  border: 1px solid var(--sb-accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.btn-sb:hover {
+  background: var(--sb-accent-hover);
+  border-color: var(--sb-accent-hover);
+  color: #fff;
+}
+.btn-sb-soft {
+  background: var(--sb-accent-soft);
+  color: var(--sb-accent);
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.btn-sb-soft:hover {
+  background: var(--sb-accent-soft-2);
+  color: var(--sb-accent-hover);
+}
+.btn-ghost {
+  background: #fff;
+  color: var(--sb-ink-soft);
+  border: 1px solid var(--sb-border);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.btn-ghost:hover {
+  background: #f7f8fa;
+  color: var(--sb-ink);
+  border-color: var(--sb-border-strong);
+}
+.btn-sm {
+  padding: 5px 11px;
+  font-size: 12.5px;
+}
+
+/* antd Button (전역) — 아이콘 + 텍스트 정렬
+   ----------------------------------------------------------------------
+   antd v4 Button 기본은 아이콘(span.anticon)과 텍스트(span)를 각각
+   inline 요소로 두고 vertical-align으로만 정렬한다. Bootstrap reboot 등
+   전역 CSS와 맞물리면 베이스라인이 미세하게 어긋나 아이콘이 텍스트보다
+   위/아래로 들뜨는 문제가 생긴다. .btn-sb/.btn-ghost 등 커스텀 버튼은
+   이미 자체적으로 flex 정렬을 쓰고 있어 문제 없지만, 프로젝트 전역에서
+   쓰는 순수 <Button icon={...}>는 이 규칙이 없으면 그대로 영향을 받으므로
+   antd Button 전체에 flex 정렬을 강제한다. */
+.ant-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.ant-btn > .anticon + span,
+.ant-btn > span + .anticon {
+  margin-left: 0; /* 위 gap이 이미 간격을 주므로 antd 기본 마진과 중복되지 않게 제거 */
+}
+
+/* ==========================================================================
+   Badges / pills
+   ========================================================================== */
+.sb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 650;
+  padding: 3px 9px;
+  border-radius: 99px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.sb-badge .pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.sb-badge--green {
+  background: var(--sb-green-soft);
+  color: #0f7a37;
+}
+.sb-badge--amber {
+  background: var(--sb-amber-soft);
+  color: #b45f06;
+}
+.sb-badge--red {
+  background: var(--sb-red-soft);
+  color: #c01e1e;
+}
+.sb-badge--blue {
+  background: var(--sb-accent-soft);
+  color: var(--sb-accent);
+}
+.sb-badge--violet {
+  background: var(--sb-violet-soft);
+  color: #6b27d6;
+}
+.sb-badge--cyan {
+  background: var(--sb-cyan-soft);
+  color: #0a7793;
+}
+.sb-badge--gray {
+  background: #eef0f3;
+  color: var(--sb-ink-soft);
+}
+
+/* ==========================================================================
+   Grade badges (S/A/B/C/D)
+   ========================================================================== */
+.sb-grade {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: var(--sb-radius-sm);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.sb-grade--sm {
+  min-width: 30px;
+  height: 28px;
+  font-size: 13px;
+  padding: 0 8px;
+}
+.sb-grade--lg {
+  min-width: 88px;
+  height: 88px;
+  font-size: 44px;
+  border-radius: 12px;
+}
+.sb-grade--s {
+  background: #7c3aed;
+  color: #fff;
+}
+.sb-grade--a {
+  background: var(--sb-accent);
+  color: #fff;
+}
+.sb-grade--b {
+  background: var(--sb-green);
+  color: #fff;
+}
+.sb-grade--c {
+  background: var(--sb-amber);
+  color: #fff;
+}
+.sb-grade--d {
+  background: var(--sb-ink-soft);
+  color: #fff;
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+.sb-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13.5px;
+}
+.sb-table thead th {
+  text-align: left;
+  font-weight: 650;
+  color: var(--sb-ink-faint);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 11px 16px;
+  background: #fafbfc;
+  border-bottom: 1px solid var(--sb-border);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.sb-table tbody td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--sb-border);
+  vertical-align: middle;
+}
+.sb-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.sb-table tbody tr {
+  transition: background 0.1s;
+}
+.sb-table tbody tr:hover {
+  background: #f8fafc;
+}
+.sb-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.sb-table__name {
+  font-weight: 600;
+  color: var(--sb-ink);
+}
+.sb-table__muted {
+  color: var(--sb-ink-faint);
+}
+
+.sb-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--sb-accent);
+  cursor: pointer;
+}
+
+.sb-rowuser {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sb-rowuser .sb-avatar {
+  width: 30px;
+  height: 30px;
+  font-size: 12px;
+}
+
+.sb-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--sb-border);
+}
+.sb-toolbar .grow {
+  flex: 1 1 auto;
+}
+.sb-field {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.sb-field input,
+.sb-field select {
+  height: 36px;
+  border: 1px solid var(--sb-border);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  color: var(--sb-ink);
+  outline: none;
+  padding: 0 12px;
+}
+.sb-field--search input {
+  padding-left: 34px;
+  min-width: 240px;
+}
+.sb-field--search i {
+  position: absolute;
+  left: 11px;
+  color: var(--sb-ink-faint);
+  font-size: 15px;
+}
+.sb-field input:focus,
+.sb-field select:focus {
+  border-color: var(--sb-accent);
+  box-shadow: 0 0 0 3px rgba(var(--sb-accent-rgb), 0.12);
+}
+
+.sb-segment {
+  display: inline-flex;
+  background: #f1f3f6;
+  border-radius: 9px;
+  padding: 3px;
+  gap: 2px;
+}
+.sb-segment button {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sb-ink-soft);
+  padding: 6px 13px;
+  border-radius: 7px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.sb-segment button.active {
+  background: #fff;
+  color: var(--sb-accent);
+  box-shadow: var(--sb-shadow-sm);
+}
+
+/* Empty state */
+.sb-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--sb-ink-faint);
+}
+.sb-empty i {
+  font-size: 34px;
+  opacity: 0.5;
+}
+.sb-empty p {
+  margin: 12px 0 0;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   Progress / misc
+   ========================================================================== */
+.sb-progress {
+  height: 7px;
+  background: #eef0f3;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.sb-progress > span {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: var(--sb-accent);
+}
+
+.sb-divider {
+  height: 1px;
+  background: var(--sb-border);
+  margin: 16px 0;
+}
+
+.sb-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Avatars stack */
+.sb-avstack {
+  display: inline-flex;
+}
+.sb-avstack .sb-avatar {
+  width: 28px;
+  height: 28px;
+  font-size: 11px;
+  border: 2px solid #fff;
+  margin-left: -8px;
+}
+.sb-avstack .sb-avatar:first-child {
+  margin-left: 0;
+}
+
+/* Modal tweaks (Bootstrap 모달 사용 시) */
+.modal-content {
+  border: none;
+  border-radius: var(--sb-radius-lg);
+  box-shadow: var(--sb-shadow-lg);
+}
+.modal-header {
+  border-bottom: 1px solid var(--sb-border);
+  padding: 18px 22px;
+}
+.modal-title {
+  font-weight: 750;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+}
+.modal-body {
+  padding: 22px;
+}
+.modal-footer {
+  border-top: 1px solid var(--sb-border);
+  padding: 14px 22px;
+}
+
+.sb-form-label {
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--sb-ink-soft);
+  margin-bottom: 6px;
+  display: block;
+}
+.form-control,
+.form-select {
+  border: 1px solid var(--sb-border);
+  border-radius: 8px;
+  font-size: 13.5px;
+  padding: 9px 12px;
+  color: var(--sb-ink);
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--sb-accent);
+  box-shadow: 0 0 0 3px rgba(var(--sb-accent-rgb), 0.12);
+}
+
+/* ==========================================================================
+   Score radio (1~5 점수 선택 UI)
+   ========================================================================== */
+.sb-score-radio {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.sb-score-radio > div {
+  flex: 1;
+  position: relative;
+}
+.sb-score-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.sb-score-radio label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--sb-border);
+  border-radius: var(--sb-radius-sm);
+  background: #fff;
+  color: var(--sb-ink-soft);
+  font-weight: 650;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin: 0;
+}
+.sb-score-radio label:hover {
+  border-color: var(--sb-accent);
+  color: var(--sb-accent);
+  background: var(--sb-accent-soft);
+}
+.sb-score-radio input[type="radio"]:checked + label {
+  background: var(--sb-accent);
+  border-color: var(--sb-accent);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(var(--sb-accent-rgb), 0.25);
+}
+.sb-score-radio input[type="radio"]:focus-visible + label {
+  outline: 2px solid var(--sb-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .sb-score-radio label {
+    height: 40px;
+    font-size: 14px;
+  }
+}
+
+/* Toast */
+.sb-toast-wrap {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 1080;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sb-toast {
+  background: #1a1f29;
+  color: #fff;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  font-weight: 550;
+  box-shadow: var(--sb-shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 240px;
+  animation: sbToastIn 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.sb-toast i {
+  font-size: 17px;
+}
+.sb-toast.ok i {
+  color: #4ade80;
+}
+.sb-toast.warn i {
+  color: #fbbf24;
+}
+@keyframes sbToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Layout variants (switched via data-layout on .sb-app)
+   ========================================================================== */
+.sb-app[data-layout="rail"] .sb-sidebar {
+  width: var(--sb-sidebar-rail);
+}
+.sb-app[data-layout="rail"] .sb-brand__name,
+.sb-app[data-layout="rail"] .sb-nav__label,
+.sb-app[data-layout="rail"] .sb-nav__badge,
+.sb-app[data-layout="rail"] .sb-nav__section,
+.sb-app[data-layout="rail"] .sb-userchip__meta {
+  display: none;
+}
+.sb-app[data-layout="rail"] .sb-brand {
+  justify-content: center;
+  padding: 0;
+}
+.sb-app[data-layout="rail"] .sb-nav__item {
+  justify-content: center;
+  padding: 10px;
+}
+.sb-app[data-layout="rail"] .sb-nav__item.active::before {
+  left: -12px;
+}
+.sb-app[data-layout="rail"] .sb-userchip {
+  justify-content: center;
+}
+.sb-app[data-layout="rail"] .sb-nav {
+  padding: 12px 10px;
+}
+.sb-app[data-layout="rail"] .sb-nav__item {
+  position: relative;
+}
+.sb-app[data-layout="rail"] .sb-nav__item::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1a1f29;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 9px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s;
+  z-index: 60;
+}
+.sb-app[data-layout="rail"] .sb-nav__item:hover::after {
+  opacity: 1;
+}
+
+.sb-app[data-layout="topnav"] {
+  grid-template-columns: 1fr;
+}
+.sb-app[data-layout="topnav"] .sb-sidebar {
+  display: none;
+}
+.sb-topbar {
+  display: none;
+  height: 52px;
+  background: var(--sb-surface);
+  border-bottom: 1px solid var(--sb-border);
+  align-items: center;
+  gap: 4px;
+  padding: 0 16px;
+  overflow-x: auto;
+  position: sticky;
+  top: var(--sb-header-h);
+  z-index: 25;
+}
+.sb-app[data-layout="topnav"] .sb-topbar {
+  display: flex;
+}
+.sb-topbar__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px;
+  border-radius: 8px;
+  color: var(--sb-ink-soft);
+  font-weight: 600;
+  font-size: 13.5px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.sb-topbar__item i {
+  font-size: 16px;
+}
+.sb-topbar__item:hover {
+  background: #f1f3f6;
+  color: var(--sb-ink);
+}
+.sb-topbar__item.active {
+  background: var(--sb-accent-soft);
+  color: var(--sb-accent);
+}
+.sb-header__brand {
+  display: none;
+  align-items: center;
+  gap: 9px;
+  margin-right: 8px;
+}
+.sb-app[data-layout="topnav"] .sb-header__brand {
+  display: flex;
+}
+
+@media (max-width: 1100px) {
+  .sb-app:not([data-layout="topnav"]) .sb-sidebar {
+    width: var(--sb-sidebar-rail);
+  }
+}
+
+.sb-accent-opt {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--sb-border);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.12s;
+}
+.sb-accent-opt:hover {
+  transform: scale(1.12);
+}
+.sb-accent-opt.on {
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 4px currentColor;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  background: var(--sb-accent-soft);
+  color: var(--sb-accent);
+}
+.dropdown-item {
+  font-size: 13.5px;
+  border-radius: 7px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+}
+.dropdown-menu {
+  border: 1px solid var(--sb-border);
+  border-radius: 12px;
+  box-shadow: var(--sb-shadow-lg);
+  padding: 6px;
+}
+.dropdown-header {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sb-ink-faint);
+}
+
+/* Utility */
+.text-soft {
+  color: var(--sb-ink-soft) !important;
+}
+.text-faint {
+  color: var(--sb-ink-faint) !important;
+}
+.fw-750 {
+  font-weight: 750;
+}
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.sb-hr-cell {
+  color: var(--sb-ink-faint);
+  font-size: 12.5px;
+}
+
+/* ═══════════════════════════════════════════
+   sidebar - 드롭다운 서브메뉴 (인사평가 그룹)
+   ═══════════════════════════════════════════ */
+.sb-nav .sb-nav__group {
+  position: relative;
+}
+.sb-nav .sb-nav__toggle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+.sb-nav .sb-nav__toggle .sb-nav__caret {
+  margin-left: auto;
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+.sb-nav .sb-nav__toggle[aria-expanded="true"] .sb-nav__caret {
+  transform: rotate(180deg);
+}
+.sb-nav .sb-nav__toggle.has-active-child {
+  color: var(--sb-accent, #6366f1);
+  font-weight: 600;
+}
+.sb-nav .sb-nav__submenu {
+  padding-left: 12px;
+  margin-left: 12px;
+  border-left: 1px solid var(--sb-border, #e5e7eb);
+}
+.sb-nav .sb-nav__submenu .sb-nav__item {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  font-size: 13px;
+}
+.sb-nav .sb-nav__submenu .sb-nav__item.active {
+  color: var(--sb-accent, #6366f1);
+  font-weight: 600;
+}
+.sb-nav .sb-nav__submenu .sb-nav__item i {
+  font-size: 13px;
+}
+
+/* 2026.08.13 CYJ */
+/* antd Dropdown Menu — SBerp 디자인 토큰 적용 */
+/* .sb-user-menu: 헤더 계정 드롭다운(내 프로필/권한 설정/로그아웃 등 긴 라벨) 전용, min-width 고정.
+   .sb-lang-menu: 언어 전환 드롭다운(한국어/English) 전용, 텍스트 길이에 맞춰 min-width 없이 좁게. */
+.sb-user-menu.ant-dropdown-menu,
+.sb-lang-menu.ant-dropdown-menu {
+  border: 1px solid var(--sb-border);
+  border-radius: 12px;
+  box-shadow: var(--sb-shadow-lg);
+  padding: 6px;
+}
+.sb-user-menu.ant-dropdown-menu {
+  min-width: 200px;
+}
+.sb-lang-menu.ant-dropdown-menu {
+  min-width: 0;
+  width: max-content;
+}
+
+.sb-user-menu .ant-dropdown-menu-item,
+.sb-lang-menu .ant-dropdown-menu-item {
+  padding: 8px 12px;
+  border-radius: 7px;
+}
+
+/* 아이콘 + 텍스트 간격을 항목마다 동일하게 고정 */
+.sb-user-menu .sb-dropdown-link,
+.sb-lang-menu .sb-dropdown-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  font-size: 13.5px;
+  color: inherit;
+  white-space: nowrap;
+}
+.sb-user-menu .sb-dropdown-link .anticon,
+.sb-lang-menu .sb-dropdown-link .anticon {
+  font-size: 15px;
+  width: 16px;
+  flex: 0 0 auto;
+}
+
+/* 상단 사용자 정보 (클릭/호버 비활성화, 다른 항목과 동일한 padding) */
+.sb-user-menu__info {
+  padding: 8px 12px !important;
+  /* border-bottom: 1px solid var(--sb-border); */
+  margin-bottom: 4px;
+  cursor: default !important;
+  pointer-events: none;
+}
+.sb-user-menu__info b {
+  display: block;
+  line-height: 1.35;
+}
+
+.sb-user-menu .ant-dropdown-menu-item:hover,
+.sb-user-menu .ant-dropdown-menu-item-active,
+.sb-lang-menu .ant-dropdown-menu-item:hover,
+.sb-lang-menu .ant-dropdown-menu-item-active {
+  background: var(--sb-accent-soft);
+  color: var(--sb-accent);
+}
+.sb-user-menu .ant-dropdown-menu-item-danger:hover {
+  background: var(--sb-red-soft);
+  color: var(--sb-red);
+}
+
+/* ==========================================================================
+   Score radio (AntD Radio.Group 버전 · 1~5 점수 선택 UI)
+   ========================================================================== */
+.sb-score-group {
+    display: flex;
+    width: 100%;
+    gap: 0;
+}
+
+.sb-score-group .ant-radio-button-wrapper {
+    flex: 1;
+    height: 44px;
+    line-height: 42px;
+    text-align: center;
+    font-weight: 650;
+    font-size: 15px;
+}
+
+@media (max-width: 768px) {
+    .sb-score-group .ant-radio-button-wrapper {
+        height: 40px;
+        line-height: 38px;
+        font-size: 14px;
+    }
+}

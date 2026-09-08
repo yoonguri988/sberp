@@ -1,0 +1,39 @@
+{
+  "list": {
+    "breadcrumbOrg": "Organization",
+    "breadcrumbCurrent": "Positions",
+    "title": "Positions",
+    "subtitle": "Add, edit, and delete positions per company. Positions are used as a selectable field when registering or editing employees.",
+    "addBtn": "Add Position",
+    "table": {
+      "order": "Order",
+      "code": "Code",
+      "name": "Position Name",
+      "actions": "Actions"
+    },
+    "emptyMsg": "No positions registered.",
+    "deleteHint": "ℹ A position can only be deleted if no employees currently use it. Change any affected employees' position first, then delete.",
+    "addModalTitle": "Add Position",
+    "editModalTitle": "Edit Position",
+    "codeLabel": "Position Code",
+    "codeExtra": "A short identifier code that must be unique within the company.",
+    "codePlaceholder": "e.g. MGR",
+    "codeRequired": "Please enter a position code.",
+    "codeAvailable": "This code is available.",
+    "codeUnavailable": "This code is already in use.",
+    "nameLabel": "Position Name",
+    "namePlaceholder": "e.g. Manager",
+    "nameRequired": "Please enter a position name.",
+    "orderLabel": "Order",
+    "orderExtra": "Display order in the position list (ascending).",
+    "orderPlaceholder": "A smaller number ranks higher",
+    "orderRequired": "Please enter an order.",
+    "duplicateWarning": "Duplicate position code. Please enter a different code.",
+    "addSuccessMsg": "Position registered.",
+    "editSuccessMsg": "Position updated.",
+    "deleteSuccessMsg": "Position deleted.",
+    "deleteModalTitle": "Delete Position",
+    "deleteConfirmMsg": "Are you sure you want to delete the position {{posName}}?",
+    "deleteHint2": "This position cannot be deleted while employees are assigned to it."
+  }
+}

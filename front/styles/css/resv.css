@@ -1,0 +1,84 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   resv.css — 자원 예약 관리 (resv_list) 전용 스타일
+   app.css 의 디자인 토큰(--sb-*), sb-search-form(project.css)을 그대로 사용
+   ========================================================================== */
+
+/* 검색폼 하단 안내문구
+   - sb-search-form(flex, flex-wrap:wrap) 안에 있어도
+     flex-basis:100%로 자기 혼자 한 줄 전체를 차지하게 만들어
+     검색 필드들과 자연스럽게 줄바꿈되도록 처리
+*/
+.sb-search-note {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--sb-ink-faint);
+  line-height: 1.5;
+}
+.sb-search-note i {
+  font-size: 13px;
+  color: var(--sb-accent);
+  flex: 0 0 auto;
+}
+.sb-search-note b {
+  color: var(--sb-ink-soft);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   resv_insert — 예약 신청 폼
+   ========================================================================== */
+
+/* [수정] 카드 너비 시각적 오류
+   - 기존 max-width:720px 고정 인라인 스타일 때문에 넓은 화면에서
+     폼이 지나치게 좁고 옆 여백만 과하게 남아 보이던 문제 개선
+   - 최대 900px까지는 넓히되, 화면이 더 좁을 땐 100% 폭으로 축소되도록 반응형 처리
+*/
+.sb-form-card {
+  width: 100%;
+  max-width: 900px;
+}
+
+/* [수정] 필드 검증 오류 상태 : 자원 미선택 / 기간 미지정 / 수량 초과 등
+   perm.css 의 .form-control.is-err / .perm-field-err 패턴을 예약 폼에도 동일하게 적용
+*/
+.form-control.is-err,
+.form-select.is-err {
+  border-color: var(--sb-red);
+}
+.form-control.is-err:focus,
+.form-select.is-err:focus {
+  border-color: var(--sb-red);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, .12);
+}
+
+.sb-field-msg {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--sb-red);
+}
+.sb-field-msg i { flex: 0 0 auto; }
+
+/* ==========================================================================
+   resv_appr — 관리자 승인/반려 모달
+   ========================================================================== */
+
+/* [신규] 승인 확인 모달용 sb-confirm-box 변형
+   - emp.css 의 기본 .sb-confirm-box 는 danger(빨강) 톤 고정
+   - 승인은 위험 액션이 아니므로 accent(파랑) 톤으로 오버라이드
+*/
+.sb-confirm-box--accent {
+  background: var(--sb-accent-soft);
+  border-color: var(--sb-accent-soft-2);
+}
+.sb-confirm-box--accent .sb-confirm-box__icon {
+  color: var(--sb-accent);
+}

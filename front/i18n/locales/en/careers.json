@@ -1,0 +1,145 @@
+{
+  "common": {
+    "footer": "© SBerp. A space for job applicants."
+  },
+  "oauth2": {
+    "processing": "Signing you in...",
+    "loginFailedTitle": "Login failed",
+    "retryDefaultDescription": "Please try again.",
+    "backToLoginBtn": "Back to login"
+  },
+  "layout": {
+    "myApplicationsLink": "My Applications",
+    "logoutMenuItem": "Logout",
+    "jobListLink": "Job Openings",
+    "loginBtn": "Log in"
+  },
+  "authLayout": {
+    "tagline": "Looking for<br/>colleagues to grow with",
+    "subtitle": "From checking your application status to submitting a resume,<br/>do it all in one place.",
+    "features": {
+      "social": "Easy login with a social account (Kakao, Naver, Google)",
+      "status": "Check your application status anytime after applying",
+      "resume": "Upload and resubmit your resume (PDF)"
+    }
+  },
+  "login": {
+    "providers": {
+      "kakao": "Continue with Kakao",
+      "naver": "Continue with Naver",
+      "google": "Continue with Google"
+    },
+    "heading": "Applicant Login",
+    "subtitle": "You can browse job postings and submit applications after signing in with a social account.<br/>Get started easily with one of the accounts below.",
+    "noteLine": "Your name and email may be used when filling out your application.<br/>Are you a recruiter? ",
+    "adminLoginLink": "Go to admin login"
+  },
+  "list": {
+    "title": "Job Openings",
+    "subtitle": "Check out currently open positions and apply.",
+    "searchPlaceholder": "Search by job title",
+    "loadError": "Failed to load job postings",
+    "emptySearch": "No results found for '{{keyword}}'.",
+    "emptyDefault": "There are no open positions right now.",
+    "headcountUnit": "{{count}}",
+    "closingDate": "Closes {{date}}",
+    "alwaysOpen": "Rolling recruitment"
+  },
+  "detail": {
+    "backToListBtn": "Back to list",
+    "loadError": "Failed to load job posting",
+    "statusOpen": "Open",
+    "statusClosed": "Closed",
+    "statusCancelled": "Cancelled",
+    "headcountUnit": "{{count}}",
+    "dateRange": "{{start}} ~ {{end}}",
+    "dateRangeOpen": "{{start}} ~ Rolling recruitment",
+    "alwaysOpen": "Rolling recruitment",
+    "labels": {
+      "department": "Department",
+      "position": "Position",
+      "headcount": "Headcount",
+      "employmentType": "Employment Type",
+      "manager": "Contact Person",
+      "applicantCount": "Applicants",
+      "startDate": "Application Start",
+      "endDate": "Application End",
+      "createdAt": "Posted",
+      "updatedAt": "Last Updated",
+      "description": "Description"
+    },
+    "applyBtn": "Apply to this posting",
+    "cannotApplyBtn": "Applications are not being accepted"
+  },
+  "apply": {
+    "backToDetailBtn": "Back to posting",
+    "successTitle": "Your application has been submitted",
+    "successSubtitleWithTitle": "Your application for \"{{title}}\" has been successfully received.",
+    "successSubtitleDefault": "Your application has been successfully received.",
+    "uploadResumeBtn": "Upload resume (PDF)",
+    "viewMyApplicationsBtn": "View my applications",
+    "formTitle": "Application Form",
+    "formSubtitleWithTitle": "You are applying to \"{{title}}\".",
+    "formSubtitleDefault": "You are applying to the selected posting.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Jane Doe",
+    "nameRequired": "Please enter your name.",
+    "emailLabel": "Email",
+    "emailInvalid": "Please enter a valid email address.",
+    "emailPlaceholder": "If left blank, your social account email will be used.",
+    "phoneLabel": "Phone",
+    "phoneRequired": "Please enter your phone number.",
+    "phonePlaceholder": "010-1234-5678",
+    "submitErrorDefault": "Failed to submit your application.",
+    "submitBtn": "Submit Application"
+  },
+  "my": {
+    "title": "My Applications",
+    "subtitle": "Check the status of your applications and submit or resubmit your resume.",
+    "cancelSuccess": "Your application has been cancelled.",
+    "updateSuccess": "Your application information has been updated.",
+    "uploadSuccess": "Your resume has been submitted. It will be forwarded to the recruiter after AI analysis.",
+    "selectFileWarning": "Please select a resume (PDF) file to upload.",
+    "emptyDescription": "You haven't applied to any postings yet.",
+    "editBtn": "Edit Application",
+    "resumeBtn": "Submit Resume",
+    "resumeResubmitBtn": "Resubmit Resume",
+    "previewResumeBtn": "View Submitted Resume",
+    "resumeSubmittedTag": "Resume Submitted",
+    "previewError": "Failed to load resume.",
+    "cancelConfirmTitle": "Are you sure you want to cancel this application?",
+    "cancelOkText": "Cancel Application",
+    "cancelCancelText": "Close",
+    "cancelBtn": "Cancel Application",
+    "appliedDate": "Applied on {{date}}",
+    "statusLabels": {
+      "received": "Received",
+      "screening": "Screening",
+      "interview": "Interview",
+      "hired": "Hired",
+      "rejected": "Not Selected"
+    },
+    "uploadModal": {
+      "title": "Upload Resume (PDF)",
+      "okText": "Submit",
+      "cancelText": "Close",
+      "dragText": "Click or drag a file to this area to upload",
+      "dragHint": "You can only upload one PDF file. Your existing resume will be replaced automatically."
+    },
+    "editModal": {
+      "title": "Edit Application",
+      "okText": "Save",
+      "cancelText": "Close",
+      "nameLabel": "Name",
+      "namePlaceholder": "Jane Doe",
+      "nameRequired": "Please enter your name.",
+      "emailLabel": "Email",
+      "emailRequired": "Please enter your email.",
+      "emailInvalid": "Please enter a valid email address.",
+      "emailPlaceholder": "example@email.com",
+      "phoneLabel": "Phone",
+      "phoneRequired": "Please enter your phone number.",
+      "phonePlaceholder": "010-0000-0000"
+    }
+  }
+}

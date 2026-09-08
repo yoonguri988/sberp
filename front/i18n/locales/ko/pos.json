@@ -1,0 +1,39 @@
+{
+  "list": {
+    "breadcrumbOrg": "조직 관리",
+    "breadcrumbCurrent": "직급 관리",
+    "title": "직급 관리",
+    "subtitle": "회사별 직급을 등록·수정·삭제합니다. 직급은 사원 등록·수정 시 선택 항목으로 사용됩니다.",
+    "addBtn": "직급 등록",
+    "table": {
+      "order": "순서",
+      "code": "코드",
+      "name": "직급명",
+      "actions": "관리"
+    },
+    "emptyMsg": "등록된 직급이 없습니다.",
+    "deleteHint": "ℹ 직급 삭제는 해당 직급을 사용 중인 사원이 없을 때만 가능합니다. 먼저 사원의 직급을 다른 직급으로 변경한 후 삭제하세요.",
+    "addModalTitle": "직급 등록",
+    "editModalTitle": "직급 수정",
+    "codeLabel": "직급 코드",
+    "codeExtra": "회사 내에서 중복되지 않는 짧은 식별 코드입니다.",
+    "codePlaceholder": "예: MGR",
+    "codeRequired": "직급 코드를 입력하세요.",
+    "codeAvailable": "사용 가능한 코드입니다.",
+    "codeUnavailable": "이미 사용 중인 코드입니다.",
+    "nameLabel": "직급명",
+    "namePlaceholder": "예: 부장",
+    "nameRequired": "직급명을 입력하세요.",
+    "orderLabel": "순서",
+    "orderExtra": "직급 목록에서 표시 순서(오름차순).",
+    "orderPlaceholder": "숫자가 작을수록 상위",
+    "orderRequired": "순서를 입력하세요.",
+    "duplicateWarning": "중복된 직급 코드입니다. 다른 코드를 입력하세요.",
+    "addSuccessMsg": "직급이 등록되었습니다.",
+    "editSuccessMsg": "직급이 수정되었습니다.",
+    "deleteSuccessMsg": "직급이 삭제되었습니다.",
+    "deleteModalTitle": "직급 삭제",
+    "deleteConfirmMsg": "정말로 {{posName}} 직급을 삭제하시겠습니까?",
+    "deleteHint2": "이 직급을 사용 중인 사원이 있으면 삭제할 수 없습니다."
+  }
+}

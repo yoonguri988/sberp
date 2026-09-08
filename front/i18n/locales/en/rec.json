@@ -1,0 +1,119 @@
+{
+  "common": {
+    "breadcrumbHome": "Home",
+    "breadcrumbRoot": "Recruitment",
+    "statusLabels": {
+      "open": "Open",
+      "closed": "Closed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "list": {
+    "breadcrumbCurrent": "Postings",
+    "title": "Recruitment Posting Management",
+    "subtitle": "Register recruitment postings and manage them alongside applicant status and resumes.",
+    "addBtn": "New Posting",
+    "cardTitle": "Recruitment Posting List",
+    "searchPlaceholder": "Search by posting title",
+    "statusPlaceholder": "Posting status",
+    "searchBtn": "Search",
+    "table": {
+      "title": "Posting Title",
+      "department": "Department",
+      "position": "Position",
+      "headcount": "Headcount",
+      "employmentType": "Employment Type",
+      "manager": "Contact Person",
+      "applicantCnt": "Applicants",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "applicantCountUnit": "{{count}}",
+    "actionTooltips": {
+      "resumeSearch": "Resume Search",
+      "detail": "Details",
+      "clone": "Clone",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "emptyDescription": "No recruitment postings have been registered.",
+    "totalCountPrefix": "Total ",
+    "totalCountSuffix": "",
+    "formModal": {
+      "titleAdd": "New Recruitment Posting",
+      "titleEdit": "Edit Recruitment Posting",
+      "okAdd": "Register",
+      "okEdit": "Save",
+      "cancelBtn": "Cancel",
+      "titleLabel": "Posting Title",
+      "titlePlaceholder": "e.g. 2026 H1 Backend Developer Recruitment",
+      "titleRequired": "Please enter a posting title.",
+      "departmentLabel": "Department",
+      "departmentPlaceholder": "e.g. Development Team",
+      "departmentRequired": "Please enter the department.",
+      "positionLabel": "Position",
+      "positionPlaceholder": "e.g. Backend Developer",
+      "positionRequired": "Please enter the position.",
+      "headcountLabel": "Headcount",
+      "headcountPlaceholder": "e.g. 2",
+      "headcountRequired": "Please enter the headcount.",
+      "employmentTypeLabel": "Employment Type",
+      "employmentTypeRequired": "Please enter the employment type.",
+      "employmentTypePlaceholder": "Select",
+      "employmentTypeOptions": {
+        "fulltime": "Full-time",
+        "contract": "Contract",
+        "intern": "Intern",
+        "dispatch": "Dispatched"
+      },
+      "dateRangeLabel": "Application Period (leave end date empty for rolling recruitment)",
+      "dateRangeRequired": "Application start date is required.",
+      "statusLabel": "Posting Status",
+      "statusRequired": "Please select the posting status.",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Job duties, qualifications, preferred qualifications, etc."
+    },
+    "deleteModal": {
+      "title": "Delete Recruitment Posting",
+      "okText": "Delete",
+      "cancelText": "Cancel",
+      "confirmSuffix": "Are you sure you want to delete this posting?",
+      "hint": "Deletion may be restricted by backend policy for postings that already have applicants."
+    },
+    "messages": {
+      "createSuccess": "The recruitment posting has been registered.",
+      "updateSuccess": "The recruitment posting has been updated.",
+      "deleteSuccess": "The recruitment posting has been deleted."
+    }
+  },
+  "detail": {
+    "breadcrumbList": "Postings",
+    "breadcrumbCurrent": "Details",
+    "title": "Recruitment Posting Details",
+    "subtitle": "Check the registered recruitment posting information and applicant status.",
+    "backToListBtn": "Back to list",
+    "editFromListBtn": "Edit from list",
+    "labels": {
+      "department": "Department",
+      "position": "Position",
+      "headcount": "Headcount",
+      "employmentType": "Employment Type",
+      "manager": "Contact Person",
+      "applicantCount": "Applicants",
+      "startDate": "Application Start",
+      "endDate": "Application End",
+      "createdAt": "Posted",
+      "updatedAt": "Last Updated",
+      "description": "Description"
+    },
+    "headcountUnit": "{{count}}",
+    "alwaysOpen": "Rolling recruitment",
+    "shortcuts": {
+      "title": "Shortcuts",
+      "applicantList": "Applicant List",
+      "kanban": "Kanban Board",
+      "rank": "Fit Score Ranking",
+      "resumeSearch": "Resume AI Search"
+    }
+  }
+}

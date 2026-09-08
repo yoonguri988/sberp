@@ -1,0 +1,265 @@
+@charset "UTF-8";
+/* ══════════════════════════════════════════════════════════════
+   dashboard-admin-home.css — 관리자 대시보드 v2 compact layout
+
+   접두어: adh- (Admin Dashboard Home)
+   ══════════════════════════════════════════════════════════════ */
+
+.adh-wrap {
+  display: flex;
+  min-width: 580px;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.adh-wrap > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* 모든 band의 자식 카드도 동일하게 축소 가능하도록 강제 */
+.adh-top-band > *,
+.adh-mid-band > *,
+.adh-work-band > * {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ── 인사말 (페이지 제목) ─────────────────────────────────── */
+.adh-greeting {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--sb-ink);
+  margin: 0 0 4px 0;
+  padding: 0;
+  letter-spacing: -0.01em;
+}
+
+/* ── ROW 1: 출퇴근 + 잔여연차 + 퀵링크 (3분할) ───────────── */
+.adh-top-band {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) minmax(90px, 1.3fr) minmax(90px, 1.3fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.adh-done-row { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+/* 출퇴근 카드 */
+.adh-clock-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.adh-today-date {
+  font-size: 12px;
+  color: var(--sb-ink-faint);
+}
+.adh-clock-time {
+  font-size: 26px;
+  font-weight: 760;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--sb-ink);
+  line-height: 1.1;
+}
+.adh-clock-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+/* 잔여 연차 카드 */
+.adh-leave-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.adh-leave-label {
+  font-size: 13px;
+  color: var(--sb-ink-faint);
+}
+.adh-leave-nums {
+  font-size: 28px;
+  font-weight: 760;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.adh-leave-remaining { color: var(--sb-accent); }
+.adh-leave-sep { color: var(--sb-ink-faint); margin: 0 4px; font-weight: 400; }
+.adh-leave-total { color: var(--sb-ink-soft); }
+.adh-leave-card .ant-progress { width: 140px; margin-top: 4px; }
+
+/* 퀵 링크 카드 (3×2) */
+.adh-quick-card {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+}
+.adh-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 6px;
+  width: 100%;
+}
+.adh-quick-btn {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px;
+  padding: 10px 4px;
+  border: 1px solid var(--sb-border);
+  border-radius: var(--sb-radius-sm);
+  background: var(--sb-surface);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.adh-quick-btn:hover { border-color: var(--sb-accent); background: var(--sb-accent-soft); }
+.adh-quick-icon { font-size: 20px; color: var(--sb-accent); }
+.adh-quick-label { font-size: 11px; color: var(--sb-ink-soft); font-weight: 550; white-space: nowrap; }
+
+/* ── ROW 3: 통계(2×2) + 도넛 + 공지 ─────────────────────── */
+.adh-mid-band {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) minmax(90px, 1.3fr) minmax(90px, 1.3fr);
+  gap: 14px; align-items: stretch;
+}
+
+.adh-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; min-width: 0; }
+.adh-stat-card {
+  background: var(--sb-surface); border: 1px solid var(--sb-border);
+  border-radius: var(--sb-radius-sm); padding: 12px 10px;
+  text-align: center; display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  min-width: 0;
+}
+.adh-stat-label { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+.adh-stat-value { font-size: 24px; font-weight: 760; letter-spacing: -0.02em; line-height: 1; }
+
+.adh-stat--present .adh-stat-label, .adh-stat--present .adh-stat-value { color: var(--sb-green); }
+.adh-stat--present { border-top: 3px solid var(--sb-green); }
+.adh-stat--late .adh-stat-label, .adh-stat--late .adh-stat-value { color: var(--sb-amber); }
+.adh-stat--late { border-top: 3px solid var(--sb-amber); }
+.adh-stat--absent .adh-stat-label, .adh-stat--absent .adh-stat-value { color: var(--sb-red); }
+.adh-stat--absent { border-top: 3px solid var(--sb-red); }
+.adh-stat--leave .adh-stat-label, .adh-stat--leave .adh-stat-value { color: var(--sb-violet); }
+.adh-stat--leave { border-top: 3px solid var(--sb-violet); }
+
+.adh-chart-card { padding: 14px 16px; }
+.adh-chart-head { font-size: 13px; font-weight: 650; color: var(--sb-ink); margin-bottom: 24px; }
+.adh-chart-body { position: relative; height: 140px; display: flex; align-items: center; justify-content: center; }
+.adh-chart-center {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%); text-align: center; pointer-events: none;
+}
+.adh-chart-center-num { font-size: 22px; font-weight: 760; color: var(--sb-ink); line-height: 1; }
+.adh-chart-center-label { font-size: 11px; color: var(--sb-ink-faint); margin-top: 2px; }
+
+.adh-notice-card { padding: 14px 16px; display: flex; flex-direction: column; }
+.adh-notice-head {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; font-weight: 650; color: var(--sb-ink); margin-bottom: 10px;
+}
+.adh-notice-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 2px;
+}
+
+.adh-notice-row {
+  display: flex; align-items: center; gap: 8px; padding: 7px 0;
+  border-bottom: 1px solid var(--sb-border); cursor: pointer;
+}
+.adh-notice-row:last-child { border-bottom: none; }
+.adh-notice-row:hover { background: #fafbfc; margin: 0 -16px; padding: 7px 16px; }
+.adh-notice-title { font-size: 13px; color: var(--sb-ink); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.adh-notice-date { font-size: 11px; color: var(--sb-ink-faint); flex: 0 0 auto; }
+
+/* ── ROW 4: 결재(1) + 회사 프로젝트(1) + 내 프로젝트(1) — 3분할 ──── */
+.adh-work-band {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) minmax(90px, 1.3fr) minmax(90px, 1.3fr);
+  gap: 14px;
+}
+
+.adh-pending-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px; border-bottom: 1px solid var(--sb-border);
+}
+.adh-pending-row:last-child { border-bottom: none; }
+.adh-pending-label { font-size: 13.5px; color: var(--sb-ink); display: flex; align-items: center; gap: 8px; }
+.adh-pending-count { font-size: 14px; font-weight: 700; color: var(--sb-accent); }
+
+/* 프로젝트 리스트 (회사/내 공용) */
+.adh-proj-list {
+  display: flex; flex-direction: column;
+}
+.adh-proj-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; padding: 10px 16px;
+  border-bottom: 1px solid var(--sb-border);
+  cursor: pointer;
+}
+.adh-proj-row:last-child { border-bottom: none; }
+.adh-proj-row:hover { background: #fafbfc; }
+.adh-proj-main {
+  display: flex; align-items: center; gap: 4px;
+  flex: 1; min-width: 0;
+}
+.adh-proj-name {
+  font-size: 13px; color: var(--sb-ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.adh-proj-dday {
+  font-size: 12px; font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 auto;
+}
+
+/* ── ROW 5: 주간 bar chart ───────────────────────────────── */
+.adh-weekly-card { padding: 0; }
+.adh-weekly-body { padding: 12px 18px 16px; height: 220px; }
+
+/* ── 공통: 링크 버튼 ─────────────────────────────────────── */
+.adh-link-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 12px; color: var(--sb-accent); font-weight: 600;
+  padding: 0; display: inline-flex; align-items: center; gap: 4px;
+}
+.adh-link-btn:hover { text-decoration: underline; }
+
+/* ── 반응형 ──────────────────────────────────────────────── */
+
+/* 900px 이하: 모든 row가 동시에 1열로 전환 */
+@media (max-width: 900px) {
+  .adh-top-band  { grid-template-columns: 1fr; }
+  .adh-mid-band  { grid-template-columns: 1fr; }
+  .adh-work-band { grid-template-columns: 1fr; }
+
+  .adh-stat-grid {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .adh-quick-grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto;
+  }
+}
+
+/* 600px 이하: 퀵링크 6열→3열 */
+@media (max-width: 740px) {
+  .adh-greeting { font-size: 17px; }
+  .adh-quick-grid { grid-template-columns: repeat(3, 1fr); }
+}
