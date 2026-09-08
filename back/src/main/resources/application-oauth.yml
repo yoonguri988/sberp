@@ -43,5 +43,5 @@ spring:
 
 app:
   oauth2:
-    redirect-url: http://43.200.171.91/oauth2/callback
+    redirect-url: https://sberp-cyj.duckdns.org/oauth2/callback
     # redirect-url: http://localhost:3000/oauth2/callback
