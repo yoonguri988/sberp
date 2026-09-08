@@ -67,7 +67,7 @@ jobs:       # 실행할 job 정의
           echo "NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}" >> back/.env
           echo "NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}" >> back/.env
           
-          echo "KJY.OPENAI.API.KEY=${{ secrets.KJY.OPENAI.API.KEY }}" >> back/.env
+          echo "KJY_OPENAI_API_KEY=${{ secrets.KJY_OPENAI_API_KEY }}" >> back/.env
 
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> back/.env
           echo "OPENAI_API_BASEURL=${{ secrets.OPENAI_API_BASEURL }}" >> back/.env
