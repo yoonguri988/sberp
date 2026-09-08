@@ -90,7 +90,7 @@ jwt:
 # 프론트엔드 기본 URL - 비밀번호 재설정 메일의 링크 생성에 사용
 app:
   front:
-    url: ${FRONT_URL:http://43.200.171.91}
+    url: ${FRONT_URL:https://sberp-cyj.duckdns.org}
 
 #file:
 #  upload-dir: uploads
