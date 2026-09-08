@@ -103,7 +103,6 @@ jobs:       # 실행할 job 정의
           echo "JSJ_OPENAI_API_KEY=${{ secrets.JSJ_OPENAI_API_KEY }}" >> back/.env
           echo "JSJ_OPENAI_API_BASEURL=${{ secrets.JSJ_OPENAI_API_BASEURL }}" >> back/.env
           echo "JSJ_OPENAI_API_MODEL=${{ secrets.JSJ_OPENAI_API_MODEL }}" >> back/.env
-`
       - name: Ensure app directory exists on EC2`
         uses: appleboy/ssh-action@v0.1.7                 #   EC2 접속후 디렉토리 생성
         with:
