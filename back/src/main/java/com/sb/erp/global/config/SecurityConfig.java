@@ -128,7 +128,7 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(List.of(
             "http://localhost:3000",       // React 개발 서버
             "http://localhost:*",          // 로컬에서 뜨는 다른 포트들 (Flutter Web 등)
-            "https://sberp-cyj.duckdns.org;"     // 배포된 도메인 (필요시 추가)
+            "http://43.200.171.91"     // 배포된 도메인 (필요시 추가)
         ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));

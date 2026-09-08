@@ -2,19 +2,19 @@
 # 운영 프로파일(application-prod.yml)에서 enabled: false로 덮어써 운영 환경에서는 노출되지 않게 한다.
 springdoc:
   api-docs:
-    enabled: false  # API 문서(`/v3/api-docs`) 활성화 여부 (기본값: true)
-    path: /v3/api-docs  # API 문서의 엔드포인트 변경 (기본값: /v3/api-docs)
-    groups.enabled: true  # 여러 개의 API 그룹을 지원할지 여부
+    enabled: false # API 문서(`/v3/api-docs`) 활성화 여부 (기본값: true)
+    path: /v3/api-docs # API 문서의 엔드포인트 변경 (기본값: /v3/api-docs)
+    groups.enabled: true # 여러 개의 API 그룹을 지원할지 여부
 
   swagger-ui:
-    enabled: false  # Swagger UI 활성화 여부 (기본값: true)
-    path: index.html  # Swagger UI 접속 경로 변경 (기본값: /swagger-ui.html)
-    operationsSorter: method  # API 정렬 기준 (alpha: 알파벳순, method: HTTP 메서드 순)
-    tagsSorter: alpha  # 태그 정렬 방식 (alpha: 알파벳순 정렬)
-    display-request-duration: true  # 요청 실행 시간 표시 여부
-    doc-expansion: none  # Swagger UI에서 API 설명의 기본 펼침 상태 (none: 닫힘, list: 펼침, full: 전체 펼침)
-    persistAuthorization: true  # 페이지 새로고침 후에도 Authorization 헤더 유지 여부
-    defaultModelsExpandDepth: -1  # 모델 스키마의 기본 펼침 깊이 (-1이면 모델 펼쳐지지 않음)
+    enabled: false # Swagger UI 활성화 여부 (기본값: true)
+    path: index.html # Swagger UI 접속 경로 변경 (기본값: /swagger-ui.html)
+    operationsSorter: method # API 정렬 기준 (alpha: 알파벳순, method: HTTP 메서드 순)
+    tagsSorter: alpha # 태그 정렬 방식 (alpha: 알파벳순 정렬)
+    display-request-duration: true # 요청 실행 시간 표시 여부
+    doc-expansion: none # Swagger UI에서 API 설명의 기본 펼침 상태 (none: 닫힘, list: 펼침, full: 전체 펼침)
+    persistAuthorization: true # 페이지 새로고침 후에도 Authorization 헤더 유지 여부
+    defaultModelsExpandDepth: -1 # 모델 스키마의 기본 펼침 깊이 (-1이면 모델 펼쳐지지 않음)
 
 spring:
   datasource:
@@ -24,12 +24,12 @@ spring:
     driver-class-name: oracle.jdbc.OracleDriver
   jackson:
     time-zone: Asia/Seoul
-    
+
   messages:
-    basename: messages          # messages.properties(ko, 기본) / messages_en.properties
+    basename: messages # messages.properties(ko, 기본) / messages_en.properties
     encoding: UTF-8
-    fallback-to-system-locale: false  # 서버가 뜬 OS/JVM 로케일에 좌우되지 않도록 고정
-    cache-duration: -1          # 운영에서도 문제 없으면 이후 배포 주기에 맞춰 늘려도 됨
+    fallback-to-system-locale: false # 서버가 뜬 OS/JVM 로케일에 좌우되지 않도록 고정
+    cache-duration: -1 # 운영에서도 문제 없으면 이후 배포 주기에 맞춰 늘려도 됨
 
   jpa:
     # ddl-auto: update는 로컬/개발 편의용 기본값. 운영 배포 시에는 반드시
@@ -90,7 +90,7 @@ jwt:
 # 프론트엔드 기본 URL - 비밀번호 재설정 메일의 링크 생성에 사용
 app:
   front:
-    url: ${FRONT_URL:https://sberp-cyj.duckdns.org}
+    url: ${FRONT_URL:http://43.200.171.91}
 
 #file:
 #  upload-dir: uploads
@@ -170,5 +170,5 @@ cyj:
 
 #logging:
 #  level:
-    # org.springframework.security: DEBUG # 인증/인가 처리 상세가 운영 로그에 그대로 남아
-    # 로그가 지저분해지고 민감정보 노출 위험이 있어 주석 처리. 디버깅 필요 시 로컬에서만 한시적으로 켤 것.
+# org.springframework.security: DEBUG # 인증/인가 처리 상세가 운영 로그에 그대로 남아
+# 로그가 지저분해지고 민감정보 노출 위험이 있어 주석 처리. 디버깅 필요 시 로컬에서만 한시적으로 켤 것.

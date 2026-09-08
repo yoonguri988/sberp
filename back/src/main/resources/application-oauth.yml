@@ -17,7 +17,7 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             client-name: Kakao
-            client-authentication-method: none    
+            client-authentication-method: none
 
           naver:
             client-id: ${NAVER_CLIENT_ID}
@@ -45,5 +45,3 @@ app:
   oauth2:
     redirect-url: http://43.200.171.91/oauth2/callback
     # redirect-url: http://localhost:3000/oauth2/callback
-
- 
