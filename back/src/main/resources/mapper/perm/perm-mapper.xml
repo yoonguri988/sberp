@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.perm.repository.PermMapper">
+
+	<!-- ============================================================
+		 로그인 시 사원 권한 조회 (기존 유지)
+	     ============================================================ -->
+
+	<select id="selectByEmpId" resultType="com.sb.erp.perm.dto.response.PermResponse" parameterType="long">
+		select a.aut_id, a.aut_name
+		from emp_auth ea
+		join authority a on ea.aut_id = a.aut_id
+		where ea.emp_id = #{empId}
+	</select>
+
+
+	<!-- ============================================================
+		 권한 관리 (authority)
+	     ============================================================ -->
+
+	<!-- 권한 목록 + 부여 사원 수 (미부여 권한 포함) -->
+	<select id="selectAll"
+			resultType="com.sb.erp.perm.dto.response.PermResponse"
+			parameterType="long">
+		select a.aut_id, a.aut_name,
+		       count(ea.emp_aut_id) as aut_count
+		from authority a
+		left join emp_auth ea on ea.aut_id = a.aut_id
+		where a.com_id = #{comId}
+		group by a.aut_id, a.aut_name
+	</select>
+
+	<!-- 권한 단건 조회 -->
+	<select id="selectOneById"
+			resultType="com.sb.erp.perm.dto.response.PermResponse">
+		select aut_id, aut_name
+		from authority
+		where aut_id = #{autId}
+		and com_id = #{comId}
+	</select>
+
+	<!-- 권한 등록 -->
+	<insert id="insert" parameterType="com.sb.erp.perm.dto.request.PermRequest">
+		<selectKey keyProperty="autId" resultType="long" order="BEFORE">
+			select SEQ_AUTHORITY.nextval from dual
+		</selectKey>
+		insert into authority (aut_id, com_id, aut_name)
+		values (#{autId}, #{comId}, #{autName})
+	</insert>
+
+	<!-- 권한 수정 -->
+	<update id="update" parameterType="com.sb.erp.perm.dto.request.PermRequest">
+		update authority
+		set aut_name = #{autName}
+		where aut_id = #{autId}
+		and com_id = #{comId}
+	</update>
+	
+	<!-- 사용중인 사원 확인 -->
+	<select id="countEmpUsing" resultType="int">
+	    SELECT COUNT(*)
+	    FROM emp_auth
+	    WHERE aut_id = #{autId}
+	</select>
+
+	<!-- 권한 삭제 -->
+	<delete id="delete" parameterType="com.sb.erp.perm.dto.request.PermRequest">
+		delete from authority
+		where aut_id = #{autId}
+		and com_id = #{comId}
+	</delete>
+
+
+	<!-- ============================================================
+		 사원-권한 매핑 (emp_auth)
+	     ============================================================ -->
+
+	<!-- 특정 권한을 가진 사원 목록.
+		 사원의 회사(e.com_id)로 가드하여 타 회사 사원 노출 차단. -->
+	<select id="selectEmpsByAuthId"
+			resultType="com.sb.erp.perm.dto.response.EmpAuthResponse">
+		select ea.emp_aut_id,
+		       e.emp_id, e.emp_no, e.emp_name,
+		       p.pos_name, d.dept_name,
+		       a.aut_id, a.aut_name
+		from emp_auth ea
+		join employee e     on e.emp_id = ea.emp_id
+		join authority a    on a.aut_id = ea.aut_id
+		join emp_position p on e.pos_id = p.pos_id
+		join department d   on e.dept_id = d.dept_id
+		where ea.aut_id = #{autId}
+		and e.com_id = #{comId}
+	</select>
+
+	<!-- 특정 사원의 권한 목록 -->
+	<select id="selectAuthsByEmpId"
+			resultType="com.sb.erp.perm.dto.response.EmpAuthResponse">
+		select ea.emp_aut_id,
+		       e.emp_id, e.emp_no, e.emp_name,
+		       p.pos_name, d.dept_name,
+		       a.aut_id, a.aut_name
+		from emp_auth ea
+		join employee e     on e.emp_id = ea.emp_id
+		join authority a    on a.aut_id = ea.aut_id
+		join emp_position p on e.pos_id = p.pos_id
+		join department d   on e.dept_id = d.dept_id
+		where ea.emp_id = #{empId}
+		and e.com_id = #{comId}
+	</select>
+
+	<!-- 권한 부여 -->
+	<insert id="grantAuth" parameterType="com.sb.erp.perm.dto.request.EmpAuthRequest">
+		insert into emp_auth (emp_aut_id, emp_id, aut_id)
+		values (SEQ_EMP_AUTH.nextval, #{empId}, #{autId})
+	</insert>
+
+	<!-- 권한 회수 -->
+	<delete id="revokeAuth" parameterType="com.sb.erp.perm.dto.request.EmpAuthRequest">
+		delete from emp_auth
+		where emp_id = #{empId}
+		and aut_id = #{autId}
+	</delete>
+
+</mapper>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.proj.repository.ProjectMapper">
+
+	<!-- 프로젝트 생성 -->
+	<insert id="insert" parameterType="ProjRequest">
+	    <selectKey keyProperty="proId" resultType="long" order="AFTER">
+	        SELECT seq_project.CURRVAL FROM DUAL
+	    </selectKey>
+	    insert into project(com_id, pro_name, pro_desc, emp_id, pro_status,
+	                         start_date, end_date, created_at, updated_at )
+	    values(#{comId}, #{proName}, #{proDesc}, #{empId}, #{proStatus},
+	             #{startDate}, #{endDate}, SYSDATE, SYSDATE)
+	</insert>
+	
+    <!-- 프로젝트 상세페이지 (참여인원 포함) -->
+    <select id="select" resultType="ProjResponse" parameterType="long">
+        select p.*, e.emp_name,
+               (select count(*) from project_member pm where pm.project_pro_id = p.pro_id) as memberCnt
+        from project p
+        join employee e on p.emp_id = e.emp_id
+        join company c on p.com_id = c.com_id
+        where p.pro_id = #{proId}
+    </select>
+
+    <!-- paging (참여인원 포함) -->
+    <select id="selectAll" resultType="ProjResponse" parameterType="ProjectSearchRequest">
+        select p.*, e.emp_name,
+               (select count(*) from project_member pm where pm.project_pro_id = p.pro_id) as memberCnt
+        from project p
+        join employee e on p.emp_id = e.emp_id
+        join company c on p.com_id = c.com_id
+        <where>
+        	<if test="comId != null"> 
+        	and p.com_id = #{comId} 
+        	</if>
+        	<if test="keyword != null and keyword != ''">
+        	and p.pro_name like '%' || #{keyword} || '%'
+        	</if>
+        	<if test="proStatus != null and proStatus != ''">
+        	and p.pro_status = #{proStatus}
+        	</if>
+        	<if test="startDate != null and startDate != ''">
+        	and p.start_date  <![CDATA[>=]]> #{startDate}
+      		</if>
+        	<if test="endDate != null and endDate != ''">
+        	and p.end_date <![CDATA[<=]]> #{endDate}
+        	</if>
+        </where>
+        order by p.pro_id desc
+        OFFSET #{pstartno} ROWS FETCH NEXT #{onepagelist} ROWS ONLY
+    </select>
+    
+	<select id="selectCnt" resultType="int">
+	select COUNT(*)
+    from project p
+    join employee e ON p.emp_id = e.emp_id
+    join company c ON p.com_id = c.com_id
+    <where>
+        <if test="comId != null">
+            AND p.com_id = #{comId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND p.pro_name LIKE '%' || #{keyword} || '%'
+        </if>
+        <if test="proStatus != null and proStatus != ''">
+            AND p.pro_status = #{proStatus}
+        </if>
+        <if test="startDate != null and startDate != ''">
+            AND p.start_date <![CDATA[>=]]> #{startDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND p.end_date <![CDATA[<=]]> #{endDate}
+        </if>
+    </where>
+	</select>
+	
+	<!-- 프로젝트 삭제 영역 -->
+	<!-- 태스크 삭제 -->
+	<delete id="deleteTaskByProjectId" parameterType="long">
+	    delete from task where pro_id = #{proId}
+	</delete>
+	<!-- 프로젝트 멤버 삭제 -->
+	<delete id="deleteMemberByProjectId" parameterType="long">
+	    delete from project_member where project_pro_id = #{proId}
+	</delete>
+	<!-- 프로젝트 삭제 -->
+	<delete id="deleteProject" parameterType="long">
+	    delete from project where pro_id = #{proId}
+	</delete>
+    <!-- 프로젝트 삭제 영역 -->
+    
+    <!-- 프로젝트 수정 -->
+    <update id="update" parameterType="ProjRequest">
+       update project  set
+       pro_name = #{proName}, 
+       pro_desc = #{proDesc}, 
+       pro_status = #{proStatus}, 
+       start_date = #{startDate}, 
+       end_date = #{endDate}, 
+       updated_at = SYSDATE
+       where pro_id = #{proId}
+    </update>
+	
+	<!-- 리스크 예측용 api -> sql에서 계산 처리 -->
+	<select id="projectAnalysis" resultType="ProjectAnalysisResponse" parameterType="long">
+	<![CDATA[
+	select
+	p.pro_id as proId,
+	p.pro_name as projectName,
+	p.end_date as endDate,
+	nvl(count(t.task_id), 0) as totalTask,
+	nvl(sum(case when t.task_status = 'TODO' then 1 end), 0) as todoCount,
+	nvl(sum(case when t.task_status = 'DOING' then 1 end), 0) as doingCount,
+	nvl(sum(case when t.task_status = 'DONE' then 1 end), 0) as doneCount,
+	nvl(sum(case when t.task_status <> 'DONE' and t.task_end_date < sysdate then 1 end), 0) as delayCount,
+	NVL( ROUND( SUM(CASE WHEN t.task_status='DONE' THEN 1 ELSE 0 END) / NULLIF(COUNT(t.task_id),0) *100 ), 0 ) AS progressRate
+	from project p
+	left join task t on p.pro_id = t.pro_id
+	where p.pro_id = #{proId}
+	group by p.pro_id, p.pro_name, p.end_date
+	]]>
+	</select>
+	
+	<!-- 주간보고서용(팀장) api ->sql에서 계산 처리 -->
+	<select id="weeklyReport" resultType="WeeklyReportResponse" parameterType="long">
+	<![CDATA[
+	select
+	p.pro_id as proId,
+	p.pro_name as projectName,
+	p.end_date as endDate,
+	(p.end_date - trunc(sysdate)) as remainDays,
+	nvl(count(t.task_id), 0) as totalTask,
+	nvl(sum(case when t.task_status = 'DONE'
+	    and t.actual_end_date >= trunc(sysdate,'IW') - 7
+	    and t.actual_end_date <  trunc(sysdate,'IW')
+	    then 1 end), 0) as completedThisWeek,
+	nvl(sum(case when t.task_status = 'DONE' then 1 else 0 end), 0) as doneTaskCount,
+	nvl(sum(case when t.task_status <> 'DONE' then 1 else 0 end), 0) as notDoneTaskCount,    
+    nvl(sum(case when t.task_status <> 'DONE' and t.task_end_date < sysdate then 1 end), 0) as delayTaskCount,
+	nvl(round(sum(case when t.task_status = 'DONE' then 1 else 0 end) / count(t.task_id) * 100), 0) as progressRate,
+	nvl(round(avg(case when t.actual_start_date is not null and t.actual_end_date is not null
+	    then t.actual_end_date - t.actual_start_date end), 1), 0) as avgTaskDays,
+	nvl(round(avg(case when t.actual_end_date > t.task_end_date
+	    then t.actual_end_date - t.task_end_date end)), 0) as avgDelayDays
+	from project p
+	left join task t on p.pro_id = t.pro_id
+	where p.pro_id = #{proId}
+	group by p.pro_id, p.pro_name, p.end_date
+	]]>
+	</select>
+	
+	<!-- 진행중인 프로젝트만 골라서 주간보고서 때림 -->
+	<select id="selectActiveProjectIds" resultType="int">
+	select pro_id from project where pro_status IN ('TODO','DOING')
+	</select>
+	
+	<!-- 대시보드용 - 내가 참여중인 진행중 프로젝트 (최근 5개, 진행률 포함) -->
+	<select id="selectMyProjects" resultType="DashboardProjResponse" parameterType="long">
+		select
+			p.pro_id as proId,
+			p.pro_name as proName,
+			p.pro_status as proStatus,
+			p.end_date as endDate,
+			nvl(round(
+				(select count(*) from task t where t.pro_id = p.pro_id and t.task_status = 'DONE')
+				/ nullif((select count(*) from task t2 where t2.pro_id = p.pro_id), 0) * 100
+			), 0) as progressRate
+		from
+			project p
+		join
+			project_member pm on pm.project_pro_id = p.pro_id
+		where
+			pm.emp_id = #{empId}
+			and p.pro_status in ('TODO', 'DOING')
+		order by
+			p.pro_id desc
+		fetch first 5 rows only
+	</select>
+	
+</mapper>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.emp.repository.EmpMapper">
+
+	<!-- jsj : 사원 상세 조회 -->
+	<select id="selectByEmpId" resultType="com.sb.erp.emp.dto.response.EmpResponse">
+		select e.emp_id, e.emp_no, e.emp_name, e.com_id,
+			   e.emp_email, e.emp_mobile, e.emp_status,
+			   e.dept_id, d.dept_name, 
+			   e.pos_id,  p.pos_name,
+			   to_char(e.hire_date,  'YYYY-MM-DD') as hire_date,
+		       to_char(e.created_at, 'YYYY-MM-DD') as created_at,
+		       to_char(e.updated_at, 'YYYY-MM-DD') as updated_at
+		from employee e
+		join emp_position p on e.pos_id = p.pos_id
+		join department d on e.dept_id = d.dept_id
+		where e.emp_id = #{empId} and e.com_id = #{comId}
+	</select>
+	
+	<!-- jsj : 사원 검색 + 페이징 -->
+	<select id="search" parameterType="com.sb.erp.emp.dto.request.EmpSearchRequest" resultType="com.sb.erp.emp.dto.response.EmpResponse">
+		select e.emp_id, e.emp_no, e.emp_name,
+			   d.dept_name, p.pos_name,
+			   e.emp_email, e.emp_mobile, e.emp_status,
+			   to_char(e.hire_date, 'YYYY-MM-DD') as hire_date
+		from employee e
+		join emp_position p on e.pos_id = p.pos_id
+		join department   d on e.dept_id = d.dept_id
+		<where>
+			e.com_id = #{comId}
+			<if test="deptId != null">
+				and e.dept_id = #{deptId}
+			</if>
+			<if test="posId != null">
+				and e.pos_id = #{posId}
+			</if>
+			<if test="empStatus != null and empStatus !=''">
+				and e.emp_status = #{empStatus}
+			</if>
+			<if test="keyword != null and keyword !=''">
+				and (e.emp_name like '%' || #{keyword} || '%'
+				or	 e.emp_no   like '%' || #{keyword} || '%')
+			</if>
+		</where>
+		order by p.pos_order, e.emp_no
+		offset #{pstartno} rows fetch next #{onepagelist} rows only
+	</select>
+	
+	<!-- jsj : 목록 paging 계산용, 검색 결과 개수 -->
+	<select id="selectCnt" resultType="int">
+		select count(*)
+		from employee e
+		join emp_position p on e.pos_id = p.pos_id
+		join department   d on e.dept_id = d.dept_id
+		<where>
+			e.com_id = #{comId}
+			<if test="deptId != null">
+				and e.dept_id = #{deptId}
+			</if>
+			<if test="posId != null">
+				and e.pos_id = #{posId}
+			</if>
+			<if test="empStatus != null and empStatus !=''">
+				and e.emp_status = #{empStatus}
+			</if>
+			<if test="keyword != null and keyword !=''">
+				and (e.emp_name like '%' || #{keyword} || '%'
+				  or e.emp_no   like '%' || #{keyword} || '%')
+			</if>
+		</where>
+	</select>
+
+	<!-- jsj : 사원 등록, emp_id는 트리거가 시퀀스로 자동 등록(제외) -->
+	<!-- cyj: 최초 비밀번호는 항상 사번(EmpServiceImpl.insert)이므로 must_change_pwd='Y'로 등록 -->
+	<insert id="insert" parameterType="com.sb.erp.emp.dto.request.EmpRequest">
+		insert into employee
+		(emp_no, emp_pass, emp_name,
+		dept_id, pos_id, com_id,
+		emp_email, emp_mobile, emp_status, hire_date, must_change_pwd)
+		values
+		(#{empNo}, #{empPass},
+		#{empName},
+		#{deptId}, #{posId}, #{comId},
+		#{empEmail}, #{empMobile}, #{empStatus},
+		to_date(#{hireDate}, 'YYYY-MM-DD'), 'Y')
+		<selectKey keyProperty="empId" resultType="long" order="AFTER">
+			select seq_employee.currval from dual
+		</selectKey>
+	</insert>
+
+	<!-- jsj : 사원 정보 수정 -->
+	<update id="update" parameterType="com.sb.erp.emp.dto.request.EmpRequest">
+		update employee
+		set emp_name = #{empName},
+			dept_id = #{deptId},
+			pos_id = #{posId},
+			emp_email = #{empEmail},
+			emp_mobile = #{empMobile},
+			emp_status = #{empStatus},
+    		hire_date = #{hireDate}
+		where emp_id = #{empId} and com_id = #{comId}
+	</update>
+
+	
+	<!-- jsj : 이메일 중복 검사 -->
+	<select id ="countByEmpEmail" parameterType="String" resultType="int">
+		select count(*) from employee where emp_email = #{empEmail}	
+	</select>
+	
+	<!-- jsj : 모바일 중복 검사 -->
+	<select id ="countByEmpMobile" parameterType="String" resultType="int">
+		select count(*) from employee where emp_mobile = #{empMobile}	
+	</select>
+	
+	<!-- jsj : 사번 중복 검사 -->
+	<select id="countByEmpNo" resultType="int">
+		select count(*) from employee where emp_no = #{empNo} and com_id = #{comId}
+	</select>
+	
+	
+	<!-- jsj: 회사 내 권한 + 사원 정보 -->
+	<select id="selectAuthByComId" parameterType="int" resultType="com.sb.erp.perm.dto.response.EmpAuthResponse">
+		select e.emp_id, e.emp_name, e.emp_no, e.com_id,
+        	   e.dept_id, d.dept_name,
+        	   e.pos_id,  p.pos_name,
+        	   ea.emp_aut_id,
+        	   a.aut_id,  a.aut_name
+		from employee e 
+		join emp_position p on e.pos_id = p.pos_id
+		join department   d on e.dept_id = d.dept_id
+		join emp_auth 	 ea on e.emp_id = ea.emp_id
+		join authority    a on a.aut_id = ea.aut_id and e.com_id = a.com_id
+		where e.com_id = #{comId}
+	</select>
+	
+	
+	<!-- cyj: 비밀번호 찾기시 해당하는 사원정보가 있는지 확인 -->
+	<select id="selectForVerify" parameterType="com.sb.erp.emp.dto.request.EmpRequest" resultType="com.sb.erp.emp.dto.response.EmpResponse">
+		select *
+		from employee
+		where emp_no = #{empNo}
+		  and emp_email = #{empEmail} 
+		  and emp_mobile = #{empMobile} 
+	</select>
+	
+	<!-- cyj: 비밀번호 재설정 (관리자 초기화 → must_change_pwd='Y' / 본인 변경 → 'N', 호출부(EmpServiceImpl)에서 세팅) -->
+	<update id="updatePassByEmpId" parameterType="com.sb.erp.emp.dto.request.EmpRequest">
+		update employee
+		   set emp_pass = #{empPass},
+		       must_change_pwd = #{mustChangePwd}
+		 where emp_id = #{empId} and com_id = #{comId}
+	</update>
+	
+	<!-- cyj: 이메일을 기준으로 사용자 정보 찾기 -->
+	<select id="selectByEmpEmail" parameterType="string" resultType="com.sb.erp.emp.dto.response.EmpResponse">
+		select e.*, d.dept_name, p.pos_name, c.com_name
+		from employee e
+		join department   d on d.dept_id = e.dept_id
+		join emp_position p on p.pos_id = e.pos_id
+		join company c on c.com_id = e.com_id
+		where e.emp_email = #{empEmail}
+	</select>
+
+	<!-- cyj: 기존 비밀번호와 일치 확인 -->
+	<select id="selectPassById" resultType="string" parameterType="long">
+		select e.emp_pass
+		from employee e
+		where e.emp_id = #{empId}
+	</select>
+	
+	<!-- cyj: 부서 아이디를 기준으로 사원 정보 확인-->
+	<select id="selectByDeptId" resultType="com.sb.erp.emp.dto.response.EmpResponse">
+		select e.*, p.pos_name
+		from employee e
+		join emp_position p on e.pos_id = p.pos_id
+		join department d on e.dept_id = d.dept_id
+		where d.dept_id = #{deptId} 
+		   or d.parent_id = #{deptId} 
+	</select>
+	
+	
+	<!-- 비밀번호 분실 - session(empId) 기반, 본인확인 후에만 진입 가능 -->
+	<select id="selectAuthByEmpId" resultType="com.sb.erp.emp.dto.response.EmpResponse" parameterType="int">
+		select e.emp_id, e.emp_no, e.emp_name, e.com_id,
+		e.dept_id, d.dept_name, 
+		e.pos_id, p.pos_name, 
+		e.emp_email, e.emp_mobile, e.emp_status,
+		to_char(e.hire_date,  'YYYY-MM-DD') as hire_date,
+		to_char(e.created_at, 'YYYY-MM-DD') as created_at,
+		to_char(e.updated_at, 'YYYY-MM-DD') as updated_at
+		from employee e
+		join emp_position p on e.pos_id = p.pos_id
+		join department   d on e.dept_id = d.dept_id
+		where e.emp_id = #{empId}
+	</select>
+	
+	<!-- cyj: 비밀번호 분실시 본인 확인 - EMP_ID로만 조회해서 업데이트 -->
+	<!-- 본인이 직접 새 비밀번호를 설정하는 경로(비밀번호 찾기 / 로그인 상태 변경)이므로 must_change_pwd='N'으로 해제 -->
+	<update id="updatePassByEmpIdOnly" parameterType="com.sb.erp.emp.dto.request.EmpRequest">
+		update employee
+		   set emp_pass = #{empPass},
+		       must_change_pwd = 'N'
+		 where emp_id = #{empId}
+	</update>
+</mapper>

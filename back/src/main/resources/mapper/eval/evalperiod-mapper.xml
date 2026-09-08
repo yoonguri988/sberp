@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.eval.repository.EvalPeriodMapper">
+
+	<!-- 회차 단건 상세 조회 -->
+	<select id="selectByPeriodId" resultType="com.sb.erp.eval.dto.response.PeriodResponse">
+		select period_id,
+		com_id, eval_year, eval_term, title, period_status,
+		TO_CHAR(start_date, 'YYYY-MM-DD') AS start_date,
+		TO_CHAR(end_date,
+		'YYYY-MM-DD') AS end_date,
+		TO_CHAR(created_at, 'YYYY-MM-DD') AS
+		created_at,
+		TO_CHAR(updated_at, 'YYYY-MM-DD') AS updated_at
+		from
+		evaluation_period
+		where period_id = #{periodId}
+		and com_id = #{comId}
+	</select>
+
+	<!-- 회차 등록 -->
+	<insert id="insert" parameterType="com.sb.erp.eval.dto.request.PeriodRequest">
+		insert into
+		evaluation_period(com_id, eval_year, eval_term, title, start_date,
+		end_date)
+		values( #{comId}, #{evalYear}, #{evalTerm}, #{title},
+		TO_DATE(#{startDate}, 'YYYY-MM-DD'), TO_DATE(#{endDate},
+		'YYYY-MM-DD'))
+	</insert>
+
+	<!-- 회차 정보 수정 -->
+	<update id="update" parameterType="com.sb.erp.eval.dto.request.PeriodRequest">
+		update evaluation_period
+		set
+		title = #{title},
+		eval_year = #{evalYear},
+		eval_term = #{evalTerm},
+		start_date = TO_DATE(#{startDate}, 'YYYY-MM-DD'),
+		end_date =
+		TO_DATE(#{endDate},
+		'YYYY-MM-DD')
+		where period_id = #{periodId}
+		and
+		com_id = #{comId}
+	</update>
+
+	<!-- 상태 전환 -->
+	<update id="updateStatus">
+		update evaluation_period
+		set period_status =
+		#{periodStatus}
+		where period_id = #{periodId}
+		and com_id = #{comId}
+	</update>
+
+	<!-- 목록(조건부) 조회 -->
+	<select id="search" parameterType="com.sb.erp.eval.dto.request.PeriodSearchRequest"
+		resultType="com.sb.erp.eval.dto.response.PeriodResponse">
+		select period_id, com_id, eval_year, eval_term, title, period_status,
+		TO_CHAR(start_date, 'YYYY-MM-DD') AS start_date,
+		TO_CHAR(end_date,
+		'YYYY-MM-DD') AS end_date,
+		TO_CHAR(created_at, 'YYYY-MM-DD') AS
+		created_at,
+		TO_CHAR(updated_at, 'YYYY-MM-DD') AS updated_at
+		from
+		evaluation_period
+		<where>
+			com_id = #{comId}
+			<if test="evalYear != null">
+				and eval_year = #{evalYear}
+			</if>
+			<if test="evalTerm != null and evalTerm != ''">
+				and eval_term = #{evalTerm}
+			</if>
+			<if test="periodStatus != null and periodStatus != ''">
+				and period_status = #{periodStatus}
+			</if>
+		</where>
+		order by eval_year DESC,
+		CASE eval_term
+		WHEN 'ANNUAL' THEN 3
+		WHEN 'H2'
+		THEN 2
+		WHEN 'H1' THEN 1
+		END DESC,
+		period_id DESC
+	</select>
+
+	<!-- 상태 갯수 확인 -->
+	<select id="countByStatusAll" resultType="map">
+		select
+		count(case when period_status = 'READY' then 1 end) as "READY",
+		count(case when period_status = 'OPEN' then 1 end) as "OPEN",
+		count(case when period_status = 'CLOSED' then 1 end) as "CLOSED",
+		count(case when period_status = 'REPORTING_FAILED' then 1 end) as
+		"REPORTING_FAILED",
+		count(case when period_status = 'REPORTED' then 1 end) as "REPORTED"
+		from evaluation_period
+		where com_id = #{comId}
+	</select>
+
+	<!-- 중복 확인 -->
+	<select id="isDuplicate" resultType="boolean">
+		select count(*)
+		from
+		evaluation_period
+		where com_id = #{comId}
+		and eval_year = #{evalYear}
+		and eval_term = #{evalTerm}
+	</select>
+
+	<!-- 데이터 카운트 -->
+	<select id="countEvalsByPeriodId" resultType="int">
+		select count(*)
+		from performance_evaluation
+		where period_id = #{periodId}
+	</select>
+
+	<select id="countReportsByPeriodId" resultType="int">
+		select count(*)
+		from evaluation_ai_report
+		where period_id = #{periodId}
+	</select>
+
+</mapper>

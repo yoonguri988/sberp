@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.task.repository.TaskDependencyMapper">
+
+<!-- 선행 태스크 지정하여 태스크 생성 (task_id는 trg_task_bi 트리거가 자동 채움) -->
+<!-- parent_task_id->null 값 허용인데 실제 null값 들어오면 오류> 자바-DB 통신 과정버그라고 함> 해결책>jdbcType=INTEGER -->
+<insert id="insertWithParent" parameterType="TaskRequest">
+    <selectKey keyProperty="taskId" resultType="long" order="AFTER">
+        SELECT SEQ_TASK.CURRVAL FROM DUAL
+    </selectKey>
+	insert into task (pro_id , com_id , task_name , task_desc , task_status , pm_id , 
+	task_start_date , task_end_date , parent_task_id , created_at , updated_at)
+	values(#{proId} , #{comId} , #{taskName} , #{taskDesc} , #{taskStatus} , #{pmId},
+	 #{taskStartDate}, #{taskEndDate}, #{parentTaskId, jdbcType=INTEGER}, SYSDATE, SYSDATE)
+</insert>
+
+<!-- 태스크 의존성 트리 조회 (선행 -> 후행 순으로 정렬) -->
+<select id="selectTaskDependencies" parameterType="long" resultType="TaskResponse">
+	<![CDATA[
+	with task_hierarchy (
+		task_id, pro_id, pm_id, com_id, task_name, task_desc, task_status,
+		task_start_date, task_end_date, parent_task_id, task_path
+	) as (
+		select 
+			task_id, pro_id, pm_id, com_id, task_name, task_desc, task_status,
+			task_start_date, task_end_date, parent_task_id,
+			CAST(task_id as VARCHAR2(200))
+		from task
+		where pro_id = #{proId} AND parent_task_id IS NULL
+		UNION ALL
+		select 
+			t.task_id, t.pro_id, t.pm_id, t.com_id, t.task_name, t.task_desc, t.task_status,
+			t.task_start_date, t.task_end_date, t.parent_task_id,
+			th.task_path || ',' || t.task_id
+		from task t
+		INNER JOIN task_hierarchy th ON t.parent_task_id = th.task_id
+		where t.pro_id = #{proId}
+	)
+	select * from task_hierarchy order by task_path
+	]]>
+</select>
+
+<!-- 태스크 일정 및 선행 태스크 수정 (updated_at은 trg_task_bu 트리거가 자동 처리) -->
+<update id="updateTaskSchedule" parameterType="TaskRequest">
+	update task set
+	task_name = #{taskName},
+	task_desc = #{taskDesc},
+	task_status = #{taskStatus},
+	task_start_date = #{taskStartDate},
+	task_end_date = #{taskEndDate},
+	parent_task_id = #{parentTaskId, jdbcType=INTEGER}
+	where task_id = #{taskId}
+	and pro_id = #{proId}
+</update>
+
+<!-- 벌크 연쇄 업데이트: 후속 지연 일정들을 PL/SQL 블록으로 한 번에 갱신 -->
+<update id="updateBatchTaskSchedule" parameterType="list">
+	<![CDATA[
+	BEGIN
+	]]>
+	<foreach collection="list" item="item">
+		UPDATE task
+		SET 
+			task_start_date = #{item.taskStartDate},
+			task_end_date = #{item.taskEndDate}
+		WHERE task_id = #{item.taskId};
+	</foreach>
+	<![CDATA[
+	END;
+	]]>
+</update>
+
+<!-- 후속 작업 조회 -->
+<select id="selectImpactTasks" parameterType="long" resultType="TaskResponse">
+<![CDATA[
+SELECT
+    task_id,
+    task_name,
+    task_status,
+    task_start_date,
+    task_end_date,
+    parent_task_id,
+    LEVEL AS depth
+FROM task
+START WITH parent_task_id = #{taskId}
+CONNECT BY PRIOR task_id = parent_task_id
+ORDER BY LEVEL
+]]>
+</select>
+
+<!-- 동일 프로젝트의 태스크를 수정하는 동안 다른 사용자의 동시 수정을 방지하기 위해 행 잠금 획득 -->
+<select id="lockProjectTasks" parameterType="long" resultType="long">
+    SELECT task_id
+    FROM task
+    START WITH task_id = #{taskId}
+    CONNECT BY PRIOR task_id = parent_task_id
+    FOR UPDATE WAIT 5
+</select>
+
+</mapper>

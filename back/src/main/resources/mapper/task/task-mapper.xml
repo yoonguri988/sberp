@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.task.repository.TaskMapper">
+
+<!-- 태스크 추가 -->
+<insert id="insert" parameterType="TaskRequest">
+	insert into task (pro_id , com_id , task_name , task_desc , task_status , pm_id , 
+	task_start_date , task_end_date , created_at , updated_at)
+	values(#{proId} , #{comId} , #{taskName} , #{taskDesc} , #{taskStatus} , #{pmId},
+	 #{taskStartDate}, #{taskEndDate}, SYSDATE, SYSDATE)
+</insert>
+
+<!-- 태스크 수정 -->
+<update id="update" parameterType="TaskRequest">
+	update task set
+	task_name = #{taskName},
+	task_desc = #{taskDesc},
+	task_status = #{taskStatus},
+	task_start_date = #{taskStartDate},
+	task_end_date = #{taskEndDate},
+	updated_at =SYSDATE
+	where task_id = #{taskId}
+</update>
+
+<!-- 태스크 페이징 / 목록 -->
+<select id="selectAll" parameterType="TaskSearchRequest" resultType="TaskResponse">
+	select t.task_id, t.task_name, t.task_status, t.created_at
+	from task t
+	where t.pro_id = #{proId}
+	order by t.task_id asc
+	OFFSET #{pstartno} ROWS FETCH NEXT #{onepagelist} ROWS ONLY
+</select>
+
+<!-- 태스크 페이징 / 갯수 -->
+<select id="selectCnt" parameterType="long" resultType="int">
+	select count(*)
+	from task t
+	where t.pro_id = #{proId}
+</select>
+
+<!-- 태스크 상세 목록조회 -->
+<select id="select" parameterType="long" resultType="TaskResponse">
+	select t.task_id, t.pro_id, t.pm_id, t.task_name, t.task_desc, t.task_status, p.pro_name,
+	em.emp_name as pmName, t.task_start_date, t.task_end_date, t.parent_task_id
+	from task t
+	join project p on t.pro_id = p.pro_id
+	join company c on p.com_id = c.com_id
+	join project_member pi on pi.pm_id = t.pm_id
+	join employee em on pi.emp_id = em.emp_id
+	where t.task_id = #{taskId}
+</select>
+
+<!-- 태스크 삭제 -->
+<delete id="delete" parameterType="long">
+	delete from task where task_id =#{taskId}
+</delete>
+
+<!-- 주간보고서용(개발자) -->
+<select id="myWeeklyReport" resultType="MyWeeklyReportResponse">
+ <![CDATA[
+    select
+        e.emp_id as empId,
+        e.emp_name as empName,
+        nvl(count(t.task_id), 0) as totalTask,
+        nvl(sum(case when t.task_status = 'DONE' then 1 else 0 end), 0) as doneTaskCount,
+        nvl(sum(case when t.task_status <> 'DONE' then 1 else 0 end), 0) as notDoneTaskCount,
+        nvl(sum(case when t.task_status = 'DONE'
+            and t.actual_end_date >= trunc(sysdate,'IW') - 7
+            and t.actual_end_date <  trunc(sysdate,'IW')
+            then 1 end), 0) as completedThisWeek,
+        nvl(sum(case when t.task_status <> 'DONE' and t.task_end_date < sysdate then 1 end), 0) as delayTaskCount,
+        nvl(round(sum(case when t.task_status = 'DONE' then 1 else 0 end) / count(t.task_id) * 100), 0) as progressRate,
+        nvl(round(avg(case when t.actual_start_date is not null and t.actual_end_date is not null
+            then t.actual_end_date - t.actual_start_date end), 1), 0) as avgTaskDays,
+        nvl(round(avg(case when t.actual_end_date > t.task_end_date
+            then t.actual_end_date - t.task_end_date end)), 0) as avgDelayDays
+    from task t
+    join project_member pm on t.pm_id = pm.pm_id
+    join employee e on pm.emp_id = e.emp_id
+    where e.emp_id = #{empId}
+    group by e.emp_id, e.emp_name
+    ]]>
+</select>
+	
+<!-- 지연 태스크 이름 목록 -->
+<select id="delayedTaskNames" resultType="String">
+	<![CDATA[
+	select t.task_name
+	from task t
+	join project_member pm on t.pm_id = pm.pm_id
+	where pm.emp_id = #{empId} and t.task_status <> 'DONE' and t.task_end_date < sysdate
+	order by t.task_end_date asc
+	]]>
+</select>
+
+<!-- 나의 태스크 목록 todo의 최신순 >doing안에서의 최신순 >done-->
+<select id="selectMyTasks" resultType="TaskResponse" parameterType="TaskSearchRequest">
+  select t.task_id, t.pro_id, p.pro_name as proName,
+         t.com_id, t.task_name, t.task_desc, t.task_status,
+         t.pm_id, t.task_start_date, t.task_end_date,
+         t.actual_start_date, t.actual_end_date,
+         t.created_at, t.updated_at, t.parent_task_id,
+         pt.task_status as parentTaskStatus
+  from task t
+  join project_member pm on t.pm_id = pm.pm_id
+  join project p on t.pro_id = p.pro_id
+  left join task pt on t.parent_task_id = pt.task_id
+  where pm.emp_id = #{empId}
+    and t.com_id = #{comId}
+    <if test="taskStatus != null and taskStatus != ''">
+      and t.task_status = #{taskStatus}
+    </if>
+  order by
+    case t.task_status
+      when 'TODO'  then 1
+      when 'DOING' then 2
+      when 'DONE'  then 3
+      else 4
+    end,
+    t.task_id desc
+  OFFSET #{pstartno} ROWS FETCH NEXT #{onepagelist} ROWS ONLY
+</select>
+
+<select id="selectMyTasksCount" resultType="int" parameterType="TaskSearchRequest">
+  select count(*)
+  from task t
+  join project_member pm on t.pm_id = pm.pm_id
+  where pm.emp_id = #{empId}
+    and t.com_id = #{comId}
+    <if test="taskStatus != null and taskStatus != ''">
+      and t.task_status = #{taskStatus}
+    </if>
+</select>
+
+<!-- 한프로젝트의 모든 태스크 -->
+<select id="selectTaskList" resultType="TaskResponse" parameterType="long">
+select    
+t.task_id, t.task_name, t.task_start_date, t.task_end_date, t.parent_task_id, e.emp_name, p.start_date, p.end_date
+from task t
+join project_member pm on t.pm_id = pm.pm_id
+join employee e on pm.emp_id=e.emp_id
+join project p on t.pro_id=p.pro_id
+where t.pro_id=#{proId}
+order by t.task_start_date
+</select>
+
+</mapper>

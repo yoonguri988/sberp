@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.notice.repository.NoticeMapper">
+
+  <!-- 공지 게시글 등록 (bno는 trg_notice_bi 트리거가 자동 채움) -->
+  <insert id="insert" parameterType="NoticeRequest">
+    insert into notice (btitle, bcontent, emp_id, com_id
+      <if test="bfile != null and bfile != ''">, bfile</if>
+    )
+    values (#{btitle}, #{bcontent}, #{empId}, #{comId}
+      <if test="bfile != null and bfile != ''">, #{bfile}</if>
+    )
+  <selectKey keyProperty="bno" resultType="long" order="AFTER">
+    SELECT SEQ_NOTICE.CURRVAL FROM DUAL
+  </selectKey>
+  </insert>
+
+  <!-- 상세 페이지 조회 -->
+  <select id="select" resultType="NoticeResponse" parameterType="long">
+    select * from notice where bno = #{bno}
+  </select>
+
+  <!-- 조회수 증가 -->
+  <update id="updateHit" parameterType="long">
+    update notice set bhit = bhit + 1 where bno = #{bno}
+  </update>
+
+  <!-- 삭제 -->
+  <delete id="delete" parameterType="long">
+    delete from notice where bno = #{bno}
+  </delete>
+
+  <!-- 공지 수정 -->
+  <update id="update" parameterType="NoticeRequest">
+    update notice
+    set btitle   = #{btitle}
+        , bcontent = #{bcontent}
+        <if test="bfile != null and bfile != ''">, bfile = #{bfile}</if>
+    where bno = #{bno}
+  </update>
+
+	<!-- 긴급 공지 개수 체크용 -->
+	<select id="countUrgentNotices" parameterType="long" resultType="int">
+	    select count(*) from notice
+	    where com_id = #{comId} and bcontent like '%긴급%'
+	</select>
+
+	<!-- 긴급 공지 (최대 5개, 상단 고정) -->
+	<select id="selectUrgentNotices" parameterType="NoticeSearchRequest" resultType="NoticeResponse">
+	    select n.bno, n.btitle, n.bcontent, n.bfile, n.bhit,
+	       n.emp_id, n.com_id, n.created_at, n.updated_at,
+	       e.emp_name as empName
+	    from notice n
+	    join employee e on n.emp_id = e.emp_id
+	   where 1=1
+	    <if test="comId != null">and n.com_id = #{comId, jdbcType=BIGINT}</if>
+	     and n.bcontent like '%긴급%'
+	   order by n.created_at desc
+	   FETCH FIRST 5 ROWS ONLY
+	</select>
+	
+	<!-- 일반 목록 (상단 고정 5개 제외하고 페이징) -->
+	<select id="selectAll" resultType="NoticeResponse" parameterType="NoticeSearchRequest">
+	    select n.bno, n.btitle, n.bcontent, n.bfile, n.bhit,
+	       n.emp_id, n.com_id, n.created_at, n.updated_at,
+	       e.emp_name as empName
+	    from notice n
+	    join employee e on n.emp_id = e.emp_id
+	   where 1=1
+	    <if test="comId != null">and n.com_id = #{comId, jdbcType=BIGINT}</if>
+	    <if test="pinnedBnos != null and !pinnedBnos.isEmpty()">
+	      and n.bno not in
+	      <foreach collection="pinnedBnos" item="bno" open="(" separator="," close=")">
+	        #{bno}
+	      </foreach>
+	    </if>
+	    <if test="keyword != null and keyword != ''">
+	      and (lower(n.btitle) like lower('%' || #{keyword} || '%')
+	           or lower(n.bcontent) like lower('%' || #{keyword} || '%'))
+	    </if>
+	  order by
+	    <choose>
+	      <when test="sortBy == 'views'">n.bhit desc</when>
+	      <otherwise>n.created_at desc</otherwise>
+	    </choose>
+	  OFFSET #{pstartno} ROWS FETCH NEXT #{onepagelist} ROWS ONLY
+	</select>
+
+ 	<!-- 전체 카운트 -->
+	<select id="selectCount" resultType="int" parameterType="NoticeSearchRequest">
+	    select count(*) from notice
+	   where 1=1
+	    <if test="comId != null">and com_id = #{comId, jdbcType=BIGINT}</if>
+	</select>
+
+	<!-- 페이징 계산용 카운트(전체 카운트(ex:23)-긴급공지(ex:5) -> 18개면 2페이지로) -->
+	<select id="selectCountNoticeList" resultType="int" parameterType="NoticeSearchRequest">
+	  select count(*)
+	  from notice
+	 where 1=1
+	    <if test="comId != null">and com_id = #{comId, jdbcType=BIGINT}</if>
+	    <if test="pinnedBnos != null and !pinnedBnos.isEmpty()">
+	      and bno not in
+	      <foreach collection="pinnedBnos" item="bno" open="(" separator="," close=")">
+	        #{bno}
+	      </foreach>
+	    </if>
+	    <if test="keyword != null and keyword != ''">
+	      and (lower(btitle) like lower('%' || #{keyword} || '%')
+	           or lower(bcontent) like lower('%' || #{keyword} || '%'))
+	    </if>
+	</select>
+
+</mapper>

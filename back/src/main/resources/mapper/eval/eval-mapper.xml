@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.eval.repository.EvalMapper">
+
+	<!-- 평가자(부서장)가 특정 회차에서 평가할 대상 목록. 
+	- 부서장이 소속된 부서의 사원 중 본인 제외 
+	- 각 사원에 대해 이미 작성한 평가가 있으면 상태 함께 조회 (LEFT JOIN) 
+	- 대시보드 카드에서 미작성/임시저장/제출완료 배지 표시용 
+	- 필요한 최소 컬럼만 조회 (evalId, evalStatus, weightedScore) 
+	상세 조회는 selectByEvalId 사용 -->
+	<select id="selectTargetsByEvaluator" resultType="com.sb.erp.eval.dto.response.EvalResponse">
+		select
+		e.evalId,
+		e.evalStatus,
+		e.weightedScore,
+		emp.emp_id as targetEmpId,
+		emp.emp_name as targetEmpName,
+		emp.emp_no as targetEmpNo,
+		dept.dept_name as targetDeptName,
+		pos.pos_name as targetPosName
+		from employee emp
+		join department dept on emp.dept_id = dept.dept_id
+		join emp_position pos on emp.pos_id = pos.pos_id
+		left join (
+		select
+		eval_id as evalId,
+		target_emp_id,
+		weighted_score as weightedScore,
+		eval_status as evalStatus
+		from performance_evaluation
+		where period_id = #{periodId}
+		and evaluator_id = #{evaluatorId}
+		and eval_type = 'LEADER'
+		) e on e.target_emp_id = emp.emp_id
+		where emp.dept_id in (
+		select dept_id from department
+		where emp_id =
+		#{evaluatorId}
+		)
+		and emp.emp_id != #{evaluatorId}
+		and emp.emp_status = '재직'
+		order by pos.pos_order, emp.emp_no
+	</select>
+
+	<!-- 평가 단건 조회 (수정 폼용) -->
+	<select id="selectByEvalId" resultType="com.sb.erp.eval.dto.response.EvalResponse">
+		select
+		pe.eval_id as evalId,
+		pe.period_id as periodId,
+		pe.target_emp_id as targetEmpId,
+		pe.evaluator_id as evaluatorId,
+		pe.eval_type as evalType,
+		pe.score_performance as scorePerformance,
+		pe.score_expertise as scoreExpertise,
+		pe.score_teamwork as scoreTeamwork,
+		pe.score_attitude as scoreAttitude,
+		pe.score_growth as scoreGrowth,
+		pe.weighted_score as weightedScore,
+		pe.strength_comment as strengthComment,
+		pe.improvement_comment as improvementComment,
+		pe.eval_status as evalStatus,
+		TO_CHAR(pe.created_at, 'YYYY-MM-DD') as createdAt,
+		TO_CHAR(pe.updated_at, 'YYYY-MM-DD') as updatedAt,
+		p.title as
+		periodTitle,
+		p.eval_year as periodYear,
+		p.eval_term as periodTerm,
+		emp.emp_name as targetEmpName,
+		emp.emp_no as targetEmpNo,
+		dept.dept_name as targetDeptName,
+		pos.pos_name as targetPosName,
+		evaluator.emp_name as evaluatorName,
+		evPos.pos_name as evaluatorPosName
+		from performance_evaluation pe
+		join evaluation_period p on pe.period_id = p.period_id
+		join employee emp on pe.target_emp_id = emp.emp_id
+		join department dept on emp.dept_id = dept.dept_id
+		join emp_position pos on emp.pos_id = pos.pos_id
+		join employee evaluator on pe.evaluator_id = evaluator.emp_id
+		join emp_position evPos on evaluator.pos_id = evPos.pos_id
+		where pe.eval_id = #{evalId}
+		and emp.com_id = #{comId}
+	</select>
+
+	<!-- 회차 내 특정 대상+평가자+유형 조합 조회 -->
+	<select id="selectByPeriodTargetEvaluator" resultType="com.sb.erp.eval.dto.response.EvalResponse">
+		select
+		eval_id as evalId,
+		period_id as periodId,
+		target_emp_id as targetEmpId,
+		evaluator_id as evaluatorId,
+		eval_type as evalType,
+		score_performance as
+		scorePerformance,
+		score_expertise as scoreExpertise,
+		score_teamwork as
+		scoreTeamwork,
+		score_attitude as scoreAttitude,
+		score_growth as
+		scoreGrowth,
+		weighted_score as weightedScore,
+		strength_comment as
+		strengthComment,
+		improvement_comment as improvementComment,
+		eval_status
+		as evalStatus,
+		TO_CHAR(created_at, 'YYYY-MM-DD') as createdAt,
+		TO_CHAR(updated_at, 'YYYY-MM-DD') as updatedAt
+		from
+		performance_evaluation
+		where period_id = #{periodId}
+		and target_emp_id =
+		#{targetEmpId}
+		and evaluator_id = #{evaluatorId}
+		and eval_type =
+		#{evalType}
+	</select>
+
+	<!-- 특정 사원이 받은 평가 이력 (emp/detail 임베드용). 
+	- 회차가 CLOSED 또는 REPORTED 상태인 것만 조회 (본인 열람 조건) 
+	- 평가자 정보는 화면에서 익명 처리 (뷰 레벨) -->
+	<select id="selectByTargetEmpId" resultType="com.sb.erp.eval.dto.response.EvalResponse">
+		select
+		pe.eval_id as
+		evalId,
+		pe.period_id as periodId,
+		pe.target_emp_id as targetEmpId,
+		pe.evaluator_id as evaluatorId,
+		pe.eval_type as evalType,
+		pe.score_performance as scorePerformance,
+		pe.score_expertise as
+		scoreExpertise,
+		pe.score_teamwork as scoreTeamwork,
+		pe.score_attitude as
+		scoreAttitude,
+		pe.score_growth as scoreGrowth,
+		pe.weighted_score as
+		weightedScore,
+		pe.strength_comment as strengthComment,
+		pe.improvement_comment as improvementComment,
+		pe.eval_status as
+		evalStatus,
+		TO_CHAR(pe.created_at, 'YYYY-MM-DD') as createdAt,
+		TO_CHAR(pe.updated_at, 'YYYY-MM-DD') as updatedAt,
+		p.title as
+		periodTitle,
+		p.eval_year as periodYear,
+		p.eval_term as periodTerm,
+		evaluator.emp_name as evaluatorName
+		from performance_evaluation pe
+		join
+		evaluation_period p on pe.period_id = p.period_id
+		join employee
+		evaluator on pe.evaluator_id = evaluator.emp_id
+		where pe.target_emp_id
+		= #{targetEmpId}
+		and pe.eval_status = 'SUBMITTED'
+		and p.period_status in
+		('CLOSED', 'REPORTED')
+		order by p.eval_year desc,
+		case p.eval_term
+		when
+		'ANNUAL' then 3
+		when 'H2' then 2
+		when 'H1' then 1
+		end desc
+	</select>
+
+	<!-- 회차별 전체 평가 목록 (관리자용) -->
+	<select id="selectByPeriodId" resultType="com.sb.erp.eval.dto.response.EvalResponse">
+		select
+		pe.eval_id as
+		evalId,
+		pe.period_id as periodId,
+		pe.target_emp_id as targetEmpId,
+		pe.evaluator_id as evaluatorId,
+		pe.eval_type as evalType,
+		pe.score_performance as scorePerformance,
+		pe.score_expertise as
+		scoreExpertise,
+		pe.score_teamwork as scoreTeamwork,
+		pe.score_attitude as
+		scoreAttitude,
+		pe.score_growth as scoreGrowth,
+		pe.weighted_score as
+		weightedScore,
+		pe.eval_status as evalStatus,
+		TO_CHAR(pe.created_at,
+		'YYYY-MM-DD') as createdAt,
+		TO_CHAR(pe.updated_at, 'YYYY-MM-DD') as
+		updatedAt,
+		emp.emp_name as targetEmpName,
+		emp.emp_no as targetEmpNo,
+		dept.dept_name as targetDeptName,
+		pos.pos_name as targetPosName,
+		evaluator.emp_name as evaluatorName
+		from performance_evaluation pe
+		join
+		employee emp on pe.target_emp_id = emp.emp_id
+		join department dept on
+		emp.dept_id = dept.dept_id
+		join emp_position pos on emp.pos_id =
+		pos.pos_id
+		join employee evaluator on pe.evaluator_id =
+		evaluator.emp_id
+		where pe.period_id = #{periodId}
+		order by
+		pos.pos_order, emp.emp_no
+	</select>
+
+	<!-- 회차 내 특정 평가자의 제출 완료 건수 -->
+	<select id="countSubmittedByEvaluator" resultType="int">
+		select
+		count(*)
+		from performance_evaluation
+		where period_id = #{periodId}
+		and
+		evaluator_id = #{evaluatorId}
+		and eval_status = 'SUBMITTED'
+	</select>
+	
+	<!-- 회차의 평가 대상 사원 수 (unique). 리포트 진행률 산정용.
+     - 같은 사원을 여러 평가자가 평가할 수 있으므로 distinct 필수
+     - 리포트는 대상 사원당 1개 생성되므로 이 값이 리포트 목표 총원 -->
+	<select id="countDistinctTargetsByPeriodId" resultType="int">
+		select count(distinct target_emp_id)
+		from performance_evaluation
+		where period_id = #{periodId}
+	</select>
+	
+	<!-- 회차의 미제출 평가 건수. SUBMITTED가 아닌 평가 카운트.
+     - 회차 CLOSED 전환 시 검증에 사용
+     - 미제출이 하나라도 있으면 마감 불가-->
+	<select id="countUnsubmittedByPeriod" resultType="int">
+		select count(*)
+		from performance_evaluation
+		where period_id = #{periodId}
+		and eval_status &lt;&gt; 'SUBMITTED'
+	</select>
+
+	<!-- 평가 등록 -->
+	<insert id="insert" parameterType="com.sb.erp.eval.dto.request.EvalRequest">
+		insert into
+		performance_evaluation (
+		period_id, target_emp_id, evaluator_id,
+		eval_type,
+		score_performance, score_expertise, score_teamwork,
+		score_attitude, score_growth,
+		weighted_score,
+		strength_comment,
+		improvement_comment,
+		eval_status
+		)
+		values (
+		#{periodId}, #{targetEmpId},
+		#{evaluatorId}, #{evalType},
+		#{scorePerformance}, #{scoreExpertise},
+		#{scoreTeamwork},
+		#{scoreAttitude}, #{scoreGrowth},
+		#{weightedScore},
+		#{strengthComment}, #{improvementComment},
+		#{evalStatus}
+		)
+	</insert>
+
+	<!-- 평가 수정 -->
+	<update id="update" parameterType="com.sb.erp.eval.dto.request.EvalRequest">
+		update performance_evaluation
+		set score_performance = #{scorePerformance},
+		score_expertise =
+		#{scoreExpertise},
+		score_teamwork = #{scoreTeamwork},
+		score_attitude =
+		#{scoreAttitude},
+		score_growth = #{scoreGrowth},
+		weighted_score =
+		#{weightedScore},
+		strength_comment = #{strengthComment},
+		improvement_comment = #{improvementComment},
+		eval_status =
+		#{evalStatus}
+		where eval_id = #{evalId}
+	</update>
+
+</mapper>

@@ -1,0 +1,174 @@
+# springdoc(Swagger)는 여기서는 개발 편의를 위해 기본 활성화해두고,
+# 운영 프로파일(application-prod.yml)에서 enabled: false로 덮어써 운영 환경에서는 노출되지 않게 한다.
+springdoc:
+  api-docs:
+    enabled: false  # API 문서(`/v3/api-docs`) 활성화 여부 (기본값: true)
+    path: /v3/api-docs  # API 문서의 엔드포인트 변경 (기본값: /v3/api-docs)
+    groups.enabled: true  # 여러 개의 API 그룹을 지원할지 여부
+
+  swagger-ui:
+    enabled: false  # Swagger UI 활성화 여부 (기본값: true)
+    path: index.html  # Swagger UI 접속 경로 변경 (기본값: /swagger-ui.html)
+    operationsSorter: method  # API 정렬 기준 (alpha: 알파벳순, method: HTTP 메서드 순)
+    tagsSorter: alpha  # 태그 정렬 방식 (alpha: 알파벳순 정렬)
+    display-request-duration: true  # 요청 실행 시간 표시 여부
+    doc-expansion: none  # Swagger UI에서 API 설명의 기본 펼침 상태 (none: 닫힘, list: 펼침, full: 전체 펼침)
+    persistAuthorization: true  # 페이지 새로고침 후에도 Authorization 헤더 유지 여부
+    defaultModelsExpandDepth: -1  # 모델 스키마의 기본 펼침 깊이 (-1이면 모델 펼쳐지지 않음)
+
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/XEPDB1
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: oracle.jdbc.OracleDriver
+  jackson:
+    time-zone: Asia/Seoul
+    
+  messages:
+    basename: messages          # messages.properties(ko, 기본) / messages_en.properties
+    encoding: UTF-8
+    fallback-to-system-locale: false  # 서버가 뜬 OS/JVM 로케일에 좌우되지 않도록 고정
+    cache-duration: -1          # 운영에서도 문제 없으면 이후 배포 주기에 맞춰 늘려도 됨
+
+  jpa:
+    # ddl-auto: update는 로컬/개발 편의용 기본값. 운영 배포 시에는 반드시
+    # application-prod.yml에서 validate(또는 none)로 덮어써서 스키마 자동 변경을 막는다.
+    hibernate:
+      ddl-auto: validate # test 환경 create-drop 매번 초기화 / update 부분 수정
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: false
+        default_batch_fetch_size: 100
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000
+
+  config:
+    import:
+      - optional:application-oauth.yml
+      - optional:file:.env[.properties]
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.sb.erp.**.dto,com.sb.erp.**.dto.**
+
+# 로그인 시도 제한(계정 잠금) - 무차별 대입(brute-force) 공격 방어
+# LoginHistory 기준 windowMinutes 분 내 maxAttempts 회 이상 실패 시 해당 이메일의 로그인을 일시 차단한다.
+security:
+  login-lockout:
+    max-attempts: 5
+    window-minutes: 15
+
+jwt:
+  issuer: spring-breeze
+  secret: ${JWT_SECRET}
+  access-token-exp-seconds: 900
+  # 로그인 유지 시간 제한(절대 만료): 로그인 시점 기준 2시간 뒤 refreshToken이 Redis에서
+  # 자동 만료되어 재로그인이 필요해진다. /auth/refresh는 재발급 시 TTL을 다시 늘리지 않으므로
+  # (TokenStore.saveRefreshToken은 로그인 시 1회만 호출) 활동 여부와 무관하게 절대 2시간이 상한이다.
+  # 30분 미사용 시 자동 로그아웃(비활동 감지)은 프론트(AppLayout의 idle 타이머)에서 별도로 처리한다.
+  # ※ 기획 확인 완료(2026-09-01): "계속 사용 중이어도 2시간마다 강제 로그아웃"은 의도된 요구사항이 맞음.
+  #   활동 시 TTL을 연장하는 방향으로 바꾸지 말 것 - /auth/refresh에서 saveRefreshToken을 다시
+  #   호출하지 않는 현재 동작을 유지한다.
+  refresh-token-exp-seconds: 7200
+  # refresh-token-exp-seconds: 1209600
+  header: Authorization
+  prefix: Bearer
+
+# 프론트엔드 기본 URL - 비밀번호 재설정 메일의 링크 생성에 사용
+app:
+  front:
+    url: ${FRONT_URL:http://43.200.171.91}
+
+#file:
+#  upload-dir: uploads
+upload:
+  path: /home/ubuntu/app/back/build/libs/uploads # 웹에서 접근할 URL prefix (fileUrl = /upload/**/**/파일명)
+resource:
+  path: C:/upload # 실제 디스크 저장 경로 (운영 서버에서는 리눅스 절대경로로 교체)
+
+#server:
+#  port: 8484s
+
+# Discord Webhook
+webhook:
+  discord:
+    url: ${WEBHOOK_DISCORD_URL}
+
+# Google (Email + Docs API)
+google:
+  email:
+    host: ${GOOGLE_EMAIL_HOST}
+    user: ${GOOGLE_EMAIL_USER}
+    password: ${GOOGLE_EMAIL_PASSWORD}
+  report:
+    client-id: ${GOOGLE_REPORT_CLIENT_ID}
+    client-secret: ${GOOGLE_REPORT_CLIENT_SECRET}
+    refresh-token: ${GOOGLE_REPORT_REFRESH_TOKEN}
+
+# JSJ OpenAI API
+jsj:
+  openai:
+    api:
+      key: ${JSJ_OPENAI_API_KEY}
+      baseurl: ${JSJ_OPENAI_API_BASEURL}
+      model: ${JSJ_OPENAI_API_MODEL}
+
+# OpenAI API
+openai:
+  api:
+    baseurl: ${OPENAI_API_BASEURL}
+    key: ${OPENAI_API_KEY}
+
+# KJY OpenAI API
+kjy:
+  openai:
+    api:
+      key: ${KJY_OPENAI_API_KEY}
+
+# CYJ
+# 국세청 사업자등록정보 진위확인 API
+nts:
+  bizno:
+    api: ${NTS_BIZNO_API_KEY}
+
+# 네이버 클로바 OCR API
+naver:
+  ocr:
+    secret: ${NAVER_OCR_SECRET}
+    apiUrl: ${NAVER_OCR_API_URL}
+  email:
+    host: ${NAVER_EMAIL_HOST}
+    user: ${NAVER_EMAIL_USER}
+    password: ${NAVER_EMAIL_PASSWORD}
+
+# CoolSMS (문자 발송)
+coolsms:
+  apikey: ${COOLSMS_API_KEY}
+  apisecret: ${COOLSMS_API_SECRET}
+  # 사전 등록된 발신번호. 미설정 시 기존 동작(수신번호를 발신번호로도 사용)으로 폴백.
+  sender: ${COOLSMS_SENDER}
+
+# OpenAI API
+cyj:
+  openai:
+    api:
+      key: ${CYJ_OPENAI_API_KEY}
+    model: ${CYJ_OPENAI_MODEL}
+
+#logging:
+#  level:
+    # org.springframework.security: DEBUG # 인증/인가 처리 상세가 운영 로그에 그대로 남아
+    # 로그가 지저분해지고 민감정보 노출 위험이 있어 주석 처리. 디버깅 필요 시 로컬에서만 한시적으로 켤 것.

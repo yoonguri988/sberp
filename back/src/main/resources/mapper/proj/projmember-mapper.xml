@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.proj.repository.ProjectMemberMapper">
+
+<!-- 사원 이름,번호 조회 -->
+<select id="searchEmpForProject" parameterType="map" resultType="EmpDto">
+select e.emp_id, e.emp_no, e.emp_name
+from employee e
+where e.com_id = #{comId}
+and (e.emp_name like '%' || #{keyword} || '%'
+or e.emp_no like '%' || #{keyword} || '%')
+</select>
+
+<!-- 프로젝트 참여 인원 조회 -->
+<select id="select" parameterType="long" resultType="ProjmemResponse">
+ select  d.dept_name as deptName, pm.pm_id, e.emp_id, p.pro_name, e.emp_name, pm.member_role, pm.joined_at
+ from project_member pm
+ join employee e on pm.emp_id=e.emp_id
+ join project p on p.pro_id=pm.project_pro_id
+ join department d on d.dept_id=e.dept_id
+ where p.pro_id = #{value}
+</select>
+
+<!-- pm_id로 멤버 1명 조회 (담당자 유효성 검증 + 이름 확보용) -->
+<select id="selectOne" parameterType="long" resultType="ProjmemResponse">
+select pm.*, e.emp_name
+from project_member pm
+join employee e
+on pm.emp_id = e.emp_id
+where pm.pm_id = #{pmId}
+</select>
+
+<!-- 프로젝트 멤버 추가 -->
+<insert id="insert" parameterType="ProjmemRequest">
+	insert into project_member(project_pro_id,emp_id,member_role,joined_at)
+	values(#{projectProId},#{empId},#{memberRole},SYSDATE)
+</insert>
+
+<!-- 프로젝트 멤버 삭제 -->
+<delete id="delete" parameterType="long">
+	delete from project_member where pm_id=#{pmId}
+</delete>
+
+<!-- 해당 프로젝트에 참여 중인 멤버 목록 -->
+<select id="selectByproject" parameterType="long" resultType="ProjmemResponse">
+	select pm.pm_id, e.emp_name
+	from project_member pm
+	join employee e on pm.emp_id = e.emp_id
+	where pm.project_pro_id = #{value}
+</select>
+
+<!-- 중복 사원 검사 -->
+<select id="existsMember" parameterType="ProjmemResponse" resultType="int">
+    SELECT COUNT(*)
+    FROM project_member
+    WHERE project_pro_id = #{projectProId}
+      AND emp_id = #{empId}
+</select>
+</mapper>

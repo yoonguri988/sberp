@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.appr.repository.ApprFormMapper">
+	
+	<!-- 회사 이름 -->
+	<select id="getCompanyName" resultType="string">
+		select com_name from company where com_id = #{comId}
+	</select>
+	
+	<!-- 양식 코드 중복 검사 -->
+	<select id="findByCode" resultType="string">
+		select
+			for_code
+		from
+			appr_form
+		where
+			for_code = #{forCode}
+			and com_id = #{comId}
+		<if test="forId != null and forId != '' and forId != 0">
+			and for_id != #{forId}
+		</if>
+		fetch first 1 rows only
+	</select>
+	
+	<!-- 양식 생성 -->
+	<insert id="insertForm" parameterType="ApprFormRequest">
+		insert into appr_form (
+			com_id,
+			for_code,
+			for_title,
+			for_content,
+			for_schema,
+			for_status,
+			for_category
+		) values (
+			#{comId},
+			#{forCode},
+			#{forTitle},
+			#{forContent, jdbcType=VARCHAR},
+			#{forSchema, jdbcType=VARCHAR},
+			#{forStatus},
+			#{forCategory, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 시퀀스 값 가져오기 -->
+	<select id="selectCurrentFormSeq" resultType="Long">
+		select appr_form_seq.currval from dual
+	</select>
+	
+	<!-- 양식 수정 / 버전 변경 X -->
+	<update id="updateForm">
+		update
+			appr_form
+		set
+			com_id = #{req.comId},
+			for_code = #{req.forCode},
+			for_title = #{req.forTitle},
+			for_content = #{req.forContent, jdbcType=VARCHAR},
+			for_schema = #{req.forSchema, jdbcType=VARCHAR},
+			for_status = #{req.forStatus}
+		where
+			for_id = #{forId}
+			and for_version = #{forVersion}
+	</update>
+	
+	<!-- 양식 수정 / 버전 변경 O -->
+	<insert id="updateFormNewVersion">
+		insert into appr_form (
+			for_id,
+			com_id,
+			for_code,
+			for_title,
+			for_content,
+			for_schema,
+			for_status,
+			created_at,
+			for_version,
+			for_category
+		) values (
+			#{forId},
+			#{req.comId},
+			#{req.forCode},
+			#{req.forTitle},
+			#{req.forContent, jdbcType=VARCHAR},
+			#{req.forSchema, jdbcType=VARCHAR},
+			#{req.forStatus},
+			sysdate,
+			(select nvl(max(for_version), 0) + 1 from appr_form where for_id = #{forId}),
+			#{req.forCategory, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 양식 삭제 / 소프트 딜리트 -->
+	<update id="deleteForm">
+		update
+			appr_form
+		set
+			is_deleted = 1
+		where
+			for_id = #{forId}
+			and for_version = #{forVersion}
+			and com_id = #{comId}
+	</update>
+	
+	<!-- 양식 버전 -->
+	<select id="selectFormVersions" resultType="ApprFormResponse">
+		select
+			f.for_id,
+	        f.for_version,
+	        f.com_id,
+	        c.com_name as comName,
+	        f.for_code,
+	        f.for_title,
+	        f.for_content,
+	        f.for_schema,
+	        f.for_status,
+	        f.is_deleted as deleted,
+	        f.created_at,
+	        f.updated_at,
+	        f.for_category
+		from
+			appr_form f
+		left outer join
+			company c on f.com_id = c.com_id
+		where
+			f.for_id = #{forId}
+			and f.com_id = #{comId}
+		order by
+			for_version desc
+	</select>
+	
+	<!-- 결재 양식 리스트 / 회사별 출력 -->
+	<select id="selectFormList" parameterType="ApprFormSearchCondition" resultType="ApprFormResponse">
+		select
+			f.*,
+			c.com_name as comName
+		from
+			appr_form f
+		left outer join
+			company c on f.com_id = c.com_id
+		<where>
+			f.is_deleted = 0
+			and f.for_version = (
+				select max(ff.for_version) from appr_form ff
+				where ff.for_id = f.for_id and ff.is_deleted = 0
+			)
+			<if test="comId != null">
+				and f.com_id = #{comId}
+			</if>
+			<if test="forStatus != null">
+				and f.for_status = #{forStatus}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				and (
+					f.for_code like '%' || #{keyword} || '%'
+					or f.for_title like '%' ||  #{keyword} || '%'
+				)
+			</if>
+		</where>
+		order by f.updated_at desc, f.for_id desc
+		offset #{pstartno} rows fetch next #{onepagelist} rows only
+	</select>
+	
+	<!-- 결재 양식 리스트 기능 구문 -->
+	<select id="listFormCnt" resultType="int" parameterType="ApprFormSearchCondition">
+		select count(*)
+		from appr_form f
+		<where>
+			is_deleted = 0
+			and f.for_version = (
+				select max(ff.for_version) from appr_form ff
+				where ff.for_id = f.for_id and ff.is_deleted = 0
+			)
+			<if test="comId != null">
+				and com_id = #{comId}
+			</if>
+			<if test="forStatus != null">
+				and for_status = #{forStatus}
+			</if>
+			<if test="keyword != null and keyword != ''">
+	            and (
+	                for_code like '%' || #{keyword} || '%'
+	                or for_title like '%' || #{keyword} || '%'
+	            )
+	        </if>
+		</where>
+	</select>
+	
+	<!-- 양식 단건 조회 -->
+	<select id="selectFormAll" resultType="ApprFormResponse">
+		select
+			f.*,
+			c.com_name as comName
+		from
+			appr_form f
+		left outer join
+			company c on f.com_id = c.com_id
+		where
+			f.for_id = #{forId}
+			and f.for_version = #{forVersion}
+	</select>
+
+</mapper>

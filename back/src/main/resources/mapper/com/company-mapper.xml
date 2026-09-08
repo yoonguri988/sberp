@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.com.repository.CompanyMapper">
+  <!-- 회사 여러개 조회 -->
+  <select id="selectAll" resultType="ComResponse" parameterType="CompanySearchRequest">
+	SELECT c.*,
+	       (SELECT COUNT(e.emp_id) 
+	        FROM employee e 
+	        WHERE e.com_id = c.com_id) AS emp_count
+	FROM company c
+  <where>
+  <!-- 회사명 또는 사업자 번호 검색 -->
+  <if test="keyword != null and keyword != ''">
+	and (c.com_name like '%' || #{keyword} || '%'
+	     or c.biz_no like '%' || #{keyword} || '%')  
+  </if>
+  <if test="industryGrpCode != null and industryGrpCode != ''">
+  	and c.industry_grp_code = #{industryGrpCode}
+  </if>
+  </where>
+  order by c.com_id desc
+  OFFSET #{pstartno} ROWS FETCH NEXT #{onepagelist} ROWS ONLY
+  </select>
+  <!-- 회사 여러개 조회 -->
+  <select id="listTotal" resultType="int" parameterType="CompanySearchRequest">
+  select count(*) from company 
+  <where>
+  <!-- 회사명 또는 사업자 번호 검색 -->
+  <if test="keyword != null and keyword != ''">
+	and (com_name like '%' || #{keyword} || '%'
+	     or biz_no like '%' || #{keyword} || '%')  
+  </if>
+  <if test="industryGrpCode != null and industryGrpCode != ''">
+  	and industry_grp_code = #{industryGrpCode}
+  </if>
+  </where>
+  </select>
+  <select id="selectSuggest" resultType="ComResponse" parameterType="string">
+    select com_id, com_name, biz_no
+    FROM company
+    <where>
+    <if test="keyword != null and keyword != ''">
+	  and (com_name like '%' || #{keyword} || '%'
+	    or biz_no like '%' || #{keyword} || '%')  
+    </if>
+    </where>
+    ORDER BY com_name ASC
+    OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY
+  </select>
+  <!-- 회사 등록 -->
+  <insert id="insert" parameterType="ComRequest">
+  	<selectKey keyProperty="comId" resultType="long" order="BEFORE">
+      SELECT seq_company.NEXTVAL FROM dual
+    </selectKey>
+  insert into company (com_id, com_name, industry_code, industry_grp_code, com_ceo, biz_no, com_tel, com_logo, com_status)
+  values (#{comId}, #{comName}, #{industryCode}, #{industryGrpCode}, #{comCeo}, #{bizNo}, #{comTel, jdbcType=VARCHAR}, #{comLogo, jdbcType=VARCHAR}, 'ACTIVE')
+  </insert>
+  <select id="selectByBizNo" parameterType="string" resultType="ComResponse">
+  select * from company
+  where biz_no = #{bizNo}
+  </select>
+  <!-- 하나만 조회 -->
+  <select id="selectOneById" parameterType="long" resultType="ComResponse">
+  select * from company 
+  where com_id = #{comId} 
+  </select>
+  <!-- 회사 정보 수정 -->
+  <update id="update" parameterType="ComRequest">
+    update company
+    <set>
+    	<if test="comName != null">com_name = #{comName},</if>
+    	<if test="comCeo != null">com_ceo = #{comCeo},</if>
+    	<if test="industryGrpCode != null">industry_grp_code = #{industryGrpCode},</if>
+    	<if test="industryCode != null">industry_code = #{industryCode},</if>
+    	<if test="comTel != null">com_tel = #{comTel},</if>
+        <if test="comLogo != null">com_logo   = #{comLogo},</if>
+    </set>
+    where com_id = #{comId}
+  </update>
+  <!-- 회사 삭제 (연관 데이터가 전혀 없을 때만 호출됨) -->
+  <delete id="delete" parameterType="long">
+  delete from company
+  where com_id = #{comId}
+  </delete>
+  <!--
+    회사를 FK(com_id)로 직접 참조하는 테이블에 남아있는 행 수를 전부 더한 값.
+    0보다 크면 delete()는 FK 위반(ORA-02292 등)으로 실패하므로 대신 softDelete()를 쓴다.
+    새로운 모듈/테이블에 company FK가 추가되면 이 목록에도 함께 추가해야 한다.
+  -->
+  <select id="countRelatedData" parameterType="long" resultType="long">
+    SELECT
+        (SELECT COUNT(*) FROM department WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM employee WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM emp_position WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM authority WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM evaluation_period WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM notice WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM project WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM recruit WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM applicant WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM com_resource WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM reservation WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM task WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM dept_transfer_log WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM appr_form WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM appr_doc WHERE com_id = #{comId})
+      + (SELECT COUNT(*) FROM sal_plcy_doc WHERE com_id = #{comId})
+    AS cnt
+    FROM dual
+  </select>
+  <!-- 하위 데이터가 남아있어 완전 삭제 대신 비활성화 처리 -->
+  <update id="softDelete" parameterType="long">
+    update company
+    set com_status = 'INACTIVE'
+    where com_id = #{comId}
+  </update>
+  <!-- 비활성화된 회사를 다시 활성화 -->
+  <update id="reactivate" parameterType="long">
+    update company
+    set com_status = 'ACTIVE'
+    where com_id = #{comId}
+  </update>
+  <!-- 회사 통계 -->
+  <select id="selectStats" resultType="StatsComResponse">
+	SELECT 
+	    (SELECT COUNT(*) FROM company) AS com_total,
+	    (SELECT COUNT(*) FROM employee) AS emp_total,
+	    (SELECT COUNT(DISTINCT industry_code) FROM company) AS indust_total,
+	    (SELECT com_name FROM company 
+	      ORDER BY created_at DESC 
+	      FETCH FIRST 1 ROWS ONLY) AS com_latest
+	FROM dual
+  </select>
+  <!-- 회원 id를 통해 내 회사 정보 조회 -->
+  <select id="selectOneByEmpId" resultType="ComResponse" parameterType="long">
+    select c.*
+    from company c
+    join employee e on e.com_id = c.com_id
+    where e.emp_id = #{empId}
+  </select>
+</mapper>

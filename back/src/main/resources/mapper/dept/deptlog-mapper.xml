@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.dept.repository.DeptTransferLogMapper">
+<insert id="insertTransferLog" parameterType="DeptTransferLogRequest">
+	INSERT INTO dept_transfer_log
+    	(log_id, com_id, origin_dept_id, target_dept_id, emp_id,
+		ai_recommended, ai_reason, handover_snapshot, created_by, created_at)
+	VALUES
+    	(seq_dept_transfer_log.NEXTVAL, #{comId}, #{originDeptId}, #{targetDeptId}, #{empId},
+        #{aiRecommended}, #{aiReason}, #{handoverSnapshot}, #{createdBy}, SYSDATE)
+</insert>
+<select id="searchTransferLogs" resultType="DeptTransferLogResponse">
+	SELECT
+	    l.log_id, l.com_id,
+	    l.origin_dept_id, od.dept_name AS origin_dept_name,
+	    l.target_dept_id, td.dept_name AS target_dept_name,
+	    l.emp_id, e.emp_no, e.emp_name,
+	    l.ai_recommended, l.ai_reason, l.handover_snapshot,
+	    l.created_by, cb.emp_name AS created_by_name,
+	    l.created_at
+	FROM dept_transfer_log l
+	JOIN department od ON l.origin_dept_id = od.dept_id
+	JOIN department td ON l.target_dept_id = td.dept_id
+	JOIN employee e  ON l.emp_id = e.emp_id
+	JOIN employee cb ON l.created_by = cb.emp_id
+	WHERE l.com_id = #{comId}
+	<if test="search.originDeptId != null">
+	  AND l.origin_dept_id = #{search.originDeptId}
+	</if>
+	<if test="search.targetDeptId != null">
+	  AND l.target_dept_id = #{search.targetDeptId}
+	</if>
+	<if test="search.aiRecommended != null and search.aiRecommended != ''">
+	  AND l.ai_recommended = #{search.aiRecommended}
+	</if>
+	<if test="search.dateFrom != null and search.dateFrom != ''">
+	  AND l.created_at <![CDATA[>=]]> TO_DATE(#{search.dateFrom}, 'YYYY-MM-DD')
+	</if>
+	<if test="search.dateTo != null and search.dateTo != ''">
+	  AND l.created_at <![CDATA[<]]> TO_DATE(#{search.dateTo}, 'YYYY-MM-DD') + 1
+	</if>
+	ORDER BY l.created_at DESC
+	OFFSET #{search.pstartno} ROWS FETCH NEXT #{search.onepagelist} ROWS ONLY
+</select>
+<!-- 전체 건수 -->
+<select id="listTotal" resultType="int" >
+	SELECT COUNT(*)
+	FROM dept_transfer_log l
+	WHERE l.com_id = #{comId}
+	<if test="search.originDeptId != null">
+	  AND l.origin_dept_id = #{search.originDeptId}
+	</if>
+	<if test="search.targetDeptId != null">
+	  AND l.target_dept_id = #{search.targetDeptId}
+	</if>
+	<if test="search.aiRecommended != null and search.aiRecommended != ''">
+	  AND l.ai_recommended = #{search.aiRecommended}
+	</if>
+	<if test="search.dateFrom != null and search.dateFrom != ''">
+	  AND l.created_at <![CDATA[>=]]> TO_DATE(#{search.dateFrom}, 'YYYY-MM-DD')
+	</if>
+	<if test="search.dateTo != null and search.dateTo != ''">
+	  AND l.created_at <![CDATA[<]]> TO_DATE(#{search.dateTo}, 'YYYY-MM-DD') + 1
+	</if>
+</select>
+</mapper>

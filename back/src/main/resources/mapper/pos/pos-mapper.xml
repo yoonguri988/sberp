@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.pos.repository.PosMapper">
+
+	<!-- 회사별 직급 목록 -->
+	<select id="selectAll" resultType="com.sb.erp.pos.dto.response.PosResponse">
+		select pos_id, pos_code, pos_name, pos_order, com_id
+		from emp_position
+		where com_id = #{comId}
+		order by pos_order
+	</select>
+
+	<!-- 직급 단건 조회 (com_id 가드) -->
+	<select id="selectOneById" resultType="com.sb.erp.pos.dto.response.PosResponse">
+		select pos_id, pos_code, pos_name, pos_order, com_id
+		from emp_position
+		where pos_id = #{posId}
+		and com_id = #{comId}
+	</select>
+
+	<!-- 직급 등록 -->
+	<insert id="insert" parameterType="com.sb.erp.pos.dto.request.PosRequest">
+		<selectKey keyProperty="posId" resultType="long" order="AFTER">
+			select SEQ_POSITION.currval from dual
+		</selectKey>
+		insert into emp_position (com_id, pos_code, pos_name, pos_order)
+		values (#{comId}, #{posCode}, #{posName}, #{posOrder})
+	</insert>
+
+	<!-- 직급 수정 -->
+	<update id="update" parameterType="com.sb.erp.pos.dto.request.PosRequest">
+		update emp_position
+		set pos_code = #{posCode},
+		pos_name = #{posName},
+		pos_order = #{posOrder}
+		where pos_id = #{posId}
+		and com_id = #{comId}
+	</update>
+
+	<!-- 직급 삭제 -->
+	<delete id="delete" parameterType="com.sb.erp.pos.dto.request.PosRequest">
+		delete from emp_position
+		where pos_id = #{posId}
+		and com_id = #{comId}
+	</delete>
+
+	<!-- 이 직급을 사용중인 사원 수 -->
+	<select id="countEmpUsing" resultType="int">
+		select count(*)
+		from employee
+		where pos_id = #{posId}
+		and com_id = #{comId}
+	</select>
+
+	<!-- 회사 내 pos_code 중복 확인 (수정 시 자신 제외) -->
+	<select id="countByPosCode" resultType="int">
+		select count(*)
+		from emp_position
+		where pos_code = #{posCode}
+		and com_id = #{comId}
+		<if test="excludePosId != null">
+			and pos_id != #{excludePosId}
+		</if>
+	</select>
+
+</mapper>

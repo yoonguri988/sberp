@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.emp.repository.EmailSendLogMapper">
+
+	<!-- 발송 시작: MERGE로 upsert. - (emp_id, mail_type) 조합이 UNIQUE 제약이므로 재시도 시에도 
+		안전. - 처음이면 INSERT, 이미 있으면(P/F/S) → 'P'로 리셋 후 재시도. -->
+	<update id="upsertProcessing">
+		merge into email_send_log tgt
+		using ( select #{empId} as emp_id, #{mailType} as mail_type from dual ) src
+		on (tgt.emp_id = src.emp_id and tgt.mail_type = src.mail_type)
+		when
+		matched then
+		update set status = 'P',
+		sent_at = SYSDATE,
+		error_msg = null,
+		updated_at = SYSDATE
+		when not matched then
+		insert (log_id, emp_id, mail_type, status, sent_at, created_at, updated_at)
+		values (SEQ_EMAIL_LOG.nextval, src.emp_id, src.mail_type, 'P',
+		SYSDATE, SYSDATE, SYSDATE)
+	</update>
+
+	<!-- 발송 성공: 'S'로 갱신 -->
+	<update id="updateSuccess">
+		update email_send_log
+		set status = 'S',
+		error_msg = null,
+		updated_at = SYSDATE
+		where emp_id = #{empId}
+		and mail_type = #{mailType}
+	</update>
+
+	<!-- 발송 실패: 'F' + error_msg -->
+	<update id="updateFail">
+		update email_send_log
+		set status = 'F',
+		error_msg = #{errorMsg},
+		updated_at = SYSDATE
+		where emp_id = #{empId}
+		and mail_type = #{mailType}
+	</update>
+
+
+	<!-- ══════ 스케줄러 조회 ═══════ -->
+
+	<!-- 3일 차 안부 메일 대상자. 
+		- created_at이 정확히 '3일 전 하루 구간' 인 사원 
+		- FOLLOWUP_3DAY 
+		발송 이력이 없거나 실패('F')인 경우 포함 - 재직자만 -->
+	<select id="selectFollowup3DayTargets"
+		resultType="com.sb.erp.emp.dto.WelcomeMailTargetDto">
+		select
+		e.emp_id as empId,
+		e.emp_name as empName,
+		e.emp_email as empEmail,
+		c.com_name as comName,
+		TO_CHAR(e.created_at, 'YYYY-MM-DD') as createdAt
+		from employee e
+		join company c on e.com_id =
+		c.com_id
+		left join email_send_log l
+		on l.emp_id = e.emp_id
+		and l.mail_type = 'FOLLOWUP_3DAY'
+		and l.status = 'S'
+		where e.created_at >= TRUNC(SYSDATE) - 3
+		and
+		e.created_at &lt; TRUNC(SYSDATE) - 2
+		and e.emp_status = '재직'
+		and
+		l.log_id is null
+		and e.emp_email is not null
+	</select>
+
+	<!-- 환영 메일 안전망 (afterCommit 실패 복구). - 최근 7일 이내 등록된 사원 중 성공 로그 없는 사원 / 재직자만 -->
+	<select id="selectWelcomeOrphans"
+		resultType="com.sb.erp.emp.dto.WelcomeMailTargetDto">
+		select
+		e.emp_id as empId,
+		e.emp_name as empName,
+		e.emp_email as empEmail,
+		c.com_name as comName,
+		TO_CHAR(e.created_at, 'YYYY-MM-DD') as createdAt
+		from employee e
+		join company c on e.com_id =
+		c.com_id
+		left join email_send_log l
+		on l.emp_id = e.emp_id
+		and l.mail_type = 'WELCOME'
+		and l.status = 'S'
+		where e.created_at >= TRUNC(SYSDATE) - 7
+		and
+		e.emp_status = '재직'
+		and l.log_id is null
+		and e.emp_email is not null
+	</select>
+
+</mapper>

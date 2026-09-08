@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.dept.repository.DeptTransferMapper">
+<!-- 해당 부서가 자신이 속한 회사의 부서가 맞는지 확인  -->
+<select id="countDeptInCompany" resultType="int">
+	SELECT COUNT(*)
+    FROM department
+    WHERE dept_id = #{deptId}
+      AND com_id = #{comId}
+</select>
+<!-- 삭제 대기중인 부서 목록 조회 -->
+<select id="selectOneById" resultType="DeptResponse">
+	SELECT *
+	FROM department d 
+	WHERE d.dept_id = #{deptId}
+	AND D.DEPT_STATUS = 'PENDING_DELETE'
+</select>
+<!-- 이관 대상 사원 -->
+<select id="findEmployeesByDept" resultType="EmpTransferResponse" parameterType="long">
+	SELECT
+      e.emp_id, e.emp_no, e.emp_name, e.emp_status,
+      p.pos_name, p.pos_order
+	FROM employee e
+    JOIN emp_position p ON e.pos_id = p.pos_id
+    WHERE e.dept_id = #{deptId}
+    ORDER BY p.pos_order ASC, e.emp_name ASC
+</select>
+<!-- 사원 기준 미처리 예약 -->
+<select id="findPendingResvByDept" resultType="ResvImpactResponse" parameterType="long">
+	SELECT
+      r.rev_id, r.status, r.start_dt, r.end_dt,
+      e.emp_id, e.emp_name,
+      res.res_id, res.res_name
+	FROM reservation r
+    JOIN employee e       ON r.emp_id = e.emp_id
+    JOIN com_resource res ON r.res_id = res.res_id
+    WHERE e.dept_id = #{deptId}
+      AND r.status = 'WAI'
+	ORDER BY r.start_dt ASC
+</select>
+<!-- 사원 기준 미완료 결재라인 -->
+<select id="findPendingApprLineByDept" resultType="ApprLineImpactResponse" parameterType="long">
+	SELECT
+      l.lin_id, l.lin_order, l.lin_status,
+      ad.doc_id, ad.doc_title,
+      e.emp_id, e.emp_name
+	FROM appr_line l
+    JOIN employee e  ON l.emp_id = e.emp_id
+    JOIN appr_doc ad ON l.doc_id = ad.doc_id
+    WHERE e.dept_id = #{deptId}
+      AND l.lin_status IN ('NOT', 'WAI')
+    ORDER BY ad.created_at ASC, l.lin_order ASC
+</select>
+<!-- 사원이 기안한 진행중 결재문서 -->
+<select id="findPendingApprDocsByDept" resultType="ApprDocImpactResponse" parameterType="long">
+	SELECT 
+	  d.doc_id, d.doc_title, d.doc_status,
+	  e.emp_id, e.emp_name
+	FROM appr_doc d
+	JOIN employee e ON d.emp_id = e.emp_id
+	WHERE e.dept_id = #{deptId}
+	  AND d.doc_status = 'ING'
+	ORDER BY d.created_at ASC
+</select>
+<!-- 사원이 기안한 진행중 결재문서 제목 요약 — AI 프롬프트 재료 겸 dept_transfer_log.handover_snapshot 원본 -->
+<select id="findPendingApprDocTitles" parameterType="long" resultType="string">
+	SELECT LISTAGG(doc_title, ' | ') WITHIN GROUP (ORDER BY doc_title)
+    FROM appr_doc
+    WHERE doc_status = 'ING'
+      AND emp_id IN (SELECT emp_id FROM employee WHERE dept_id = #{deptId})
+</select>
+<!-- 필터링: (1) 동일 상위조직(형제 부서) OR (2) 해체 대상 부서의 상위 부서 자체 -->
+<select id="findCandidateDepartments" resultType="DeptResponse">
+	SELECT *
+    FROM department
+    WHERE com_id = #{comId}
+      AND dept_status = 'ACTIVE'
+      AND dept_id != #{deptId}
+      AND (
+	 	 parent_id = (SELECT parent_id FROM department WHERE dept_id = #{deptId})  -- 형제 부서
+      OR dept_id = (SELECT parent_id FROM department WHERE dept_id = #{deptId}) -- 상위 부서 자체
+      )
+        ORDER BY dept_name
+</select>
+<!-- 필터링: 필터링 실패 시 폴백용 전체 목록 -->
+<select id="findActiveDeptsExcluding" resultType="DeptResponse">
+	SELECT *
+    FROM department
+    WHERE com_id = #{comId}
+      AND dept_status = 'ACTIVE'
+      AND dept_id != #{deptId}
+    ORDER BY dept_name
+</select>
+<!-- 이관 취소 업데이트 -->
+<update id="updateActiveById">
+	UPDATE DEPARTMENT
+	SET DEPT_STATUS = 'ACTIVE'
+	WHERE DEPT_ID = #{deptId}
+</update>
+<!-- 부서 이관 확정 -->
+<update id="markDeleted">
+	UPDATE DEPARTMENT
+	SET DEPT_STATUS = 'DELETED'
+	WHERE DEPT_ID = #{deptId} 
+</update>
+<!-- 부서 이관 진행 (사원 부서 업데이트) -->
+<update id="updateEmployeeDept">
+	UPDATE employee
+    SET dept_id = #{newDeptId}
+    WHERE emp_id = #{empId}
+</update>
+<!-- 이관 대기(PENDING_DELETE) 부서 목록  -->
+<select id="findPendingTransferDepts" resultType="PendingDeptResponse">
+	SELECT
+	    d.dept_id, d.dept_name, d.dept_code, d.updated_at,
+	    (SELECT COUNT(*) FROM employee e WHERE e.dept_id = d.dept_id) AS emp_count
+	FROM department d
+	WHERE d.com_id = #{comId}
+	  AND d.dept_status = 'PENDING_DELETE'
+	<if test="keyword != null and keyword != ''">
+	  AND (UPPER(d.dept_name) LIKE '%' || UPPER(#{keyword}) || '%'
+	       OR UPPER(d.dept_code) LIKE '%' || UPPER(#{keyword}) || '%')
+	</if>
+	ORDER BY d.updated_at DESC
+</select>
+</mapper>

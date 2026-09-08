@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.res.repository.ResourceMapper">
+    <!-- 자원 목록 조회 -->
+    <select id="selectResourceList" parameterType="ResSearchRequest" resultType="ResResponse">
+        SELECT 
+          R.RES_ID, R.COM_ID, R.RES_CODE, R.RES_NAME, R.RES_TYPE, 
+		  R.QUANTITY, R.LOCATION, R.CAPACITY, R.RES_STATUS, 
+		  E.EMP_ID AS managerEmpId, E.EMP_NAME AS managerEmpName, E.EMP_NO AS managerEmpNo,
+		  EP.POS_ID AS managerPosId, EP.POS_NAME AS managerPosName,  
+		  R.REMARK, 
+		  R.CREATED_AT, R.UPDATED_AT,
+		  COUNT(CASE WHEN RV.STATUS IN ('WAI','APP','NORET') THEN RV.REV_ID END) AS RESV_COUNT
+        FROM COM_RESOURCE R
+        LEFT JOIN RESERVATION RV ON R.RES_ID = RV.RES_ID
+        LEFT JOIN EMPLOYEE E ON R.MANAGER_EMP_ID = E.EMP_ID
+        LEFT JOIN EMP_POSITION EP ON EP.POS_ID = E.POS_ID
+        WHERE R.com_id = #{comId}
+        <if test="keyword != null and keyword != ''">
+			AND (R.res_name LIKE '%' || #{keyword} || '%'
+			     OR R.res_code LIKE '%' || #{keyword} || '%')
+        </if>
+        <if test="resType != null and resType != ''">
+            AND R.res_type = #{resType}
+        </if>
+        <if test="resStatus != null and resStatus != ''">
+            AND R.RES_STATUS = #{resStatus}
+        </if>
+		GROUP BY R.RES_ID, R.COM_ID, R.RES_CODE, R.RES_NAME, R.RES_TYPE, 
+		  R.QUANTITY, R.LOCATION, R.CAPACITY, R.RES_STATUS, 
+		  E.EMP_ID, E.EMP_NAME, E.EMP_NO,
+		  EP.POS_ID, EP.POS_NAME,
+		  R.REMARK, 
+		  R.CREATED_AT, R.UPDATED_AT
+        ORDER BY R.res_id DESC
+        OFFSET #{pstartno} ROWS FETCH NEXT #{onepagelist} ROWS ONLY
+    </select>
+
+    <!-- 자원 전체 개수 -->
+    <select id="selectResourceCount" parameterType="ResSearchRequest" resultType="int">
+        SELECT COUNT(*)
+        FROM COM_RESOURCE R
+        WHERE R.com_id = #{comId}
+        <if test="keyword != null and keyword != ''">
+			AND (R.res_name LIKE '%' || #{keyword} || '%'
+			     OR R.res_code LIKE '%' || #{keyword} || '%')
+        </if>
+        <if test="resType != null and resType != ''">
+            AND R.res_type = #{resType}
+        </if>
+        <if test="resStatus != null and resStatus != ''">
+            AND R.RES_STATUS = #{resStatus}
+        </if>
+    </select>
+
+    <!-- 자원 상세 -->
+    <select id="selectResourceDetail" parameterType="long" resultType="ResResponse">
+        SELECT 
+          R.RES_ID, R.COM_ID, R.RES_CODE, R.RES_NAME, R.RES_TYPE, 
+		  R.QUANTITY, R.LOCATION, R.CAPACITY, R.RES_STATUS, 
+		  E.EMP_ID AS managerEmpId, E.EMP_NAME AS managerEmpName, E.EMP_NO AS managerEmpNo,
+		  EP.POS_ID AS managerPosId, EP.POS_NAME AS managerPosName,  
+		  R.REMARK, 
+		  R.CREATED_AT, R.UPDATED_AT,
+		  COUNT(CASE WHEN RV.STATUS IN ('WAI','APP','NORET') THEN RV.REV_ID END) AS RESV_COUNT
+        FROM COM_RESOURCE R
+        LEFT JOIN RESERVATION RV ON R.RES_ID = RV.RES_ID
+        LEFT JOIN EMPLOYEE E ON R.MANAGER_EMP_ID = E.EMP_ID
+        LEFT JOIN EMP_POSITION EP ON EP.POS_ID = E.POS_ID
+        WHERE R.RES_ID = #{resId}
+		GROUP BY R.RES_ID, R.COM_ID, R.RES_CODE, R.RES_NAME, R.RES_TYPE, 
+		  R.QUANTITY, R.LOCATION, R.CAPACITY, R.RES_STATUS, 
+		  E.EMP_ID, E.EMP_NAME, E.EMP_NO,
+		  EP.POS_ID, EP.POS_NAME,
+		  R.REMARK, 
+		  R.CREATED_AT, R.UPDATED_AT
+        ORDER BY R.res_id DESC
+    </select>
+
+    <!-- 자원 등록 -->
+    <insert id="insertResource" parameterType="ResRequest">
+        INSERT INTO com_resource (
+            res_id, com_id, res_code, res_name, res_type, quantity,
+            location, capacity, res_status, manager_emp_id, remark
+        )
+        VALUES (
+            seq_com_resource.NEXTVAL, #{comId}, #{resCode}, #{resName}, #{resType}, #{quantity},
+            #{location, jdbcType=VARCHAR}, #{capacity, jdbcType=INTEGER}, #{resStatus}, #{managerEmpId, jdbcType=VARCHAR}, #{remark, jdbcType=VARCHAR}
+        ) 
+    </insert>
+
+    <!-- 자원 수정 -->
+    <update id="updateResource" parameterType="ResRequest">
+        UPDATE com_resource
+        <set>
+        	<if test="resName != null">res_name = #{resName},</if>
+        	<if test="resType != null">res_type = #{resType},</if>
+        	<if test="quantity != null">quantity = #{quantity},</if>
+        	<if test="location != null">location = #{location, jdbcType=VARCHAR},</if>
+        	<if test="capacity != null">capacity = #{capacity},</if>
+        	<if test="resStatus != null">res_status = #{resStatus},</if>
+        	<if test="managerEmpId != null">manager_emp_id = #{managerEmpId},</if>
+        	<if test="remark != null">remark   = #{remark},</if>
+        </set>
+        WHERE res_id = #{resId}
+    </update>
+
+    <!-- 자원 삭제 -->
+    <delete id="deleteResource" parameterType="long">
+        DELETE FROM COM_RESOURCE
+        WHERE res_id = #{resId}
+    </delete>
+
+	<!-- 자원코드 중복 체크 -->
+	<select id="selectByResCode" resultType="ResResponse" parameterType="ResRequest">
+		SELECT * FROM COM_RESOURCE
+		WHERE COM_ID = #{comId} 
+		AND RES_CODE = #{resCode}
+	</select>
+	<!-- 예약 할 수 있는 회사의 자원 정보 -->
+	<select id="selectResListForResv" resultType="ResResponse" parameterType="ResSearchRequest">
+		SELECT *
+		FROM COM_RESOURCE CR
+		WHERE CR.COM_ID = #{comId}
+		AND CR.RES_STATUS = 'AVAILABLE' -- 사용가능
+		AND CR.QUANTITY > 0 
+	</select>
+</mapper>

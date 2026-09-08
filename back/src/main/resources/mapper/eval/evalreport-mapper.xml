@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.eval.repository.EvalReportMapper">
+
+	<!-- 회차별 리포트 목록 (관리자용) 
+	- 회차 소속 회사 격리 위해 evaluation_period 조인 후 com_id 조건
+	- 사원 정보(이름/사번/부서/직급)까지 조인해서 카드/리스트 렌더링에 바로 사용
+	- 종합 점수 내림차순으로 정렬 (성과 상위자 우선 노출). -->
+	<select id="selectByPeriodId" resultType="com.sb.erp.eval.dto.response.ReportResponse">
+		select
+		r.report_id as reportId,
+		r.period_id as periodId,
+		r.emp_id as empId,
+		r.avg_performance as avgPerformance,
+		r.avg_expertise as avgExpertise,
+		r.avg_teamwork as avgTeamwork,
+		r.avg_attitude as avgAttitude,
+		r.avg_growth as avgGrowth,
+		r.overall_score as overallScore,
+		r.grade as grade,
+		r.ai_summary as aiSummary,
+		r.sentiment_positive as sentimentPositive,
+		r.sentiment_neutral as sentimentNeutral,
+		r.sentiment_negative as sentimentNegative,
+		r.sentiment_label as sentimentLabel,
+		r.model_name as modelName,
+		r.att_work_days as attWorkDays,
+		r.att_late_count as attLateCount,
+		r.att_early_leave_count as attEarlyLeaveCount,
+		r.att_absent_count as attAbsentCount,
+		r.att_annual_used as attAnnualUsed,
+		r.att_total_work_min as attTotalWorkMin,
+		r.att_overtime_min as attOvertimeMin,
+		r.att_rate as attRate,
+		TO_CHAR(r.generated_at, 'YYYY-MM-DD HH24:MI') as generatedAt,
+		TO_CHAR(r.created_at, 'YYYY-MM-DD') as createdAt,
+		TO_CHAR(r.updated_at, 'YYYY-MM-DD') as updatedAt,
+		p.title as periodTitle,
+		p.eval_year as periodYear,
+		p.eval_term as periodTerm,
+		emp.emp_name as empName,
+		emp.emp_no as empNo,
+		dept.dept_name as deptName,
+		pos.pos_name as posName
+		from evaluation_ai_report r
+		join evaluation_period p on r.period_id = p.period_id
+		join employee emp on r.emp_id = emp.emp_id
+		join department dept on emp.dept_id = dept.dept_id
+		join emp_position pos on emp.pos_id = pos.pos_id
+		where r.period_id = #{periodId}
+		and p.com_id = #{comId}
+		order by r.overall_score desc, pos.pos_order, emp.emp_no
+	</select>
+
+	<!-- 검색 + 페이징 리포트 목록 (관리자 화면용). 
+	- periodId 필수 (특정 회차 내에서만 검색) 
+	- deptId, keyword는 선택 필터 
+	- 사원 정보 조인해서 카드 렌더링에 바로 사용 
+	- 정렬은 기존과 동일 (종합 점수 내림차순 → 직급 → 사번) -->
+	<select id="searchByPeriod" parameterType="com.sb.erp.eval.dto.request.ReportSearchRequest"
+		resultType="com.sb.erp.eval.dto.response.ReportResponse">
+		select
+		r.report_id as reportId,
+		r.period_id as periodId,
+		r.emp_id as empId,
+		r.avg_performance as avgPerformance,
+		r.avg_expertise as avgExpertise,
+		r.avg_teamwork as avgTeamwork,
+		r.avg_attitude as avgAttitude,
+		r.avg_growth as avgGrowth,
+		r.overall_score as overallScore,
+		r.grade as grade,
+		r.sentiment_positive as sentimentPositive,
+		r.sentiment_neutral as sentimentNeutral,
+		r.sentiment_negative as sentimentNegative,
+		r.sentiment_label as sentimentLabel,
+		r.model_name as modelName,
+		r.att_work_days as attWorkDays,
+		r.att_late_count as attLateCount,
+		r.att_early_leave_count as attEarlyLeaveCount,
+		r.att_absent_count as attAbsentCount,
+		r.att_annual_used as attAnnualUsed,
+		r.att_total_work_min as attTotalWorkMin,
+		r.att_overtime_min as attOvertimeMin,
+		r.att_rate as attRate,
+		TO_CHAR(r.generated_at, 'YYYY-MM-DD HH24:MI') as generatedAt,
+		p.title as periodTitle,
+		p.eval_year as periodYear,
+		p.eval_term as periodTerm,
+		emp.emp_name as empName,
+		emp.emp_no as empNo,
+		dept.dept_name as deptName,
+		pos.pos_name as posName
+		from evaluation_ai_report r
+		join evaluation_period p on r.period_id = p.period_id
+		join employee emp on r.emp_id = emp.emp_id
+		join department dept on emp.dept_id = dept.dept_id
+		join emp_position pos on emp.pos_id = pos.pos_id
+		<where>
+			r.period_id = #{periodId}
+			and p.com_id = #{comId}
+			<if test="deptId != null">
+				and emp.dept_id = #{deptId}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				and (emp.emp_name like '%' || #{keyword} || '%'
+				or
+				emp.emp_no like '%' || #{keyword} || '%')
+			</if>
+		</where>
+		order by r.overall_score desc, pos.pos_order, emp.emp_no
+		offset #{pstartno} rows fetch next #{onepagelist} rows only
+	</select>
+
+	<!-- 검색 결과 개수 (페이징 계산용) -->
+	<select id="countByPeriodSearch"
+		parameterType="com.sb.erp.eval.dto.request.ReportSearchRequest" resultType="int">
+		select count(*)
+		from evaluation_ai_report r
+		join evaluation_period p on
+		r.period_id = p.period_id
+		join employee emp on r.emp_id = emp.emp_id
+		<where>
+			r.period_id = #{periodId}
+			and p.com_id = #{comId}
+			<if test="deptId != null">
+				and emp.dept_id = #{deptId}
+			</if>
+			<if test="keyword != null and keyword != ''">
+				and (emp.emp_name like '%' || #{keyword} || '%'
+				or
+				emp.emp_no like '%' || #{keyword} || '%')
+			</if>
+		</where>
+	</select>
+
+	<!-- 리포트 단건 조회 (comId 격리 포함) -->
+	<select id="selectByReportId" resultType="com.sb.erp.eval.dto.response.ReportResponse">
+		select
+		r.report_id as reportId,
+		r.period_id as periodId,
+		r.emp_id as empId,
+		r.avg_performance as avgPerformance,
+		r.avg_expertise as avgExpertise,
+		r.avg_teamwork as avgTeamwork,
+		r.avg_attitude as avgAttitude,
+		r.avg_growth as avgGrowth,
+		r.overall_score as overallScore,
+		r.grade as grade,
+		r.ai_summary as aiSummary,
+		r.sentiment_positive as sentimentPositive,
+		r.sentiment_neutral as sentimentNeutral,
+		r.sentiment_negative as sentimentNegative,
+		r.sentiment_label as sentimentLabel,
+		r.model_name as modelName,
+		r.att_work_days as attWorkDays,
+		r.att_late_count as attLateCount,
+		r.att_early_leave_count as attEarlyLeaveCount,
+		r.att_absent_count as attAbsentCount,
+		r.att_annual_used as attAnnualUsed,
+		r.att_total_work_min as attTotalWorkMin,
+		r.att_overtime_min as attOvertimeMin,
+		r.att_rate as attRate,
+		TO_CHAR(r.generated_at, 'YYYY-MM-DD HH24:MI') as
+		generatedAt,
+		TO_CHAR(r.created_at, 'YYYY-MM-DD') as createdAt,
+		TO_CHAR(r.updated_at, 'YYYY-MM-DD') as updatedAt,
+		p.title as
+		periodTitle,
+		p.eval_year as periodYear,
+		p.eval_term as periodTerm,
+		emp.emp_name as empName,
+		emp.emp_no as empNo,
+		dept.dept_name as
+		deptName,
+		pos.pos_name as posName
+		from evaluation_ai_report r
+		join
+		evaluation_period p on
+		r.period_id = p.period_id
+		join employee emp on
+		r.emp_id = emp.emp_id
+		join department dept on emp.dept_id =
+		dept.dept_id
+		join emp_position
+		pos on emp.pos_id = pos.pos_id
+		where
+		r.report_id = #{reportId}
+		and
+		p.com_id = #{comId}
+	</select>
+
+	<!-- 회차 + 사원 조합 단건 (본인 조회, 재생성 시 존재 여부 판단용). -->
+	<select id="selectByPeriodAndEmp" resultType="com.sb.erp.eval.dto.response.ReportResponse">
+		select
+		r.report_id as reportId,
+		r.period_id as periodId,
+		r.emp_id as empId,
+		r.avg_performance as avgPerformance,
+		r.avg_expertise as avgExpertise,
+		r.avg_teamwork as avgTeamwork,
+		r.avg_attitude as avgAttitude,
+		r.avg_growth as avgGrowth,
+		r.overall_score as overallScore,
+		r.grade as grade,
+		r.ai_summary as aiSummary,
+		r.sentiment_positive as sentimentPositive,
+		r.sentiment_neutral as sentimentNeutral,
+		r.sentiment_negative as sentimentNegative,
+		r.sentiment_label as sentimentLabel,
+		r.model_name as modelName,
+		r.att_work_days as attWorkDays,
+		r.att_late_count as attLateCount,
+		r.att_early_leave_count as attEarlyLeaveCount,
+		r.att_absent_count as attAbsentCount,
+		r.att_annual_used as attAnnualUsed,
+		r.att_total_work_min as attTotalWorkMin,
+		r.att_overtime_min as attOvertimeMin,
+		r.att_rate as attRate,
+		TO_CHAR(r.generated_at,
+		'YYYY-MM-DD HH24:MI') as generatedAt,
+		TO_CHAR(r.created_at,
+		'YYYY-MM-DD') as createdAt,
+		TO_CHAR(r.updated_at, 'YYYY-MM-DD') as
+		updatedAt,
+		p.title as periodTitle,
+		p.eval_year as periodYear,
+		p.eval_term as periodTerm,
+		emp.emp_name as empName,
+		emp.emp_no as empNo,
+		dept.dept_name as deptName,
+		pos.pos_name as posName
+		from
+		evaluation_ai_report r
+		join evaluation_period p on
+		r.period_id =
+		p.period_id
+		join employee emp on r.emp_id = emp.emp_id
+		join department
+		dept on emp.dept_id = dept.dept_id
+		join emp_position
+		pos on emp.pos_id =
+		pos.pos_id
+		where r.period_id = #{periodId}
+		and
+		r.emp_id = #{empId}
+	</select>
+
+	<!-- 특정 사원의 리포트 이력 (본인 조회용) -->
+	<select id="selectByEmpId" resultType="com.sb.erp.eval.dto.response.ReportResponse">
+		select
+		r.report_id as reportId,
+		r.period_id as periodId,
+		r.emp_id as empId,
+		r.overall_score as overallScore,
+		r.grade as grade,
+		r.sentiment_label as sentimentLabel,
+		TO_CHAR(r.generated_at, 'YYYY-MM-DD HH24:MI') as generatedAt,
+		p.title as periodTitle,
+		p.eval_year as periodYear,
+		p.eval_term as periodTerm
+		from evaluation_ai_report r
+		join evaluation_period p on r.period_id = p.period_id
+		where r.emp_id = #{empId}
+		order by p.eval_year desc,
+		case p.eval_term
+		when 'ANNUAL' then 3
+		when 'H2' then 2
+		when 'H1' then 1
+		end
+		desc
+	</select>
+
+	<!-- 특정 사원의 가장 최근 리포트 1건 (emp/detail 임베드용). 
+	- 회사 격리(comId)를 evaluation_period 조인으로 확보. 
+	- 정렬: 연도 desc → 학기 우선순위(ANNUAL > H2 > H1) desc → generated_at desc. 
+	- Oracle 12c+ FETCH FIRST 1 ROWS ONLY로 Top-N 최적화 유도. -->
+	<select id="selectLatestByEmpId" resultType="com.sb.erp.eval.dto.response.ReportResponse">
+		select
+		r.report_id as reportId,
+		r.period_id as periodId,
+		r.emp_id as empId,
+		r.overall_score as overallScore,
+		r.grade as grade,
+		r.ai_summary as aiSummary,
+		r.sentiment_positive as sentimentPositive,
+		r.sentiment_neutral as sentimentNeutral,
+		r.sentiment_negative as sentimentNegative,
+		r.sentiment_label as sentimentLabel,
+		r.model_name as modelName,
+		TO_CHAR(r.generated_at, 'YYYY-MM-DD HH24:MI') as generatedAt,
+		p.title as periodTitle,
+		p.eval_year as periodYear,
+		p.eval_term as periodTerm
+		from evaluation_ai_report r
+		join evaluation_period p on r.period_id = p.period_id
+		where r.emp_id = #{empId}
+		and p.com_id = #{comId}
+		and p.period_status = 'REPORTED'
+		order by
+		p.eval_year desc,
+		case p.eval_term
+		when 'ANNUAL' then 3
+		when 'H2' then 2
+		when 'H1' then 1
+		end desc,
+		r.generated_at desc
+		fetch first 1 rows only
+	</select>
+
+	<!-- 회차의 리포트 생성 건수. -->
+	<select id="countByPeriodId" resultType="int">
+		select count(*)
+		from
+		evaluation_ai_report
+		where period_id = #{periodId}
+	</select>
+
+	<!-- 리포트 신규 저장. -->
+	<insert id="insert" parameterType="com.sb.erp.eval.dto.request.ReportRequest">
+    insert into evaluation_ai_report (
+    report_id, period_id, emp_id,
+    avg_performance, avg_expertise, avg_teamwork, avg_attitude, avg_growth,
+    overall_score, grade, ai_summary,
+    sentiment_positive, sentiment_neutral,
+    sentiment_negative, sentiment_label,
+    model_name, generated_at,
+    att_work_days, att_late_count, att_early_leave_count,
+    att_absent_count, att_annual_used,
+    att_total_work_min, att_overtime_min, att_rate
+    ) values (
+    SEQ_REPORT.nextval, #{periodId}, #{empId},
+    #{avgPerformance}, #{avgExpertise}, #{avgTeamwork}, #{avgAttitude}, #{avgGrowth},
+    #{overallScore}, #{grade}, #{aiSummary},
+    #{sentimentPositive}, #{sentimentNeutral}, 
+    #{sentimentNegative}, #{sentimentLabel},
+    #{modelName}, SYSDATE,
+    #{attWorkDays}, #{attLateCount}, #{attEarlyLeaveCount},
+    #{attAbsentCount}, #{attAnnualUsed},
+    #{attTotalWorkMin}, #{attOvertimeMin}, #{attRate}
+    )
+</insert>
+
+	<!-- 리포트 재생성 시 갱신 (같은 period+emp에 대한 upsert의 update 경로). -->
+	<update id="update" parameterType="com.sb.erp.eval.dto.request.ReportRequest">
+    update evaluation_ai_report
+    set avg_performance = #{avgPerformance},
+    avg_expertise = #{avgExpertise},
+    avg_teamwork = #{avgTeamwork},
+    avg_attitude = #{avgAttitude},
+    avg_growth = #{avgGrowth},
+    overall_score = #{overallScore},
+    grade = #{grade},
+    ai_summary = #{aiSummary},
+    sentiment_positive = #{sentimentPositive},
+    sentiment_neutral = #{sentimentNeutral},
+    sentiment_negative = #{sentimentNegative},
+    sentiment_label = #{sentimentLabel},
+    model_name = #{modelName},
+    generated_at = SYSDATE,
+    att_work_days = #{attWorkDays},
+    att_late_count = #{attLateCount},
+    att_early_leave_count = #{attEarlyLeaveCount},
+    att_absent_count = #{attAbsentCount},
+    att_annual_used = #{attAnnualUsed},
+    att_total_work_min = #{attTotalWorkMin},
+    att_overtime_min = #{attOvertimeMin},
+    att_rate = #{attRate}
+    where period_id = #{periodId} and emp_id = #{empId}
+</update>
+
+	<!-- 회차 내 사원별 평가 집계 (SUBMITTED만). - 각 사원(대상자)이 받은 평가 점수의 평균과 코멘트 concat. 
+		- LISTAGG로 코멘트 이어붙여 서비스 계층에서 요약/감성 mock 생성에 사용. - 평가 최소 1건 이상 있는 사원만 결과에 
+		포함. - 코멘트에 CLOB은 LISTAGG 제약이 있으므로 SUBSTR로 앞부분만 잘라 VARCHAR로 처리. -->
+	<select id="selectAggregatesByPeriod" resultType="map">
+		select
+		emp.emp_id as "empId",
+		emp.emp_name as "empName",
+		emp.emp_no as "empNo",
+		dept.dept_name as "deptName",
+		pos.pos_name as "posName",
+		round(avg(pe.score_performance), 2) as "avgPerformance",
+		round(avg(pe.score_expertise), 2) as "avgExpertise",
+		round(avg(pe.score_teamwork), 2) as "avgTeamwork",
+		round(avg(pe.score_attitude), 2) as "avgAttitude",
+		round(avg(pe.score_growth), 2) as "avgGrowth",
+		count(*) as "evalCount",
+		listagg(SUBSTR(pe.strength_comment, 1, 200), ' / ')
+		within group (order
+		by pe.eval_id) as "allStrengthComments",
+		listagg(SUBSTR(pe.improvement_comment, 1, 200), ' / ')
+		within group
+		(order by pe.eval_id) as "allImprovementComments"
+		from
+		performance_evaluation pe
+		join employee emp on pe.target_emp_id =
+		emp.emp_id
+		join department dept on emp.dept_id = dept.dept_id
+		join
+		emp_position pos on emp.pos_id = pos.pos_id
+		where pe.period_id =
+		#{periodId}
+		and pe.eval_status = 'SUBMITTED'
+		group by emp.emp_id,
+		emp.emp_name, emp.emp_no, dept.dept_name, pos.pos_name, pos.pos_order
+		order by pos.pos_order, emp.emp_no
+	</select>
+
+
+
+</mapper>

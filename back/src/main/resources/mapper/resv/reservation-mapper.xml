@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.resv.repository.ReservationMapper">
+
+    <!-- 예약 목록: 회사별 + 상태필터 + 페이징, resource/employee 조인해서 이름까지 표시 -->
+    <select id="selectAll" parameterType="ResvSearchRequest" resultType="ResvResponse">
+        SELECT
+            rv.*,
+            r.res_name, r.res_code, r.res_type, r.location,
+            e.emp_name, d.dept_name, ap.emp_name AS approvedEmpName
+        FROM reservation rv
+        JOIN com_resource r ON rv.res_id = r.res_id
+        JOIN employee e ON rv.emp_id = e.emp_id
+        JOIN department d ON e.dept_id = d.dept_id
+        LEFT JOIN employee ap ON rv.approved_emp_id = ap.emp_id
+        WHERE rv.com_id = #{comId}
+        <if test="resType != null and resType != ''">
+            AND r.res_type = #{resType}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND ( UPPER(r.res_code) LIKE '%' || #{keyword} || '%'
+             OR UPPER(r.res_name) LIKE '%' || #{keyword} || '%' )
+        </if>
+        <if test="empId != null">
+            AND rv.emp_id = #{empId}
+        </if>
+        <if test="status != null and status != ''">
+            AND rv.status = #{status}
+        </if>
+        <if test="startDt != null">
+            AND rv.updated_at <![CDATA[>=]]> #{startDt}
+        </if>
+        <if test="endDt != null">
+            AND rv.updated_at <![CDATA[<]]> #{endDt}
+        </if>
+        ORDER BY rv.rev_id DESC
+        OFFSET #{pstartno} ROWS FETCH NEXT #{onepagelist} ROWS ONLY
+    </select>
+
+    <!-- 예약 전체 개수 (페이징 계산용) -->
+    <select id="selectCount" parameterType="ResvSearchRequest" resultType="int">
+        SELECT COUNT(*)
+        FROM reservation rv
+        LEFT JOIN COM_RESOURCE R ON R.RES_ID = RV.RES_ID
+        WHERE rv.com_id = #{comId}
+        <if test="resType != null and resType != ''">
+            AND r.res_type = #{resType}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND ( UPPER(r.res_code) LIKE '%' || #{keyword} || '%'
+             OR UPPER(r.res_name) LIKE '%' || #{keyword} || '%' )
+        </if>
+        <if test="empId != null">
+            AND rv.emp_id = #{empId}
+        </if>
+        <if test="status != null and status != ''">
+            AND rv.status = #{status}
+        </if>
+        <if test="startDt != null">
+            AND rv.updated_at <![CDATA[>=]]> #{startDt}
+        </if>
+        <if test="endDt != null">
+            AND rv.updated_at <![CDATA[<]]> #{endDt}
+        </if>
+    </select>
+
+    <!-- 예약 상세 -->
+    <select id="selectById" parameterType="long" resultType="ResvResponse">
+        SELECT
+            rv.*,
+            r.res_name, r.res_code, r.res_type, r.location,
+            r.quantity AS resQuantity, r.capacity, r.res_status AS resStatus,
+            e.emp_name, d.dept_name, ap.emp_name AS approvedEmpName
+        FROM reservation rv
+        JOIN com_resource r ON rv.res_id = r.res_id
+        JOIN employee e ON rv.emp_id = e.emp_id
+        JOIN department d ON e.dept_id = d.dept_id
+        LEFT JOIN employee ap ON rv.approved_emp_id = ap.emp_id
+        WHERE rv.rev_id = #{revId}
+    </select>
+
+    <!-- 예약 등록: 사용자가 자원을 신청하면 상태는 항상 'WAI'(대기)로 시작 -->
+    <insert id="insert" parameterType="ResvRequest">
+        INSERT INTO reservation (
+            rev_id, res_id, com_id, emp_id, quantity, status,
+            start_dt, end_dt, remark, created_at, updated_at
+        )
+        VALUES (
+            seq_reservation.NEXTVAL, #{resId}, #{comId}, #{empId}, #{quantity}, 'WAI',
+            #{startDt}, #{endDt},
+		    #{remark, jdbcType=VARCHAR}, SYSDATE, SYSDATE
+        )
+    </insert>
+
+    <!-- 예약 수정: 대기(WAI) 상태에서만 가능, 시간대까지 변경 가능하도록 반영 -->
+    <update id="update" parameterType="ResvRequest">
+        UPDATE reservation
+        <set>
+        	<if test="quantity != null">quantity = #{quantity},</if>
+        	<if test="startDt != null">start_dt = #{startDt},</if>
+        	<if test="endDt != null">end_dt = #{endDt},</if>
+        	<if test="remark != null">remark = #{remark},</if>
+        </set>
+        WHERE rev_id = #{revId}
+          AND status = 'WAI'
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM reservation
+        WHERE rev_id = #{revId}
+          AND status = 'WAI'
+    </delete>
+
+    <!-- 예약 승인 -->
+    <update id="updateApprove" parameterType="ResvRequest">
+        UPDATE reservation
+        SET status          = 'APP',
+            approved_emp_id = #{approvedEmpId},
+            approved_at     = SYSDATE,
+            updated_at      = SYSDATE
+        WHERE rev_id = #{revId}
+          AND status = 'WAI'
+    </update>
+
+    <!-- 예약 반려: 반려 사유는 remark가 아닌 reject_reason에 별도 저장 -->
+    <update id="updateReject" parameterType="ResvRequest">
+        UPDATE reservation
+        SET status          = 'REJ',
+            approved_emp_id = #{approvedEmpId},
+            approved_at     = SYSDATE,
+            reject_reason   = #{rejectReason},
+            updated_at      = SYSDATE
+        WHERE rev_id = #{revId}
+          AND status = 'WAI'
+    </update>
+
+    <!-- 상태별 개수 (관리자 대시보드 통계카드: 전체 / 대기 / 승인 / 반려) -->
+    <select id="countByStats" parameterType="ResvSearchRequest" resultType="StatsResvResponse">
+        SELECT
+            (SELECT COUNT(*) FROM reservation WHERE com_id = #{comId}) AS resvTotal,
+            (SELECT COUNT(*) FROM reservation WHERE com_id = #{comId} AND status = 'WAI') AS waiTotal,
+            (SELECT COUNT(*) FROM reservation WHERE com_id = #{comId} AND status = 'APP') AS appTotal,
+            (SELECT COUNT(*) FROM reservation WHERE com_id = #{comId} AND status = 'REJ') AS rejTotal,
+            (SELECT COUNT(*) FROM reservation WHERE com_id = #{comId} AND status = 'NORET') AS noRetTotal
+        FROM dual
+    </select>
+
+    <!-- 자원 삭제 전에 "진행 중인" 예약(대기/승인)이 있는지 확인. 반려 건은 제외 -->
+    <select id="countReservationsByResourceId" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM reservation
+        WHERE res_id = #{resId}
+          AND status IN ('WAI', 'APP', 'NORET')
+    </select>
+
+	<!-- 특정 자원의 특정 기간에 이미 예약(대기+승인)된 수량 합계 -->
+	<select id="selectReservedQuantity" resultType="int">
+	    SELECT NVL(SUM(quantity), 0)
+	    FROM reservation
+	    WHERE res_id = #{resId}
+	      AND status IN ('WAI','APP','NORET')
+	      <if test="excludeRevId != null">
+	        AND rev_id != #{excludeRevId}  <!-- 수정(update) 시 자기 자신은 제외 -->
+	      </if>
+	      AND start_dt <![CDATA[<]]> #{endDt}
+	      AND end_dt   <![CDATA[>]]> #{startDt}
+	</select>
+	
+	<!-- 알림 발송 대상 조회 -->
+	<select id="selectNoShowTargets" resultType="ResvAlertResponse">
+        SELECT
+            r.rev_id, 
+            res.res_id, res.res_code, res.res_name, res.res_type,
+            e.emp_id, e.emp_name, e.emp_mobile,
+            r.start_dt, r.end_dt, r.return_dt
+        FROM reservation r
+        JOIN com_resource res ON res.res_id = r.res_id
+        JOIN employee     e   ON e.emp_id   = r.emp_id
+        WHERE r.status = 'APP'
+          AND r.noshow_alert_at IS NULL
+          AND (
+                -- 차량 / 장비 : 반납 예정시간이 지났는데 반납 처리가 안 된 경우
+                (res.res_type IN ('VEHICLE','EQUIPMENT')
+                 AND r.end_dt <![CDATA[<]]> SYSTIMESTAMP
+                 AND r.return_dt IS NULL)
+             OR
+                -- 회의실 : 시작시간은 지났고 종료시간 전인데 이용 흔적이 없는 경우
+                (res.res_type = 'ROOM'
+                 AND r.start_dt <![CDATA[<]]> SYSTIMESTAMP
+                 AND r.end_dt <![CDATA[>]]> SYSTIMESTAMP
+                 AND r.return_dt IS NULL)
+              )
+        ORDER BY r.end_dt ASC
+    </select>
+
+    <!-- 이력 기반 위험도 스코어링 변수1: 해당 사원의 과거 노쇼/미반납 알림 이력 횟수(현재 건 제외) -->
+    <select id="selectEmpNoShowHistoryCount" resultType="int">
+        SELECT COUNT(*)
+        FROM reservation
+        WHERE emp_id = #{empId}
+          AND rev_id <![CDATA[<>]]> #{revId}
+          AND noshow_alert_at IS NOT NULL
+    </select>
+
+    <!-- 이력 기반 위험도 스코어링 변수2: 자원 유형별 과거 노쇼율 (승인 이후 종결 건 기준, 이력 없으면 0) -->
+    <select id="selectResTypeNoShowRate" resultType="double">
+        SELECT
+            CASE WHEN COUNT(*) = 0 THEN 0
+                 ELSE ROUND(SUM(CASE WHEN r.noshow_alert_at IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 4)
+            END
+        FROM reservation r
+        JOIN com_resource res ON res.res_id = r.res_id
+        WHERE res.res_type = #{resType}
+          AND r.status IN ('APP', 'NORET')
+    </select>
+
+ 	<!-- 알림 발송 완료 처리 (중복 발송 방지 플래그 세팅) + 계산된 위험도 스코어 기록 -->
+    <update id="updateAlertSent">
+        UPDATE reservation
+           SET noshow_alert_at = SYSTIMESTAMP,
+               risk_score      = #{riskScore}
+         WHERE rev_id = #{revId}
+    </update>
+    <!-- 반납 처리 -->
+    <update id="updateReturn">
+	    UPDATE reservation
+	       SET return_dt  = #{returnDt},
+	           updated_at = SYSDATE,
+	           status     = 'APP'
+	     WHERE rev_id     = #{revId}
+	       AND emp_id     = #{empId}
+	       AND status IN ('APP', 'NORET')
+	       AND return_dt IS NULL
+	</update>
+	<!-- 자동 미반납 처리 -->
+	<update id="updateEquipmentNoReturn">
+        UPDATE reservation r
+           SET r.status     = 'NORET',
+               r.updated_at = SYSDATE
+         WHERE r.status = 'APP'
+           AND r.return_dt IS NULL
+           AND r.end_dt <![CDATA[<]]> SYSTIMESTAMP
+           AND EXISTS (
+		       SELECT 1 FROM com_resource res
+		        WHERE res.res_id = r.res_id
+		          AND res.res_type IN ('VEHICLE','EQUIPMENT')
+		   )
+    </update>
+    <!-- 반려(REJ) 예약 이력 정리 -->
+    <delete id="deleteRejectedByResourceId" parameterType="long">
+        DELETE FROM reservation
+        WHERE res_id = #{resId}
+          AND status = 'REJ'
+    </delete>
+</mapper>

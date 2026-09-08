@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.auth.repository.AuthMapper">
+	<resultMap id="authListMap" type="AuthUserResponse">
+		<result property="empEmail" column="emp_email" />
+		<result property="empNo" column="emp_no" />
+		<result property="empPass" column="emp_pass" />
+		<result property="empName" column="emp_name" />
+		<result property="posName" column="pos_name" />
+		<result property="comName" column="com_name" />
+		<result property="comId" column="com_id" />
+		<result property="empId" column="emp_id" />
+		<result property="deptId" column="dept_id" />
+		<result property="posId" column="pos_id" />
+		<result property="mustChangePwd" column="must_change_pwd" />
+		<collection property="authList" resultMap="authMap" />
+	</resultMap>
+
+	<resultMap id="authMap" type="AuthResponse">
+		<result property="autName" column="aut_name" />
+	</resultMap>
+
+	<select id="readAuth" resultMap="authListMap" parameterType="string">
+		select e.emp_email, e.emp_no, e.emp_name, e.emp_pass, a.aut_name,
+			   ep.pos_name, c.com_name, e.com_id, e.emp_id, e.dept_id, e.pos_id, e.must_change_pwd
+		from emp_auth ea
+		join employee e  	 on e.emp_id = ea.emp_id
+		join authority a 	 on a.aut_id = ea.aut_id
+		join emp_position ep on ep.pos_id = e.pos_id
+		join company c 		 on c.com_id = e.com_id
+		where e.emp_email = #{username}
+		  and e.emp_status != '퇴직'
+	</select>
+	
+	<select id="findAuthByEmpId" resultType="AuthResponse" parameterType="long">
+		select a.aut_name
+		from emp_auth ea
+		join authority a 	 on a.aut_id = ea.aut_id
+		join employee e  	 on e.emp_id = ea.emp_id
+		where e.emp_status != '퇴직'
+          and e.emp_id = #{empId}
+	</select>
+
+	<!-- RefreshToken 재발급 시 accessToken의 전체 클레임(comId, empName, posName, comName, empEmail 등)을
+	     그대로 다시 채우기 위한 조회. readAuth와 동일한 컬럼셋을 emp_id 기준으로 조회한다. -->
+	<select id="readAuthByEmpId" resultMap="authListMap" parameterType="long">
+		select e.emp_email, e.emp_no, e.emp_name, e.emp_pass, a.aut_name,
+			   ep.pos_name, c.com_name, e.com_id, e.emp_id, e.dept_id, e.pos_id, e.must_change_pwd
+		from emp_auth ea
+		join employee e  	 on e.emp_id = ea.emp_id
+		join authority a 	 on a.aut_id = ea.aut_id
+		join emp_position ep on ep.pos_id = e.pos_id
+		join company c 		 on c.com_id = e.com_id
+		where e.emp_id = #{empId}
+		  and e.emp_status != '퇴직'
+	</select>
+</mapper>

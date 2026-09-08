@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.dept.repository.DeptMapper">
+
+	<!-- 해당 회사가 가지고 있는 부서 갯수 조회 -->
+	<select id="countActiveDepts" resultType="long">
+		select count(*) from
+		department
+		where com_id = #{comId}
+		AND DEPT_STATUS != 'DELETED'
+	</select>
+
+	<!-- 부서 전체 조회 -->
+	<select id="selectAll" resultType="DeptResponse" parameterType="long">
+	WITH dept_closure AS (
+	    -- START WITH을 생략하면 조건을 만족하는 모든 행이 각각의 root가 되어
+	    -- "부서별 하위트리(자기자신 포함)" 관계를 한 번의 CONNECT BY로 전개
+	    SELECT 
+	        CONNECT_BY_ROOT dept_id AS ancestor_dept_id,
+	        dept_id AS descendant_dept_id
+	    FROM department
+	    WHERE com_id = #{comId}
+	      AND dept_status != 'DELETED'
+	    CONNECT BY PRIOR dept_id = parent_id AND dept_status != 'DELETED'
+	),
+	emp_count_per_dept AS (
+	    SELECT dept_id, COUNT(*) AS cnt
+	    FROM employee
+	    GROUP BY dept_id
+	),
+	subtree_emp_count AS (
+	    SELECT c.ancestor_dept_id AS dept_id,
+	           SUM(NVL(ec.cnt, 0)) AS emp_count
+	    FROM dept_closure c
+	    LEFT JOIN emp_count_per_dept ec 
+	           ON ec.dept_id = c.descendant_dept_id
+	    GROUP BY c.ancestor_dept_id
+	)
+	SELECT 
+	    d.dept_id, d.dept_name, d.dept_code,
+	    d.depth, d.sort_order,
+	    d.parent_id,
+	    p.dept_name  AS parent_name,
+	    d.emp_id     AS leader_id,
+	    le.emp_name  AS leader_name,
+	    NVL(sec.emp_count, 0) AS empCount
+	FROM department d
+	LEFT JOIN department p        ON p.dept_id = d.parent_id
+	LEFT JOIN employee le          ON le.emp_id = d.emp_id
+	LEFT JOIN subtree_emp_count sec ON sec.dept_id = d.dept_id
+	WHERE d.com_id = #{comId}
+	  AND d.dept_status != 'DELETED'
+	START WITH d.parent_id IS NULL
+	CONNECT BY PRIOR d.dept_id = d.parent_id AND d.dept_status != 'DELETED'
+	ORDER SIBLINGS BY d.sort_order
+	</select>
+
+	<!-- id 값을 통해 부서 하나 조회 -->
+	<select id="selectOneById" resultType="DeptResponse">
+		WITH dept_subtree (dept_id) AS (
+		    SELECT dept_id
+		    FROM department
+		    WHERE dept_id = #{deptId}
+		      AND dept_status != 'DELETED'
+		    UNION ALL
+		    SELECT d.dept_id
+		    FROM department d
+		    JOIN dept_subtree ds ON d.parent_id = ds.dept_id
+		    WHERE d.dept_status != 'DELETED'
+		)
+		SELECT
+		    d.dept_id, d.dept_name, d.dept_code,
+		    d.depth, d.sort_order, d.com_id, d.dept_status,
+		    d.parent_id,
+		    dp_parent.dept_name  AS parent_name,
+		    d.emp_id             AS leader_id,
+		    leader.emp_name      AS leader_name,
+		    leader.emp_no        AS leader_emp_no,
+		    leader_p.pos_name    AS leader_pos_name,
+		    ec.emp_count         AS empCount
+		FROM department d
+		LEFT JOIN department dp_parent  ON dp_parent.dept_id = d.parent_id
+		LEFT JOIN employee leader       ON leader.emp_id = d.emp_id
+		LEFT JOIN emp_position leader_p ON leader_p.pos_id = leader.pos_id
+		LEFT JOIN (
+		    SELECT COUNT(*) AS emp_count
+		    FROM employee e
+		    WHERE e.dept_id IN (SELECT dept_id FROM dept_subtree)
+		) ec ON 1 = 1
+		WHERE d.dept_id = #{deptId}
+		  AND d.dept_status != 'DELETED'
+	</select>
+
+	<!-- 부서 순서 정렬 -->
+	<select id="maxSortOrder" resultType="long">
+		select
+		coalesce(max(sort_order), 0)
+		from department
+		where com_id = #{comId}
+		AND DEPT_STATUS != 'DELETED'
+		and (parent_id = #{parentId} OR (parent_id IS NULL AND #{parentId} IS NULL))
+	</select>
+
+	<!-- 부서 등록 -->
+	<insert id="insert" parameterType="DeptRequest">
+		<selectKey keyProperty="deptId" resultType="long" order="BEFORE">
+      	SELECT seq_department.NEXTVAL FROM dual
+    	</selectKey>
+		insert into department (dept_id, com_id, parent_id, dept_name, dept_code,
+		depth, sort_order)
+		values (#{deptId}, #{comId},
+		<choose>
+			<when test="parentId == null or parentId == 0">NULL</when>
+			<otherwise>#{parentId}</otherwise>
+		</choose>
+		, #{deptName}, #{deptCode}, #{depth}, #{sortOrder})
+	</insert>
+
+	<!-- 하위 부서 존재 확인 -->
+	<select id="countChildren" resultType="long">
+		select count(*) from
+		department
+		where parent_id = #{deptId}
+		AND DEPT_STATUS != 'DELETED'
+	</select>
+
+	<!-- 부서 삭제 -->
+	<delete id="delete">
+		delete from department
+		where dept_id = #{deptId}
+	</delete>
+	
+	<!-- 부서 수정 -->
+	<update id="update" parameterType="DeptRequest">
+	    update department
+	    SET dept_name = #{deptName},
+	        dept_code = #{deptCode},
+	        parent_id = <choose>
+	                        <when test="parentId == null or parentId == 0">NULL</when>
+	                        <otherwise>#{parentId}</otherwise>
+	                    </choose>,
+	        depth = #{depth},
+	        emp_id = <choose>
+	                     <when test="empId == null or empId == 0">NULL</when>
+	                     <otherwise>#{empId}</otherwise>
+	                 </choose>
+	    where dept_id = #{deptId}
+	</update>
+
+	<!-- 하위부서 조회 -->
+	<select id="selectAllChildIds" resultType="DeptResponse" parameterType="long">
+		WITH childTree (dept_id) AS (
+		    SELECT dept_id
+		    FROM department
+		    WHERE parent_id = #{deptId}
+		      AND dept_status != 'DELETED'
+		    UNION ALL
+		    SELECT d.dept_id
+		    FROM department d
+		    JOIN childTree c ON d.parent_id = c.dept_id
+		    WHERE d.dept_status != 'DELETED'
+		)
+		SELECT dept_id FROM childTree
+	</select>
+
+	<!-- 부서 통계 데이터 조회 -->
+	<select id="selectStats" resultType="StatsDeptResponse">
+		SELECT
+        (SELECT COUNT(*) FROM department WHERE com_id = #{comId} AND DEPT_STATUS != 'DELETED') AS deptTotal,
+        (SELECT COUNT(*) FROM department WHERE com_id = #{comId} AND depth = 1 AND DEPT_STATUS != 'DELETED') AS dept1Total,
+        (SELECT COUNT(*) FROM department WHERE com_id = #{comId} AND depth in (2,3) AND DEPT_STATUS != 'DELETED') AS dept2Total,
+        (SELECT COUNT(*) FROM employee WHERE com_id = #{comId} AND emp_status = '재직') AS empTotal
+        from DUAL
+	</select>
+	<!-- 부서별 소속 직원 수 카운트 -->
+	<select id="countByDept" parameterType="long">
+		SELECT COUNT(*) 
+		FROM EMPLOYEE E
+		JOIN DEPARTMENT D
+		ON E.DEPT_ID = D.DEPT_ID
+		WHERE E.DEPT_ID = #{deptId}
+		AND D.DEPT_STATUS != 'DELETED'
+	</select>
+	<!-- 부서 임시 삭제 soft delete -->
+	<update id="softDelete" parameterType="long">
+		UPDATE DEPARTMENT
+		SET DEPT_STATUS = 'PENDING_DELETE'
+		WHERE DEPT_ID = #{deptId}
+	</update>
+	<!-- 이관 이력 화면의 원부서/대상부서 필터 select box용 — 부서 상태 무관 전체 -->
+	<select id="selectAllDeptsByComId" resultType="DeptResponse">
+		SELECT *
+		FROM department
+		WHERE com_id = #{comId}
+		ORDER BY dept_name
+	</select>
+	<!-- 부서 코드 중복 체크 -->
+	<select id="selectDeptCode" resultType="DeptResponse" parameterType="DeptSearchRequest">
+		SELECT *
+		FROM DEPARTMENT
+		WHERE COM_ID = #{comId}
+		  AND DEPT_CODE = #{deptCode}
+	</select>
+	<!-- 로그인 사원(empId) 기준 소속 부서 조회 - "내 부서" 화면용 -->
+	<select id="selectByEmpId" resultType="DeptResponse" parameterType="long">
+		SELECT
+		    d.dept_id, d.dept_name, d.dept_code,
+		    d.depth, d.sort_order, d.com_id, d.dept_status,
+		    d.parent_id,
+		    dp_parent.dept_name  AS parent_name,
+		    d.emp_id             AS leader_id,
+		    leader.emp_name      AS leader_name,
+		    leader.emp_no        AS leader_emp_no,
+		    leader_p.pos_name    AS leader_pos_name
+		FROM employee me
+		JOIN department d              ON d.dept_id = me.dept_id
+		LEFT JOIN department dp_parent ON dp_parent.dept_id = d.parent_id
+		LEFT JOIN employee leader      ON leader.emp_id = d.emp_id
+		LEFT JOIN emp_position leader_p ON leader_p.pos_id = leader.pos_id
+		WHERE me.emp_id = #{empId}
+		  AND d.dept_status != 'DELETED'
+	</select>
+</mapper>

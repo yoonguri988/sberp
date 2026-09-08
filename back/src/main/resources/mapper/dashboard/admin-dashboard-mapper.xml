@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sb.erp.dashboard.admin.repository.AdminDashboardMapper">
+
+    <!--
+        회사 전체 프로젝트 - 진행 중(TODO/DOING) 만, 마감일 임박순 상위 N개
+        - Oracle FETCH FIRST N ROWS ONLY 문법 사용
+        - 마감일이 지난 프로젝트는 제외 (오늘 이후 마감분만)
+        - 리더 이름(emp_name)을 함께 조회
+    -->
+    <select id="selectCompanyOngoingProjects" resultType="map">
+        select
+            p.pro_id      as "proId",
+            p.pro_name    as "proName",
+            p.pro_status  as "proStatus",
+            p.end_date    as "endDate",
+            e.emp_name    as "empName"
+        from project p
+        join employee e on p.emp_id = e.emp_id
+        where p.com_id = #{comId}
+          and p.pro_status in ('TODO', 'DOING')
+          and p.end_date >= trunc(sysdate)
+        order by p.end_date asc
+        FETCH FIRST #{limit} ROWS ONLY
+    </select>
+
+    <!--
+        내가 참여한 프로젝트 - 진행 중 만, 마감일 임박순 상위 N개
+        - 내가 리더(project.emp_id)이거나 멤버(project_member.emp_id) 인 경우 모두 포함
+        - DISTINCT 로 리더+멤버 중복 제거
+    -->
+    <select id="selectMyOngoingProjects" resultType="map">
+        select distinct
+            p.pro_id      as "proId",
+            p.pro_name    as "proName",
+            p.pro_status  as "proStatus",
+            p.end_date    as "endDate",
+            e.emp_name    as "empName"
+        from project p
+        join employee e on p.emp_id = e.emp_id
+        left join project_member pm on pm.project_pro_id = p.pro_id
+        where p.com_id = #{comId}
+          and p.pro_status in ('TODO', 'DOING')
+          and p.end_date >= trunc(sysdate)
+          and (p.emp_id = #{empId} or pm.emp_id = #{empId})
+        order by p.end_date asc
+        FETCH FIRST #{limit} ROWS ONLY
+    </select>
+
+</mapper>
