@@ -221,6 +221,7 @@ jobs:       # 실행할 job 정의
       - name: Archive frontend build
         run: |
           cd front
+          mkdir -p public
           tar -czf ../frontend-build.tar.gz .next public package.json .env.production
 
       - name: Copy frontend archive to EC2
