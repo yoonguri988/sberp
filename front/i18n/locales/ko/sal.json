@@ -400,5 +400,45 @@
     "referencesPanelHeader": "근거 조항 보기",
     "articleUnknown": "(조항 미상)",
     "inputPlaceholder": "급여 관련 질문을 입력하세요"
+  },
+  "analytics": {
+    "breadcrumb": "급여관리 > 급여 분석",
+    "title": "급여 분석 대시보드",
+    "subtitle": "부서별 평균급여 · 월별 지급추이 · 항목 구성비 · 지급상태를 한눈에 봅니다",
+    "latestMonthLabel": "기준월",
+    "monthsSelectLabel": "조회 기간",
+    "monthsSuffix": "개월",
+    "accessDenied": "급여 분석은 관리자만 조회할 수 있습니다.",
+    "emptyData": "아직 집계할 급여 데이터가 없습니다.",
+    "loadError": "분석 데이터를 불러오지 못했습니다. 분석 서비스가 켜져 있는지 확인해 주세요.",
+    "cards": {
+      "deptAverage": {
+        "title": "부서별 평균 급여",
+        "subtitle": "기준월 재직자 평균 (기본급 / 실지급액)",
+        "empCountUnit": "명",
+        "baseSalLegend": "평균 기본급",
+        "netPayLegend": "평균 실지급액"
+      },
+      "monthlyTrend": {
+        "title": "월별 지급 총액 추이",
+        "subtitle": "최근 {{months}}개월 실지급액 합계",
+        "legend": "실지급액 합계"
+      },
+      "itemBreakdown": {
+        "title": "수당 · 공제 항목 구성비",
+        "subtitle": "기준월 항목별 합계"
+      },
+      "statusDistribution": {
+        "title": "지급 상태 현황",
+        "subtitle": "전체 누적 기준",
+        "unit": "건"
+      }
+    },
+    "status": {
+      "PENDING": "대기",
+      "APPROVED": "승인",
+      "PAID": "지급완료",
+      "REJECTED": "반려"
+    }
   }
 }
