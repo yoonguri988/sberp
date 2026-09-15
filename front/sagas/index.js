@@ -33,6 +33,7 @@ import salHistSaga from "./sal/salHistSaga";
 import salPolicySaga from "./sal/salPolicySaga";
 import salAiChatSaga from "./sal/salAiChatSaga";
 import salAiDocSaga from "./sal/salAiDocSaga";
+import salAnalyticsSaga from "./sal/salAnalyticsSaga";
 // 근태, 연차
 import attSaga from "./att/attSaga";
 import leaveBalanceSaga from "./att/leaveBalanceSaga"
@@ -85,6 +86,7 @@ export default function* rootSaga() {
     fork(salPolicySaga),
     fork(salAiChatSaga),
     fork(salAiDocSaga),
+    fork(salAnalyticsSaga),
     // 근태, 연차
     fork(attSaga),
     fork(leaveBalanceSaga),

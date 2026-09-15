@@ -32,6 +32,7 @@ import salHistReducer from "./sal/salHistReducer";
 import salPolicyReducer from "./sal/salPolicyReducer";
 import salAiChatReducer from "./sal/salAiChatReducer";
 import salAiDocReducer from "./sal/salAiDocReducer";
+import salAnalyticsReducer from "./sal/salAnalyticsReducer";
 import attReducer from "./att/attReducer";
 // 근태/연차 관련 리듀서
 import leaveBalanceReducer from "./att/leaveBalanceReducer";
@@ -82,6 +83,7 @@ const rootReducer = combineReducers({
   salPolicy: salPolicyReducer, // state.salPolicy
   salAiChat: salAiChatReducer, // state.salAiChat
   salAiDoc: salAiDocReducer, // state.salAiDoc
+  salAnalytics: salAnalyticsReducer, // state.salAnalytics
   // 근태/연차
   att: attReducer, // state.att
   leave : leaveBalanceReducer, //state.leave

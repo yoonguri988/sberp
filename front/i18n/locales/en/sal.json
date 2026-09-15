@@ -399,5 +399,45 @@
     "referencesPanelHeader": "View source articles",
     "articleUnknown": "(Unknown article)",
     "inputPlaceholder": "Enter your salary-related question"
+  },
+  "analytics": {
+    "breadcrumb": "Salary > Analytics",
+    "title": "Salary Analytics Dashboard",
+    "subtitle": "Department averages, monthly payout trend, item breakdown, and payment status at a glance",
+    "latestMonthLabel": "As of",
+    "monthsSelectLabel": "Range",
+    "monthsSuffix": "months",
+    "accessDenied": "Salary analytics is only available to administrators.",
+    "emptyData": "No salary data to aggregate yet.",
+    "loadError": "Couldn't load analytics data. Please check that the analytics service is running.",
+    "cards": {
+      "deptAverage": {
+        "title": "Average Salary by Department",
+        "subtitle": "Active employees as of the latest pay month (base pay / net pay)",
+        "empCountUnit": "",
+        "baseSalLegend": "Avg. base pay",
+        "netPayLegend": "Avg. net pay"
+      },
+      "monthlyTrend": {
+        "title": "Monthly Payout Trend",
+        "subtitle": "Total net pay over the last {{months}} months",
+        "legend": "Total net pay"
+      },
+      "itemBreakdown": {
+        "title": "Allowance / Deduction Breakdown",
+        "subtitle": "By item, latest pay month"
+      },
+      "statusDistribution": {
+        "title": "Payment Status",
+        "subtitle": "All-time totals",
+        "unit": ""
+      }
+    },
+    "status": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "PAID": "Paid",
+      "REJECTED": "Rejected"
+    }
   }
 }

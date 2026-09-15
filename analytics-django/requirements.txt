@@ -1,0 +1,10 @@
+Django>=5.0,<5.3
+djangorestframework>=3.15
+PyJWT>=2.8
+django-cors-headers>=4.4
+python-dotenv>=1.0
+
+# Oracle 접속 드라이버. Django 5.x는 python-oracledb(thin mode, Oracle Client 불필요)를 공식 지원한다.
+# 만약 사용 중인 Django 버전에서 python-oracledb가 인식되지 않으면 요구사항의 이 줄을
+# `cx_Oracle>=8.3`로 바꾸면 된다 — settings.py의 ENGINE("django.db.backends.oracle")은 동일하게 쓴다.
+oracledb>=2.0

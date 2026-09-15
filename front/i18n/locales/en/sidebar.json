@@ -18,6 +18,7 @@
     "salhistlist": { "tip": "Salary Change History" },
     "salpolicylist": { "tip": "Salary Calculation Policy" },
     "salaidocadmin": { "tip": "AI Q&A Reference Document Management" },
+    "salanalytics": { "tip": "Salary Analytics Dashboard" },
     "reclist": { "tip": "Job Posting Management" },
     "apctlist": { "tip": "Applicant Management" },
     "resumesearch": { "tip": "Resume AI Search" },

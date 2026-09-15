@@ -62,6 +62,12 @@ const NAV = [
         icon: "bi-file-earmark-pdf",
         role: "ROLE_ADMIN",
       },
+      {
+        page: "salanalytics",
+        href: "/sal/analytics",
+        icon: "bi-bar-chart-line",
+        role: ["ROOT", "ROLE_ADMIN"],
+      },
     ],
   },
   {
