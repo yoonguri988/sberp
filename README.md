@@ -1,12 +1,12 @@
-# 🏢 SBerp v4 — AWS CI/CD & 급여 분석 서비스 (개인 프로젝트)
+# 🏢 SBerp v4 — AWS CI/CD & 급여 분석 서비스
 
-spring-breeze-erp **v3**(팀 프로젝트) 위에서 **개인적으로** 진행한 4차 확장입니다.<br/>
+spring-breeze-erp **v3**(팀 프로젝트) 위에서 진행한 4차 확장입니다.<br/>
 팀 산출물인 Spring Boot(`back`) · React/Next.js(`front`)는 그대로 두고, 두 가지를 혼자 새로 얹었습니다.
 
 - **AWS 배포 자동화**: GitHub Actions → EC2로 `back` · `front` · 신규 분석 서비스를 한 번에 자동 배포하는 CI/CD 파이프라인 구축
 - **급여 분석 서비스 신규 개발**: `Python + Django`(집계는 **pandas**가 담당)로 만든 읽기 전용 분석 API 1개 급여 대시보드를 추가
 
-> 이 문서가 다루는 범위는 v4에서 **개인적으로 진행한 부분**(CI/CD, `analytics-django`)입니다. <br/>`back`/`front`의 도메인 기능 자체는 v3 README를 따릅니다.
+> 이 문서가 다루는 범위는 v4에서 CI/CD, `analytics-django` 입니다. <br/>`back`/`front`의 도메인 기능 자체는 v3 README를 따릅니다.
 
 ![급여분석대쉬보드](https://github.com/yoonguri988/sberp/blob/8eb353fc536d585dcdd7867d6acd60062085b586/docs/sal_analytics.png)
 ---
