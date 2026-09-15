@@ -195,6 +195,7 @@ jobs:       # 실행할 job 정의
       - name: Create Frontend .env.production
         run: |
           echo "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" > front/.env.production
+          echo "NEXT_PUBLIC_ANALYTICS_API_BASE_URL=${{ secrets.NEXT_PUBLIC_ANALYTICS_API_BASE_URL }}" >> front/.env.production
 
       # 빌드 전에 .env.production이 반영되도록 순서 조정   
       - name: Build Frontend
@@ -256,3 +257,59 @@ jobs:       # 실행할 job 정의
             pm2 delete frontend || true
             pm2 start npm --name "frontend" -- run start
 
+  analytics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create analytics-django .env from Secrets
+        run: |
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> analytics-django/.env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> analytics-django/.env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> analytics-django/.env
+          echo "ORACLE_HOST=localhost" >> analytics-django/.env
+          echo "ORACLE_PORT=1521" >> analytics-django/.env
+          echo "ORACLE_SERVICE=XEPDB1" >> analytics-django/.env
+          echo "DJANGO_ALLOWED_HOSTS=sberp-cyj.duckdns.org,localhost,127.0.0.1" >> analytics-django/.env
+          echo "FRONT_ORIGINS=https://sberp-cyj.duckdns.org,http://sberp-cyj.duckdns.org" >> analytics-django/.env
+          echo "DEBUG=False" >> analytics-django/.env
+
+      - name: Archive analytics-django source
+        run: tar -czf analytics.tar.gz analytics-django
+
+      - name: Ensure analytics directory exists on EC2
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: mkdir -p /home/ubuntu/app/analytics-django
+
+      - name: Copy analytics-django archive to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "analytics.tar.gz"
+          target: "/home/ubuntu/app"
+
+      - name: Install deps & run via pm2 on EC2
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/app
+            tar -xzf analytics.tar.gz
+            cd analytics-django
+            python3 -m venv .venv
+            source .venv/bin/activate
+            pip install -r requirements.txt -q
+            pip install gunicorn -q
+            deactivate
+            pm2 delete analytics || true
+            pm2 start .venv/bin/gunicorn --name analytics -- config.wsgi:application --bind 0.0.0.0:8000 --workers 3
+            pm2 save
