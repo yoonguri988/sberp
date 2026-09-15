@@ -273,7 +273,8 @@ jobs:       # 실행할 job 정의
           echo "ORACLE_SERVICE=XEPDB1" >> analytics-django/.env
           echo "DJANGO_ALLOWED_HOSTS=sberp-cyj.duckdns.org,localhost,127.0.0.1" >> analytics-django/.env
           echo "FRONT_ORIGINS=https://sberp-cyj.duckdns.org,http://sberp-cyj.duckdns.org" >> analytics-django/.env
-          echo "DEBUG=False" >> analytics-django/.env
+          echo "DJANGO_DEBUG=False" >> analytics-django/.env
+          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> analytics-django/.env
 
       - name: Archive analytics-django source
         run: tar -czf analytics.tar.gz analytics-django
@@ -311,5 +312,5 @@ jobs:       # 실행할 job 정의
             pip install gunicorn -q
             deactivate
             pm2 delete analytics || true
-            pm2 start .venv/bin/gunicorn --name analytics -- config.wsgi:application --bind 0.0.0.0:8000 --workers 3
+            pm2 start .venv/bin/gunicorn --name analytics -- config.wsgi:application --bind 127.0.0.1:8000 --workers 3
             pm2 save
