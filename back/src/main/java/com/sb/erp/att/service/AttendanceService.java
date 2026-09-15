@@ -119,21 +119,25 @@ public class AttendanceService {
 		}
 
 		// 퇴근 시각 세팅
-		attendance.setCheckOut(LocalDateTime.now());
+		// ★ 연장/야간 미신청 일반 퇴근 → 18:00 이후는 18:00으로 보정
+		// 이후 결재 파트에 연장/야간근무 신청·승인 기능이 추가되면,
+		// 승인된 건에 한해 캡핑을 해제하고 실제 퇴근 시각을 사용하도록 변경 필요
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime standardStart = today.atTime(9, 0);
+		LocalDateTime standardEnd = today.atTime(18, 0);
+		attendance.setCheckOut(now.isAfter(standardEnd) ? standardEnd : now);
 
 		// 근로시간 산출
 		calculateWorkMinutes(attendance);
-		
+
 		// ★ 사원 본인 퇴근 시에만 상태 자동 판별
-	    LocalDateTime standardStart = LocalDate.now().atTime(9, 0);
-	    LocalDateTime standardEnd = LocalDate.now().atTime(18, 0);
-	    if (attendance.getCheckIn().isAfter(standardStart)) {
-	        attendance.setAttStatus("LATE");
-	    }
-	    if (attendance.getCheckOut().isBefore(standardEnd)
-	            && !"LATE".equals(attendance.getAttStatus())) {
-	        attendance.setAttStatus("EARLY_LEAVE");
-	    }
+		if (attendance.getCheckIn().isAfter(standardStart)) {
+		    attendance.setAttStatus("LATE");
+		}
+		if (attendance.getCheckOut().isBefore(standardEnd)
+		        && !"LATE".equals(attendance.getAttStatus())) {
+		    attendance.setAttStatus("EARLY_LEAVE");
+		}
 
 		return AttendanceResponse.from(attendance);
 
@@ -223,8 +227,12 @@ public class AttendanceService {
 	    
 	    // 1-1. 근로 시작 전 출근 기록은 남기되 근무 시작은 09:00으로 보정해야함(근무시간 480분 준수)
 	    if(checkIn.isBefore(standardStart)) { checkIn = standardStart; }
-	    
-	    long total = Duration.between(checkIn, checkOut).toMinutes();
+
+		// 이후 연장/야간근무 신청·승인 기능이 추가되면, 승인된 건에 한해 캡핑을 해제하고 실제 퇴근 시각을 사용하도록 변경 필요
+	    LocalDateTime standardEnd = att.getAttDate().atTime(18, 0);
+		if(checkOut.isAfter(standardEnd)) { checkOut = standardEnd; }
+		
+		long total = Duration.between(checkIn, checkOut).toMinutes();
 	    
 	    // 2. 휴게시간(12:00부터 13:00까지 60분, 정상 근무시) 차감
 	    LocalDateTime breakStart = att.getAttDate().atTime(12, 0);

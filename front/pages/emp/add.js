@@ -9,10 +9,17 @@ import { useTranslation } from "react-i18next";
 
 import {
   createEmpRequest, checkEmailRequest, checkMobileRequest,
-  checkEmpNoRequest, resetEmpState,
+  checkEmpNoRequest, resetEmpState, resetCheckField,
 } from "../../reducers/emp/empReducer";
 import { listPosRequest } from "../../reducers/pos/posReducer";
 import { fetchDeptFlatRequest } from "../../reducers/dept/deptReducer";
+
+// ── 중복검사용 패턴 추가 ──
+const PATTERNS = {
+  email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  mobile: /^01[016789]-?\d{3,4}-?\d{4}$/,
+  empNo: /^[A-Za-z0-9-]{2,20}$/,
+};
 
 export default function EmpAddPage() {
   const router = useRouter();
@@ -64,14 +71,32 @@ export default function EmpAddPage() {
     const val = checkResult[field];
     if (val === true) return { validateStatus: "success", help: t("common.checkAvailable") };
     if (val === false) return { validateStatus: "error", help: t("common.checkUnavailable") };
+    if (val === "invalid") return { validateStatus: "error", help: t("common.checkInvalidFormat") };
     return {};
+  };
+
+  const handleCheckChange = (field) => {
+    if (checkResult[field] !== null) dispatch(resetCheckField({ field, value: null }));
+  };
+
+  const handleCheckBlur = (field, value, requestAction) => {
+    const v = value.trim();
+    if (!v) return;
+    if (!PATTERNS[field]?.test(v)) {
+      dispatch(resetCheckField({ field, value: "invalid" }));
+      return;
+    }
+    dispatch(requestAction(v));
   };
 
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      // 중복 차단
-      if (checkResult.email === false || checkResult.mobile === false || checkResult.empNo === false) {
+      if (
+        checkResult.email !== true ||
+        checkResult.mobile !== true ||
+        checkResult.empNo !== true
+      ) {
         message.warning(t("add.duplicateWarning"));
         return;
       }
@@ -127,10 +152,8 @@ export default function EmpAddPage() {
           >
             <Input
               placeholder={t("add.empNoPlaceholder")}
-              onBlur={(e) => {
-                const v = e.target.value.trim();
-                if (v) dispatch(checkEmpNoRequest(v));
-              }}
+              onChange={() => handleCheckChange("empNo")}
+              onBlur={(e) => handleCheckBlur("empNo", e.target.value, checkEmpNoRequest)}
             />
           </Form.Item>
 
@@ -153,10 +176,8 @@ export default function EmpAddPage() {
           >
             <Input
               placeholder={t("add.empEmailPlaceholder")}
-              onBlur={(e) => {
-                const v = e.target.value.trim();
-                if (v) dispatch(checkEmailRequest(v));
-              }}
+              onChange={() => handleCheckChange("email")}
+              onBlur={(e) => handleCheckBlur("email", e.target.value, checkEmailRequest)}
             />
           </Form.Item>
 
@@ -168,10 +189,8 @@ export default function EmpAddPage() {
           >
             <Input
               placeholder={t("add.empMobilePlaceholder")}
-              onBlur={(e) => {
-                const v = e.target.value.trim();
-                if (v) dispatch(checkMobileRequest(v));
-              }}
+              onChange={() => handleCheckChange("mobile")}
+              onBlur={(e) => handleCheckBlur("mobile", e.target.value, checkMobileRequest)}
             />
           </Form.Item>
 

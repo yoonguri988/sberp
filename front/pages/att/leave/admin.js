@@ -363,7 +363,7 @@ export default function LeaveAdminPage() {
           columns={columns}
           dataSource={allBalances}
           loading={loading}
-          pagination={{ pageSize: 20 }}
+          pagination={{ defaultPageSize: 10, showSizeChanger: true }}
           locale={{ emptyText: t("att:leaveAdmin.emptyMsg") }}
         />
       </Card>

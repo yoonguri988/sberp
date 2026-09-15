@@ -130,6 +130,14 @@ const empReducer=createSlice({
             state.error = action.payload;
         },
 
+        // --- 개별 필드 검사 결과 초기화 ---
+        resetCheckField: (state, action) => {
+            const { field, value } = typeof action.payload === "object"
+                ? action.payload
+                : { field: action.payload, value: null };
+            state.checkResult[field] = value;
+        },
+
         // --- 이메일 중복검사 ---
         checkEmailRequest: ()=>{},
         checkEmailSuccess: (state, action)=>{
@@ -153,7 +161,7 @@ const empReducer=createSlice({
 
 //3. action
 export const {
-    resetEmpState,
+    resetEmpState, resetCheckField,
     listEmpRequest, listEmpSuccess, listEmpFailure,
     detailEmpRequest, detailEmpSuccess, detailEmpFailure,
     createEmpRequest, createEmpSuccess, createEmpFailure,

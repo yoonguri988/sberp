@@ -11,9 +11,17 @@ import moment from "moment";
 import {
   detailEmpRequest, updateEmpRequest, checkEmailRequest,
   checkMobileRequest, checkEmpNoRequest, resetEmpState,
+  resetCheckField,
 } from "../../reducers/emp/empReducer";
 import { listPosRequest } from "../../reducers/pos/posReducer";
 import { fetchDeptFlatRequest } from "../../reducers/dept/deptReducer";
+
+// ── 중복검사용 패턴 추가 ──
+const PATTERNS = {
+  email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  mobile: /^01[016789]-?\d{3,4}-?\d{4}$/,
+  empNo: /^[A-Za-z0-9-]{2,20}$/,
+};
 
 export default function EmpEditPage() {
   const router = useRouter();
@@ -85,8 +93,16 @@ export default function EmpEditPage() {
   }, [success, error, dispatch, router, empId]);
 
   // 중복검사 (원본 값과 같으면 스킵)
+  const handleCheckChange = (field) => {
+    if (checkResult[field] !== null) dispatch(resetCheckField({ field, value: null }));
+  };
+
   const handleBlur = (field, value, original, requestAction) => {
     if (!value || value === original) return;
+    if (!PATTERNS[field]?.test(value)) {
+      dispatch(resetCheckField({ field, value: "invalid" }));
+      return;
+    }
     dispatch(requestAction(value));
   };
 
@@ -94,6 +110,7 @@ export default function EmpEditPage() {
     const val = checkResult[field];
     if (val === true) return { validateStatus: "success", help: t("common.checkAvailable") };
     if (val === false) return { validateStatus: "error", help: t("common.checkUnavailable") };
+    if (val === "invalid") return { validateStatus: "error", help: t("common.checkInvalidFormat") };
     return {};
   };
 
@@ -160,6 +177,7 @@ export default function EmpEditPage() {
             {...checkHelp("empNo")}
           >
             <Input
+              onChange={() => handleCheckChange("empNo")}
               onBlur={(e) =>
                 handleBlur(
                   "empNo",
@@ -186,6 +204,7 @@ export default function EmpEditPage() {
             {...checkHelp("email")}
           >
             <Input
+              onChange={() => handleCheckChange("email")}
               onBlur={(e) =>
                 handleBlur(
                   "email",
@@ -204,6 +223,7 @@ export default function EmpEditPage() {
             {...checkHelp("mobile")}
           >
             <Input
+              onChange={() => handleCheckChange("mobile")}
               onBlur={(e) =>
                 handleBlur(
                   "mobile",

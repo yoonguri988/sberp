@@ -133,7 +133,7 @@ export default function AttMyPage() {
           columns={columns}
           dataSource={myAttList}
           loading={loading}
-          pagination={{ pageSize: 20 }}
+          pagination={{ defaultPageSize: 10, showSizeChanger: true }}
           locale={{ emptyText: t("att:myHistory.emptyMsg") }}
         />
       </Card>

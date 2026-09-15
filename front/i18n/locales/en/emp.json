@@ -20,7 +20,8 @@
     "posRequired": "Please select a position.",
     "mobileRequired": "Please enter a mobile number.",
     "checkAvailable": "Available.",
-    "checkUnavailable": "Already in use."
+    "checkUnavailable": "Already in use.",
+    "checkInvalidFormat": "Invalid format."
   },
   "list": {
     "breadcrumbCurrent": "Employees",
