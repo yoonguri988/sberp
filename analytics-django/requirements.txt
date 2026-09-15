@@ -8,3 +8,4 @@ python-dotenv>=1.0
 # 만약 사용 중인 Django 버전에서 python-oracledb가 인식되지 않으면 요구사항의 이 줄을
 # `cx_Oracle>=8.3`로 바꾸면 된다 — settings.py의 ENGINE("django.db.backends.oracle")은 동일하게 쓴다.
 oracledb>=2.0
+pandas>=2.2

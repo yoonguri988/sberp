@@ -4,6 +4,11 @@
 이 서비스는 같은 Oracle DB에 **읽기 전용**으로 붙어 급여 집계 API 1개(`/api/analytics/salary/summary`)만
 제공한다. 로그인도 여기서 하지 않는다 — Spring이 발급한 JWT를 같은 시크릿으로 검증만 한다.
 
+집계 방식: DB에는 원본 행(row)만 요청하고, 부서별 평균·월별 합계 같은 집계는 **pandas**
+DataFrame(`groupby`/`agg`)에서 수행한다(`salary/views.py`). Django ORM의 `annotate`/`aggregate`로도
+같은 결과를 낼 수 있지만, 이 서비스는 pandas로 집계하는 걸 의도적으로 선택했다 — 이 API를 만든
+이유 중 하나가 pandas 활용이었기 때문.
+
 담당 4개 도메인(회사·부서/인증·보안/자원·예약/급여) 중 **급여**부터 붙였다. 자원·예약의 노쇼 위험도는
 아직 쌓인 데이터가 적어 이번 1차 구현에서는 뺐다 — 설계는 프로젝트 문서
 `claude/analytics-dashboard-design.md`에 그대로 남아 있으니, 데이터가 쌓이면 같은 패턴으로

@@ -7,14 +7,18 @@
 카드가 늘어나면 그때 별도 엔드포인트로 쪼개면 된다.
 
 전부 SELECT 집계 쿼리만 사용한다 — 이 서비스는 급여 데이터에 쓰기를 절대 하지 않는다.
+
+pandas 사용: DB에서는 필요한 원본 행(row)만 값 그대로 가져오고, 부서별/월별 집계·정렬은
+DB가 아니라 pandas DataFrame에서 수행한다(groupby/agg). Django ORM의 annotate/aggregate로도
+같은 결과를 낼 수 있지만, 이 서비스는 pandas로 집계하는 걸 의도적으로 선택했다.
 """
 
-from django.db.models import Avg, Count, Sum
+import pandas as pd
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Department, SalPay, SalPayItem
+from .models import SalPay, SalPayItem
 from .permissions import IsSalaryAdmin
 
 # back의 SalaryItemCode enum(displayName)과 반드시 같은 값을 유지해야 한다.
@@ -63,16 +67,33 @@ class SalarySummaryView(APIView):
             )
 
         # ── 1) 부서별 평균 급여 (최신 지급월 기준) ──
-        dept_average = list(
-            SalPay.objects.filter(pay_month=latest_month, emp__dept__is_deleted=0)
-            .values("emp__dept__dept_id", "emp__dept__dept_name")
-            .annotate(
-                emp_count=Count("emp_id", distinct=True),
-                avg_base_sal=Avg("base_sal"),
-                avg_net_pay=Avg("net_pay"),
+        # DB에는 GROUP BY 없이 원본 행만 요청하고, 집계는 pandas가 한다.
+        dept_rows = list(
+            SalPay.objects.filter(pay_month=latest_month, emp__dept__is_deleted=0).values(
+                "emp__dept__dept_id", "emp__dept__dept_name", "emp_id", "base_sal", "net_pay"
             )
-            .order_by("-avg_net_pay")
         )
+        if dept_rows:
+            df = pd.DataFrame(dept_rows)
+            grouped = df.groupby(
+                ["emp__dept__dept_id", "emp__dept__dept_name"], as_index=False
+            ).agg(
+                emp_count=("emp_id", "nunique"),
+                avg_base_sal=("base_sal", "mean"),
+                avg_net_pay=("net_pay", "mean"),
+            ).sort_values("avg_net_pay", ascending=False)
+            dept_average = [
+                {
+                    "deptId": int(row["emp__dept__dept_id"]),
+                    "deptName": row["emp__dept__dept_name"],
+                    "empCount": int(row["emp_count"]),
+                    "avgBaseSal": round(float(row["avg_base_sal"])),
+                    "avgNetPay": round(float(row["avg_net_pay"])),
+                }
+                for _, row in grouped.iterrows()
+            ]
+        else:
+            dept_average = []
 
         # ── 2) 월별 지급 추이 (최근 N개월) ──
         recent_months = list(
@@ -81,71 +102,84 @@ class SalarySummaryView(APIView):
             .distinct()[:months]
         )
         recent_months.reverse()  # 오래된 달 -> 최신 달 순으로 차트에 표시
-        monthly_trend = list(
-            SalPay.objects.filter(pay_month__in=recent_months)
-            .values("pay_month")
-            .annotate(
-                total_base_sal=Sum("base_sal"),
-                total_allow=Sum("allow_total"),
-                total_dedt=Sum("dedt_total"),
-                total_net_pay=Sum("net_pay"),
-                pay_count=Count("pay_id"),
+
+        trend_rows = list(
+            SalPay.objects.filter(pay_month__in=recent_months).values(
+                "pay_month", "base_sal", "allow_total", "dedt_total", "net_pay", "pay_id"
             )
-            .order_by("pay_month")
         )
+        if trend_rows:
+            df = pd.DataFrame(trend_rows)
+            grouped = df.groupby("pay_month", as_index=False).agg(
+                total_base_sal=("base_sal", "sum"),
+                total_allow=("allow_total", "sum"),
+                total_dedt=("dedt_total", "sum"),
+                total_net_pay=("net_pay", "sum"),
+                pay_count=("pay_id", "count"),
+            ).sort_values("pay_month")
+            monthly_trend = [
+                {
+                    "payMonth": row["pay_month"].isoformat(),
+                    "totalBaseSal": int(row["total_base_sal"]),
+                    "totalAllow": int(row["total_allow"]),
+                    "totalDedt": int(row["total_dedt"]),
+                    "totalNetPay": int(row["total_net_pay"]),
+                    "payCount": int(row["pay_count"]),
+                }
+                for _, row in grouped.iterrows()
+            ]
+        else:
+            monthly_trend = []
 
         # ── 3) 수당/공제 항목 구성비 (최신 지급월 기준) ──
-        item_breakdown_qs = (
-            SalPayItem.objects.filter(pay__pay_month=latest_month)
-            .values("item_code")
-            .annotate(total_amt=Sum("amt"))
-            .order_by("-total_amt")
+        item_rows = list(
+            SalPayItem.objects.filter(pay__pay_month=latest_month).values("item_code", "amt")
         )
-        item_breakdown = [
-            {
-                "itemCode": row["item_code"],
-                "itemLabel": ITEM_CODE_LABELS.get(row["item_code"], row["item_code"]),
-                "totalAmt": row["total_amt"] or 0,
-            }
-            for row in item_breakdown_qs
-        ]
+        if item_rows:
+            df = pd.DataFrame(item_rows)
+            grouped = (
+                df.groupby("item_code", as_index=False)["amt"]
+                .sum()
+                .sort_values("amt", ascending=False)
+            )
+            item_breakdown = [
+                {
+                    "itemCode": row["item_code"],
+                    "itemLabel": ITEM_CODE_LABELS.get(row["item_code"], row["item_code"]),
+                    "totalAmt": int(row["amt"]),
+                }
+                for _, row in grouped.iterrows()
+            ]
+        else:
+            item_breakdown = []
 
         # ── 4) 지급 상태 분포 (전체 누적 기준 — 대기/반려 건이 지금 얼마나 밀려있는지 보려면
         #        최신월로 좁히지 않는 게 더 유용하다) ──
-        status_qs = SalPay.objects.values("stat").annotate(count=Count("pay_id")).order_by("stat")
-        status_distribution = [
-            {
-                "status": row["stat"],
-                "statusLabel": STATUS_LABELS.get(row["stat"], row["stat"]),
-                "count": row["count"],
-            }
-            for row in status_qs
-        ]
+        status_rows = list(SalPay.objects.values("stat", "pay_id"))
+        if status_rows:
+            df = pd.DataFrame(status_rows)
+            grouped = (
+                df.groupby("stat", as_index=False)["pay_id"]
+                .count()
+                .rename(columns={"pay_id": "count"})
+                .sort_values("stat")
+            )
+            status_distribution = [
+                {
+                    "status": row["stat"],
+                    "statusLabel": STATUS_LABELS.get(row["stat"], row["stat"]),
+                    "count": int(row["count"]),
+                }
+                for _, row in grouped.iterrows()
+            ]
+        else:
+            status_distribution = []
 
         return Response(
             {
                 "latestMonth": latest_month.isoformat() if latest_month else None,
-                "deptAverage": [
-                    {
-                        "deptId": row["emp__dept__dept_id"],
-                        "deptName": row["emp__dept__dept_name"],
-                        "empCount": row["emp_count"],
-                        "avgBaseSal": round(row["avg_base_sal"] or 0),
-                        "avgNetPay": round(row["avg_net_pay"] or 0),
-                    }
-                    for row in dept_average
-                ],
-                "monthlyTrend": [
-                    {
-                        "payMonth": row["pay_month"].isoformat(),
-                        "totalBaseSal": row["total_base_sal"] or 0,
-                        "totalAllow": row["total_allow"] or 0,
-                        "totalDedt": row["total_dedt"] or 0,
-                        "totalNetPay": row["total_net_pay"] or 0,
-                        "payCount": row["pay_count"],
-                    }
-                    for row in monthly_trend
-                ],
+                "deptAverage": dept_average,
+                "monthlyTrend": monthly_trend,
                 "itemBreakdown": item_breakdown,
                 "statusDistribution": status_distribution,
             }
