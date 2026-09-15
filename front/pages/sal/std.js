@@ -103,7 +103,10 @@ export default function SalStdListPage() {
     form.setFieldsValue({
       baseSal: record.baseSal,
       annuSal: record.annuSal,
-      startDate: record.startDate ? moment(record.startDate) : null,
+      // 기존 적용시작일을 그대로 다시 제출하면(날짜를 안 바꾸고 저장) 백엔드에서 이력 구간이
+      // 뒤집혀(종료일 < 시작일) 저장되는 문제가 있어, 수정 모달에서는 시작일을 비워두고
+      // 반드시 새 날짜를 고르게 한다(아래 disabledDate로 기존 시작일 이전/당일도 선택 불가).
+      startDate: null,
     });
   };
   const closeFormModal = () => {
@@ -373,8 +376,20 @@ export default function SalStdListPage() {
             name="startDate"
             label={t("std.startDateFieldLabel")}
             rules={[{ required: true, message: t("std.startDateFieldRequired") }]}
+            extra={
+              isEditMode
+                ? t("std.startDateEditHint", { date: formTarget?.startDate })
+                : undefined
+            }
           >
-            <DatePicker style={{ width: "100%" }} />
+            <DatePicker
+              style={{ width: "100%" }}
+              disabledDate={
+                isEditMode && formTarget?.startDate
+                  ? (current) => current && current.isSameOrBefore(moment(formTarget.startDate), "day")
+                  : undefined
+              }
+            />
           </Form.Item>
         </Form>
       </Modal>

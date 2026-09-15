@@ -69,15 +69,20 @@ public class SalaryPaymentService {
             throw new AccessDeniedException("다른 회사 소속 직원의 급여는 등록할 수 없습니다.");
         }
 
-        SalStd standard = salaryStandardRepository.findByEmployee_EmpIdAndActvTrue(employee.getEmpId())
-                .orElseThrow(() -> new ResourceNotFoundException("적용 중인 급여기준이 없습니다. empId=" + employee.getEmpId()));
+        LocalDate normalizedPayMonth = request.getPayMonth().withDayOfMonth(1);
+
+        // 2026-09-15 수정: "지금 이 순간의 현재 급여기준"이 아니라 "이 지급월(normalizedPayMonth) 시점에
+        // 적용되던 급여기준"을 조회해야 한다 - findByEmployee_EmpIdAndActvTrue를 그대로 쓰면 과거 지급월을
+        // 지금 등록하는 경우 엉뚱한(현재) 급여기준으로 산정되는 문제가 있었다(재산정 버그와 동일 원인).
+        SalStd standard = salaryStandardRepository.findApplicable(employee.getEmpId(), normalizedPayMonth)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "지급월(" + normalizedPayMonth + ") 시점에 적용되는 급여기준이 없습니다. empId=" + employee.getEmpId()));
 
         // 급여 수령 계좌가 등록되어 있어야 지급을 진행할 수 있다. 지급 시점 값을 SalPay에 스냅샷으로 남긴다.
         SalAcct account = salaryAccountRepository.findByEmployee_EmpId(employee.getEmpId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "급여 수령 계좌가 등록되지 않았습니다. 계좌를 먼저 등록해주세요. empId=" + employee.getEmpId()));
 
-        LocalDate normalizedPayMonth = request.getPayMonth().withDayOfMonth(1);
         List<SalPayItemCandidate> candidates =
                 salaryCalculationService.calculate(standard, employee, YearMonth.from(normalizedPayMonth));
 
@@ -151,8 +156,16 @@ public class SalaryPaymentService {
             throw new IllegalStateException("대기 상태의 급여만 재산정할 수 있습니다.");
         }
 
-        SalStd standard = salaryStandardRepository.findByEmployee_EmpIdAndActvTrue(employee.getEmpId())
-                .orElseThrow(() -> new ResourceNotFoundException("적용 중인 급여기준이 없습니다. empId=" + employee.getEmpId()));
+        // 2026-09-15 수정: 재산정은 "지금 이 순간의 현재 급여기준"이 아니라 "이 급여 건의 지급월
+        // (payment.getPayMonth()) 시점에 적용되던 급여기준"으로 다시 계산해야 한다.
+        // 기존에는 findByEmployee_EmpIdAndActvTrue()로 "현재 활성" 급여기준을 가져왔는데, 급여 산정 이후
+        // 관리자가 급여기준을 변경(버저닝 - 기존 건 종료 + 새 버전 등록)하면 그 시점부터는 이 지급월과 무관한
+        // "현재" 급여기준이 조회되어, 재산정 결과가 실제 지급월 기준과 다른 값으로 뒤바뀌는 버그가 있었다
+        // (급여기준 -> 급여산정 -> 급여기준변경 -> 급여재산정 순으로 재현됨). findApplicable()로 지급월 시점의
+        // 이력(버전)을 정확히 찾아 재계산한다.
+        SalStd standard = salaryStandardRepository.findApplicable(employee.getEmpId(), payment.getPayMonth())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "지급월(" + payment.getPayMonth() + ") 시점에 적용되는 급여기준이 없습니다. empId=" + employee.getEmpId()));
 
         String beforeSnapshot = toJson(payment);
 

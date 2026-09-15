@@ -46,8 +46,19 @@ public class SalaryStandardService {
         }
 
         // 기존에 적용 중인 급여기준이 있다면 새 기준 시작일 전날 종료 처리(이력 보존)
+        // 새 적용시작일이 기존 건의 시작일보다 뒤여야 한다 - 같은 날짜(또는 더 이른 날짜)로 등록하면
+        // 기존 건의 endDate가 startDate보다 앞서는 뒤집힌 구간이 생겨 이력이 깨진다.
         salaryStandardRepository.findByEmployee_EmpIdAndActvTrue(employee.getEmpId())
-                .ifPresent(prev -> prev.closeAsHistory(request.getStartDate().minusDays(1)));
+                .ifPresent(prev -> {
+                    if (!request.getStartDate().isAfter(prev.getStartDate())) {
+                        throw new IllegalArgumentException(
+                                "새 적용시작일(" + request.getStartDate() + ")은 기존 급여기준의 적용시작일("
+                                        + prev.getStartDate() + ")보다 이후여야 합니다.");
+                    }
+                    prev.closeAsHistory(request.getStartDate().minusDays(1));
+                });
+
+        salaryStandardRepository.flush();
 
         SalStd entity = SalStd.builder()
                 .employee(employee)
@@ -91,6 +102,13 @@ public class SalaryStandardService {
         Long targetComId = before.getEmployee().getCompany().getComId();
         if (!actor.canAccessCompany(targetComId)) {
             throw new AccessDeniedException("다른 회사 소속 직원의 급여기준은 수정할 수 없습니다.");
+        }
+
+        // 새 적용시작일은 수정 대상 건의 시작일보다 뒤여야 한다(아래 (2)와 동일한 이유).
+        if (!request.getStartDate().isAfter(before.getStartDate())) {
+            throw new IllegalArgumentException(
+                    "새 적용시작일(" + request.getStartDate() + ")은 현재 급여기준의 적용시작일("
+                            + before.getStartDate() + ")보다 이후여야 합니다.");
         }
 
         String beforeSnapshot = toJson(before);
