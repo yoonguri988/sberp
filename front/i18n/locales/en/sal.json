@@ -297,7 +297,9 @@
     "comIdFieldRequired": "Company ID is required.",
     "posAmtFieldLabel": "Monthly Payment Amount",
     "posAmtFieldRequired": "Please enter the payment amount.",
-    "registerSuccessMsg": "Policy registered."
+    "registerSuccessMsg": "Policy registered.",
+    "minAmtFieldExtra": "Amounts at or above this value fall in this bracket (lower bound is inclusive).",
+    "maxAmtFieldExtra": "This value itself is NOT included in this bracket — it belongs to the next one (upper bound is exclusive). E.g. if you set this bracket's upper bound to 4,000,000, the next bracket's lower bound should also be exactly 4,000,000 (this bracket covers up to 3,999,999; the next starts at 4,000,000). Entering 4,000,001 (bound + 1) for the next bracket leaves a gap: a base salary of exactly 4,000,000 would match no bracket and salary calculation would fail with an error."
   },
   "hist": {
     "breadcrumb": "Salary > Change History > View",

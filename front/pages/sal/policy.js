@@ -496,6 +496,7 @@ export default function SalPolicyListPage() {
               <Form.Item
                 name="minAmt"
                 label={t("policy.minAmtFieldLabel")}
+                extra={t("policy.minAmtFieldExtra")}
                 rules={[
                   { required: true, message: t("policy.minAmtFieldRequired") },
                 ]}
@@ -511,6 +512,7 @@ export default function SalPolicyListPage() {
               <Form.Item
                 name="maxAmt"
                 label={t("policy.maxAmtFieldLabel")}
+                extra={t("policy.maxAmtFieldExtra")}
               >
                 <InputNumber
                   style={{ width: "100%" }}
